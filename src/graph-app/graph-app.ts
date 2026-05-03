@@ -22,11 +22,11 @@ export class GraphAppElement extends HTMLElement {
     sheet.replaceSync(css);
     this.shadowRoot!.adoptedStyleSheets = [sheet];
   }
-  
+
   async fetchTemplate(){
     const file = await fetch(new URL('./graph-app.html', import.meta.url));
     const html = await file.text();
-    this.shadowRoot.innerHTML = html;
+    this.shadowRoot!.innerHTML = html;
   }
 
   connectedCallback(){
