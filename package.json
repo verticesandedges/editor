@@ -1,0 +1,29 @@
+{
+  "name": "graph-canvas",
+  "version": "0.50.0",
+  "description": "A canvas based graph app",
+  "keywords": [
+    "3D",
+    "interactive",
+    "graph",
+    "editor"
+  ],
+  "homepage": "https://github.com/illogical-alliteration/graph-canvas#readme",
+  "bugs": {
+    "url": "https://github.com/illogical-alliteration/graph-canvas/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/illogical-alliteration/graph-canvas.git"
+  },
+  "license": "UNLICENSED",
+  "author": "Joshua Moore <joshua.moore@verticesandedges.net>",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "parcel src/index.html --dist-dir docs/",
+    "start": "http-server docs/"
+  },
+  "devDependencies": {
+    "parcel": "^2.16.4"
+  }
+}
