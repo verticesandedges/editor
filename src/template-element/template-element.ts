@@ -1,7 +1,6 @@
-export class GraphAppElement extends HTMLElement {
+export class TemplateElement extends HTMLElement {
   static template: string = `
-    <div>
-    Hello World!
+    <div class="">
     </div>
   `;
 
@@ -13,15 +12,19 @@ export class GraphAppElement extends HTMLElement {
     this.attachShadow({mode: 'open'});
     this.qs = this.shadowRoot?.querySelector.bind(this.shadowRoot);
     this.qsa = this.shadowRoot?.querySelectorAll.bind(this.shadowRoot);
-    this.shadowRoot.innerHTML = GraphAppElement.template;
+    this.shadowRoot.innerHTML = TemplateElement.template;
     this.fetchStyle();
   }
 
   async fetchStyle(){
     const sheet = new CSSStyleSheet();
-    const file = await fetch(new URL('./graph-app.css', import.meta.url));
+    const file = await fetch(new URL('./element-template.css', import.meta.url));
     const css = await file.text();
     sheet.replaceSync(css);
     this.shadowRoot!.adoptedStyleSheets = [sheet];
+  }
+
+  connectedCallback(){
+    this.qsa('[popover]').forEach(popover => popover.showPopover());
   }
 }

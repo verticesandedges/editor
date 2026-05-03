@@ -1,1 +1,1 @@
-{"mappings":"","sources":[],"sourcesContent":[],"names":[],"version":3,"file":"graph-canvas.fc7cabbb.css.map","sourceRoot":"/__parcel_source_root/"}
+{"mappings":"AAAA;;;;;;;AAOA","sources":["src/index.css"],"sourcesContent":["html, body {\n  margin: 0;\n  border: 0;\n  padding: 0;\n  overflow: hidden;\n}\n\ngraph-app {\n  position: relative;\n}"],"names":[],"version":3,"file":"graph-canvas.fc7cabbb.css.map","sourceRoot":"/__parcel_source_root/"}

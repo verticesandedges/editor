@@ -714,18 +714,89 @@ function hmrAccept(bundle /*: ParcelRequire */ , id /*: string */ ) {
 }
 
 },{}],"gH3Lb":[function(require,module,exports,__globalThis) {
-var _graphApp = require("./graph-app");
+var _graphApp = require("./graph-app/graph-app");
 customElements.define("graph-app", (0, _graphApp.GraphAppElement));
 
-},{"./graph-app":"co364"}],"co364":[function(require,module,exports,__globalThis) {
+},{"./graph-app/graph-app":"iSw9G"}],"iSw9G":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "GraphAppElement", ()=>GraphAppElement);
 class GraphAppElement extends HTMLElement {
     static{
         this.template = `
-    <div>
-    Hello World!
+    <div class="app">
+      <header>
+
+        <!-- Graph Menu -->
+        <details>
+          <summary>Graph</summary>
+          <menu class="graph">
+            <li>Open</li>
+            <li>Save</li>
+            <li>Clear</li>
+          </menu>
+        </details>
+
+        <!-- Notebook Menu -->
+        <details>
+          <summary>Notebook</summary>
+          <menu class="notebook">
+            <li>Open</li>
+            <li>Save</li>
+            <li>Run All</li>
+            <li>Clear</li>
+            <li>Toggle</li>
+          </menu>
+        </details>
+      </header>
+
+      <main>
+        <div class="content-menus">
+          <details>
+            <summary>Vertex</summary>
+            <menu class="vertex">
+              <li>Add</li>
+              <li>Select All</li>
+              <li>Cut</li>
+              <li>Copy</li>
+              <li>Paste</li>
+              <li>Add Neighbor</li>
+              <li>Edit</li>
+            </menu>
+
+            <!-- Vertex List -->
+            <details>
+              <summary>List</summary>
+              <menu>
+                <li>Hello</li>
+                <li>World</li>
+                <li>!</li>
+              </menu>
+            </details>
+          </details>
+          
+          <details>
+            <summary>Edge</summary>
+            <menu class="edge">
+              <li>Connect Vertices</li>
+              <li>Select All</li>
+            </menu>
+            <!-- Edge List -->
+            <details>
+              <summary>List</summary>
+              <menu>
+                <li>Hello</li>
+                <li>Once</li>
+                <li>Again</li.>
+              </menu>
+            </details>
+          </details>
+        </div>
+
+        <div class="graph-element">
+        test
+        </div>
+      </main>
     </div>
   `;
     }
@@ -741,16 +812,19 @@ class GraphAppElement extends HTMLElement {
     }
     async fetchStyle() {
         const sheet = new CSSStyleSheet();
-        const file = await fetch(new URL(require("7bd0454248ba812b")));
+        const file = await fetch(new URL(require("faab26f8896d07ae")));
         const css = await file.text();
         sheet.replaceSync(css);
         this.shadowRoot.adoptedStyleSheets = [
             sheet
         ];
     }
+    connectedCallback() {
+        this.qsa('[popover]').forEach((popover)=>popover.showPopover());
+    }
 }
 
-},{"7bd0454248ba812b":"1EHYx","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}],"1EHYx":[function(require,module,exports,__globalThis) {
+},{"faab26f8896d07ae":"1EHYx","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}],"1EHYx":[function(require,module,exports,__globalThis) {
 module.exports = module.bundle.resolve("graph-app.5ba69e74.css") + "?" + Date.now();
 
 },{}],"jnFvT":[function(require,module,exports,__globalThis) {
