@@ -1,0 +1,73 @@
+import { Graph } from '../layout/scene-graph';
+import { VertexOptions } from '../layout/scene-vertex';
+import { EdgeOptions } from '../layout/scene-edge';
+
+function propName(attrStr: string){
+  return attrStr.replace(/-([a-z])/g, (match, letter) => letter.toUpperCase());
+}
+
+export class GraphElement extends HTMLElement {
+  static observedAttributes = ['background-color'];
+  graph: Graph;
+
+  constructor(){
+    super();
+    this.attachShadow({mode: "open"});
+
+    this.shadowRoot!.innerHTML = `
+    <style>
+      :host {
+        display: flex;
+        flex-grow: 1;
+      }
+
+      div { 
+        width: 100%; 
+        height: 100%; 
+      } 
+    </style>  
+    
+    <div>
+    </div>
+    `
+    const div = this.shadowRoot!.querySelector('div')!;
+    this.graph = new Graph( div );
+  }
+
+  attributeChangedCallback(attr: string, old: string, value: string){
+    const prop = propName(attr);
+    this.graph[prop] = value;
+  }
+
+  addVertex(options: VertexOptions = {}){
+    const vertexEl = document.createElement('vertex-el');
+    for(let prop of Object.keys(options)){
+      vertexEl[prop] = options[prop];
+    }
+    
+    this.appendChild(vertexEl);
+    return vertexEl;
+  }
+
+  addEdge(sourceSel: string, targetSel: string, options: EdgeOptions = {}){
+    const edgeEl = document.createElement('edge-el');
+
+    edgeEl.setAttribute('source', sourceSel)
+    edgeEl.setAttribute('target', targetSel);
+
+    for(let prop of Object.keys(options)){
+      edgeEl[prop] = options[prop];
+    }
+
+    this.appendChild(edgeEl);
+    return edgeEl;
+  }
+
+  get backgroundColor(): string {
+    return this.getAttribute('background-color') ?? 'white';
+  }
+
+  set backgroundColor(val: string | number){
+    this.setAttribute('background-color', String(val));
+  }
+}
