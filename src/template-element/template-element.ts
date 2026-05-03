@@ -12,8 +12,8 @@ export class TemplateElement extends HTMLElement {
     this.attachShadow({mode: 'open'});
     this.qs = this.shadowRoot?.querySelector.bind(this.shadowRoot);
     this.qsa = this.shadowRoot?.querySelectorAll.bind(this.shadowRoot);
-    this.shadowRoot.innerHTML = TemplateElement.template;
     this.fetchStyle();
+    this.fetchTemplate();
   }
 
   async fetchStyle(){
@@ -22,6 +22,12 @@ export class TemplateElement extends HTMLElement {
     const css = await file.text();
     sheet.replaceSync(css);
     this.shadowRoot!.adoptedStyleSheets = [sheet];
+  }
+
+  async fetchTemplate(){
+    const file = await fetch(new URL('./template-element.html', import.meta.url));
+    const html = await file.text();
+    this.shadowRoot.innerHTML = html;
   }
 
   connectedCallback(){

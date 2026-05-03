@@ -3,7 +3,11 @@
   flex-direction: column;
   width: 100vw;
   height: 100vh;
-  background-color:darkolivegreen;
+
+
+  --ui-color: black;
+  --bg-color: white;
+  --highlight: red;
 }
 
 div.content-menus {
@@ -14,6 +18,7 @@ header {
   display: flex;
   flex-direction: row;
   gap: 15px;
+  border-bottom: 1px solid var(--ui-color);
 }
 
 menu {
@@ -21,6 +26,24 @@ menu {
   list-style-position: inside;
   padding-left: 0;
   margin-left: 0;
+}
+
+details.graph-menu-container {
+  margin-left: 15px;
+}
+
+menu.graph, menu.notebook {
+  border: 1px solid var(--ui-color)
+}
+
+header > details {
+  position: relative;
+}
+
+header > details > menu {
+  position: absolute;
+  z-index: 10;
+  background-color: var(--bg-color);
 }
 
 summary {
@@ -36,16 +59,17 @@ menu.graph, menu.notebook {
 main {
   display: flex;
   flex-direction: row;
+  height: 100%;
 }
 
 .content-menus {
   display: flex;
   flex-direction: column;
+  overflow-y:scroll;
+  width: 20rem;
 }
 
 .graph-element {
-  display: flex;
-  flex-grow: 1;
   width: 100%;
   height: 100%;
   border: 1px solid black;
