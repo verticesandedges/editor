@@ -51,11 +51,13 @@ export class VertexElement extends HTMLElement {
     if(parent && parent.graph){
       const options = this.readAttributes();
       this.vertex = parent.graph.addVertex(options);
+      this.setAttribute('id', this.vertex.id);
     }else{
       setTimeout(() => {
         if(parent?.graph){
           const options = this.readAttributes();
           this.vertex = parent.graph.addVertex(options);
+          this.setAttribute('id', this.vertex.id);
         }
       }, 0);
     }
