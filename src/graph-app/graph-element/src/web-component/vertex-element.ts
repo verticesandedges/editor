@@ -61,6 +61,10 @@ export class VertexElement extends HTMLElement {
     }
   }
 
+  disconnectedCallback(){
+    this.vertex.remove();
+  }
+
   attributeChangedCallback(attr: string, old: string, value: string){
     if(!this.isConnected || !this.vertex) return;
 

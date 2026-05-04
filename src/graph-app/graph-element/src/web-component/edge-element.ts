@@ -57,6 +57,11 @@ export class EdgeElement extends HTMLElement {
     }
   }
 
+  disconnectedCallback(){
+    const parent = this.parentElement as GraphElement;
+    parent.graph.removeEdge(this.id);
+  }
+
   readPoints(): string[] {
     const sourceSel = this.getAttribute('source')!;
     const targetSel = this.getAttribute('target')!;

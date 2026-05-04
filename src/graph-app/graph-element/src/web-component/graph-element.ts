@@ -10,6 +10,9 @@ export class GraphElement extends HTMLElement {
   static observedAttributes = ['background-color'];
   graph: Graph;
 
+  qs: (query: string) => HTMLElement;
+  qsa: (query: string) => NodeList;
+
   constructor(){
     super();
     this.attachShadow({mode: "open"});
@@ -32,11 +35,26 @@ export class GraphElement extends HTMLElement {
     `
     const div = this.shadowRoot!.querySelector('div')!;
     this.graph = new Graph( div );
+
+    this.qs = this.shadowRoot?.querySelector.bind(this.shadowRoot);
+    this.qsa = this.shadowRoot?.querySelectorAll.bind(this.shadowRoot);
   }
 
   attributeChangedCallback(attr: string, old: string, value: string){
     const prop = propName(attr);
     this.graph[prop] = value;
+  }
+
+  get vertices(): NodeList {
+    return this.querySelectorAll('vertex-el');
+  }
+
+  get edges(): NodeList {
+    return this.querySelectorAll('edge-el');
+  }
+
+  get selected(): NodeList {
+    return this.querySelectorAll('vertex-el[selected=true]')
   }
 
   addVertex(options: VertexOptions = {}){
@@ -61,6 +79,16 @@ export class GraphElement extends HTMLElement {
 
     this.appendChild(edgeEl);
     return edgeEl;
+  }
+
+  removeVertex(sel: string): void {
+    const vertex = this.shadowRoot!.querySelector(sel);
+    vertex?.remove();
+  }
+
+  removeEdge(sel: string): void {
+    const edge = this.shadowRoot!.querySelector(sel);
+    edge?.remove();
   }
 
   get backgroundColor(): string {

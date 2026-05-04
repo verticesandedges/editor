@@ -70,7 +70,7 @@ main {
   border-right: 1px solid var(--ui-color)
 }
 
-.graph-element {
+graph-el {
   width: 100%;
   height: 100%;
 }
