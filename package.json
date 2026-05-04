@@ -67,5 +67,8 @@
   },
   "dependencies": {
     "three": "^0.183.2"
+  },
+  "overrides": {
+    "serialize-javascript": "^7.0.5"
   }
 }
