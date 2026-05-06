@@ -1,6 +1,8 @@
 import { Graph } from '../layout/scene-graph';
 import { VertexOptions } from '../layout/scene-vertex';
 import { EdgeOptions } from '../layout/scene-edge';
+import { VertexElement } from './vertex-element';
+import { EdgeElement } from './edge-element';
 
 function propName(attrStr: string){
   return attrStr.replace(/-([a-z])/g, (match, letter) => letter.toUpperCase());
@@ -58,7 +60,7 @@ export class GraphElement extends HTMLElement {
   }
 
   addVertex(options: VertexOptions = {}){
-    const vertexEl = document.createElement('vertex-el');
+    const vertexEl = document.createElement('vertex-el') as VertexElement;
     for(let prop of Object.keys(options)){
       vertexEl[prop] = options[prop];
     }
@@ -68,7 +70,7 @@ export class GraphElement extends HTMLElement {
   }
 
   addEdge(sourceSel: string, targetSel: string, options: EdgeOptions = {}){
-    const edgeEl = document.createElement('edge-el');
+    const edgeEl = document.createElement('edge-el') as EdgeElement;
 
     edgeEl.setAttribute('source', sourceSel)
     edgeEl.setAttribute('target', targetSel);

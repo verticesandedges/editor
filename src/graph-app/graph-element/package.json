@@ -55,7 +55,7 @@
     "util": "^0.12.5"
   },
   "scripts": {
-    "build:lib": "parcel build --target main",
+    "build:lib": "parcel watch --target main",
     "build:demo": "parcel build --target demo",
     "build:tests": "parcel build --target test_page --no-scope-hoist",
     "build:all": "parcel build --target main --target demo --target test_page --no-scope-hoist",

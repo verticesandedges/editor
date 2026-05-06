@@ -775,7 +775,13 @@ class GraphAppElement extends HTMLElement {
     // this.qs('.select.all').addEventListener('click', this.onSelectAllClick.bind(this));
     // this.qs('.cut.vertex').addEventLister
     }
-    setupEdgeMenuHandlers() {}
+    setupEdgeMenuHandlers() {
+        console.error('Not implemented, yet');
+    }
+    //#region graph
+    onOpenGraphClick() {}
+    //#endregion
+    //#region vertex
     onAddVertexClick() {
         this.graph.addVertex({});
     }
@@ -1092,10 +1098,12 @@ class $854bed0ac3c3a143$export$ed30cc242fc1c50a extends HTMLElement {
         if (parent && parent.graph) {
             const options = this.readAttributes();
             this.vertex = parent.graph.addVertex(options);
+            this.setAttribute('id', this.vertex.id);
         } else setTimeout(()=>{
             if (parent?.graph) {
                 const options = this.readAttributes();
                 this.vertex = parent.graph.addVertex(options);
+                this.setAttribute('id', this.vertex.id);
             }
         }, 0);
     }
@@ -53362,22 +53370,14 @@ $dc0f537620f04294$export$8ff26dafa08918.prototype.zeros = function() {
     return this;
 };
 class $40f3f8b290647dff$export$a002182e51710d39 {
-    // repulsion constant; more f0, more repulsion
-    static f0 = 1.0;
-    // spring constant; more K, more attraction
-    static K = 0.15;
-    // time step; more dt, faster simulation
-    static dt = 0.02;
-    // damping constant; more D, more damping
-    static D = 0.2;
-    // minimum distance; to avoid division by zero
-    static epsilon = 0.1;
-    // Barnes-Hut theta; more theta, less accuracy and more speed
-    static theta = 0.5;
-    // Phi time dilation factor
-    static phi = 0.15;
-    // Inner distance: Used by the Barnes Hut Tree to determine proximity
-    static innerDistance = 1.0;
+    static f0 = 1.00e+0;
+    static K = 0.75e+0;
+    static dt = 0.25e+0;
+    static D = 0.50e+0;
+    static epsilon = 1.00e+0;
+    static theta = 0.50e+1;
+    static phi = 0.15e+0;
+    static innerDistance = 1.00e+0;
     //#region serialization
     static reset() {
         $40f3f8b290647dff$export$a002182e51710d39.fromJSON({
@@ -53459,9 +53459,11 @@ class $40f3f8b290647dff$export$3e8a3cc8713efbec {
     }
     static repel(args) {
         const { source: source, target: target } = args;
-        const difference = new $dc0f537620f04294$export$64b5c384219d3699().subVectors(target.position, source.position);
-        const distance = difference.lengthSq() || $40f3f8b290647dff$export$a002182e51710d39.epsilon;
-        return difference.multiplyScalar($40f3f8b290647dff$export$a002182e51710d39.f0 / (distance + $40f3f8b290647dff$export$a002182e51710d39.epsilon));
+        const difference = target.position.clone().sub(source.position);
+        const direction = difference.clone().divideScalar(Math.sqrt(difference.lengthSq()));
+        const scale = $40f3f8b290647dff$export$a002182e51710d39.f0 / ($40f3f8b290647dff$export$a002182e51710d39.epsilon + difference.length());
+        const force = direction.multiplyScalar(-1 * scale);
+        return force;
     }
     merge(other) {
     // this.finers = this.finers.union(other.finers);
@@ -53943,7 +53945,7 @@ class $25151b2351682303$export$614db49f3febe941 {
     #controls;
     #vertices = new Map();
     #edges = new Map();
-    dynamicMatching = new $40f3f8b290647dff$export$cd8999526d73645f(1);
+    dynamicMatching = new $40f3f8b290647dff$export$cd8999526d73645f(0);
     selected = new Set();
     #selectionBox;
     #selectionHelper;

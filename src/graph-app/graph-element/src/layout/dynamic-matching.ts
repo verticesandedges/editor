@@ -22,7 +22,7 @@ interface locatable {
 }
 
 // todo replace Vector3 with locatable
-interface estimatable {
+interface estimateable {
   source: locatable,
   target: locatable
   strength?: EdgeStrength
@@ -103,29 +103,14 @@ Matrix3.prototype.zeros = function(): Matrix3 {
 //#endregion
 
 export class Constants { 
-  // repulsion constant; more f0, more repulsion
-  static f0: number = 1.0;
-
-  // spring constant; more K, more attraction
-  static K: number = 0.15;
-
-  // time step; more dt, faster simulation
-  static dt: number = 0.02;
-  
-  // damping constant; more D, more damping
-  static D: number = 0.2;
-
-  // minimum distance; to avoid division by zero
-  static epsilon: number = 0.1;
-
-  // Barnes-Hut theta; more theta, less accuracy and more speed
-  static theta: number = 0.5;
-
-  // Phi time dilation factor
-  static phi: number = 0.15;
-
-  // Inner distance: Used by the Barnes Hut Tree to determine proximity
-  static innerDistance: number = 1.0;
+  static f0: number             = 1.00e+0; // repulsion constant; more f0, more repulsion
+  static K: number              = 0.75e+0; // spring constant; more K, more attraction
+  static dt: number             = 0.25e+0; // time step; more dt, faster simulation
+  static D: number              = 0.50e+0; // damping constant; more D, more damping
+  static epsilon: number        = 1.00e+0; // minimum distance; to avoid division by zero
+  static theta: number          = 0.50e+1; // Barnes-Hut theta; more theta, less accuracy and more speed
+  static phi: number            = 0.15e+0; // Phi time dilation factor
+  static innerDistance: number  = 1.00e+0; // Inner distance: Used by the Barnes Hut Tree to determine proximity
 
   //#region serialization
   static reset(){
@@ -204,11 +189,13 @@ export class Vertex implements locatable {
     });
   }
 
-  static repel(args: estimatable): Vector3 {
+  static repel(args: estimateable): Vector3 {
     const { source, target } = args;
-    const difference = new Vector3().subVectors(target.position, source.position);
-    const distance = difference.lengthSq() || Constants.epsilon;
-    return difference.multiplyScalar(Constants.f0 / (distance + Constants.epsilon));
+    const difference: Vector3 = target.position.clone().sub(source.position);
+    const direction: Vector3 = difference.clone().divideScalar(Math.sqrt(difference.lengthSq()));
+    const scale: number = Constants.f0 / (Constants.epsilon + difference.length());
+    const force = direction.multiplyScalar(-1*scale);
+    return force;
   }
 
   merge(other: Vertex){
@@ -244,7 +231,7 @@ export class Edge {
     this.#strength = val;
   }
 
-  static attract(args: estimatable): Vector3 {  
+  static attract(args: estimateable): Vector3 {  
     const { source, target, strength } = args;
     const difference = new Vector3().subVectors(target.position, source.position);
     const distance = difference.length() || Constants.epsilon
@@ -371,7 +358,7 @@ export class Octree implements locatable {
     this.#size++;
   }
 
-  estimate(v: Vertex, forceFn: (args: estimatable) => Vector3): Vector3 {
+  estimate(v: Vertex, forceFn: (args: estimateable) => Vector3): Vector3 {
     const f = new Vector3();
 
     if(this.inners.size > 0){

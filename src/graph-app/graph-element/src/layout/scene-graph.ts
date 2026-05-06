@@ -67,7 +67,7 @@ export class Graph {
   #vertices: Map<VertexId, Vertex> = new Map(); // vertices mapping from id string to scene vertex
   #edges: Map<EdgeId, Edge> = new Map(); // edge mapping from id string to scene edge
   
-  dynamicMatching  = new DynamicMatching(1); // todo get it to work
+  dynamicMatching  = new DynamicMatching(0); // todo get it to work
   selected: Set<Vertex> = new Set<Vertex>();;
 
   #selectionBox: SelectionBox;

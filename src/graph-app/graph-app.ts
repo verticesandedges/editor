@@ -16,7 +16,6 @@ export class GraphAppElement extends HTMLElement {
     this.qsa = this.shadowRoot!.querySelectorAll.bind(this.shadowRoot);
 
     this.setupUI();
-    
   }
 
   async setupUI(): Promise<void> {
@@ -46,7 +45,6 @@ export class GraphAppElement extends HTMLElement {
   }
 
   setupGraphMenuHandlers(): void {
-
   }
 
   setupNotebookMenuHandlers(): void {
@@ -72,9 +70,16 @@ export class GraphAppElement extends HTMLElement {
   }
 
   setupEdgeMenuHandlers(): void {
-
+    console.error('Not implemented, yet');
   }
 
+  //#region graph
+  onOpenGraphClick(): void {
+    
+  }
+  //#endregion
+
+  //#region vertex
   onAddVertexClick(): void {
     this.graph.addVertex({});
   }
@@ -113,4 +118,5 @@ export class GraphAppElement extends HTMLElement {
       }
     })
   }
+  //#endregion
 }
