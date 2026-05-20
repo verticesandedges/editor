@@ -98,6 +98,7 @@ export class Graph {
     // the renderer renders the scene onto a canvas element
     this.#renderer = new three.WebGLRenderer({ antialias: true });
     this.#renderer.setSize( elem.clientWidth, elem.clientHeight );
+    this.#renderer.setPixelRatio( elem.clientWidth / elem.clientHeight );
     this.#renderer.setClearColor( 'white' );
     this.#renderer.domElement.style.width = '100%';
     this.#renderer.domElement.style.height = '100%';

@@ -70,7 +70,29 @@ export class GraphAppElement extends HTMLElement {
   }
 
   setupEdgeMenuHandlers(): void {
-    console.error('Not implemented, yet');
+    this.qs('.add.edges').addEventListener('click', this.onAddEdgesClick);
+    this.qs('.remove.edges').addEventListener('click', this.onRemoveEdgesClick);
+  }
+
+  onAddEdgesClick(e: PointerEvent): void {
+    let prev: VertexElement | null = null;
+    this.graph.selected.forEach(v => {
+      if(prev !== null){
+        const prevSel = `#${prev.getAttribute('id')}`;
+        const curSel = `#${v.getAttribute('id')};`
+        this.graph.addEventListener(prevSel, curSel, {})
+      }
+
+      prev = v;
+    })
+  }
+
+  onRemoveEdgesClick(e: PointerEvent): void {
+
+  }
+
+  onSelectAllEdgesClick(): void {
+
   }
 
   //#region graph

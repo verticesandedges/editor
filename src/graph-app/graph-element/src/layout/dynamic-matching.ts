@@ -6,8 +6,8 @@
 // by Dr. Todd Veldhuizen (2007)
 
 
-import { EdgesGeometry } from "three";
-import { Vector3, Matrix3 } from "../../node_modules/three/build/three.module";
+import { Vector3, Matrix3, EdgesGeometry } from "three";
+// import { Vector3, Matrix3 } from "../../node_modules/three/build/three.module";
 
 //#region types
 type VertexId = string;
@@ -103,14 +103,14 @@ Matrix3.prototype.zeros = function(): Matrix3 {
 //#endregion
 
 export class Constants { 
-  static f0: number             = 1.00e+0; // repulsion constant; more f0, more repulsion
-  static K: number              = 0.75e+0; // spring constant; more K, more attraction
-  static dt: number             = 0.25e+0; // time step; more dt, faster simulation
-  static D: number              = 0.50e+0; // damping constant; more D, more damping
-  static epsilon: number        = 1.00e+0; // minimum distance; to avoid division by zero
-  static theta: number          = 0.50e+1; // Barnes-Hut theta; more theta, less accuracy and more speed
-  static phi: number            = 0.15e+0; // Phi time dilation factor
-  static innerDistance: number  = 1.00e+0; // Inner distance: Used by the Barnes Hut Tree to determine proximity
+  static f0: number             = 0.25e-1; // repulsion (magnets) constant; more f0, more repulsion
+  static K: number              = 0.75e+1; // attraction (spring) constant; more K, more attraction
+  static dt: number             = 0.05e+1; // time step; more dt, faster simulation
+  static D: number              = 0.85e+1; // damping constant; more D, more damping
+  static epsilon: number        = 0.25e+1; // minimum distance; to avoid division by zero
+  static theta: number          = 0.10e+1; // Barnes-Hut theta; more theta, less accuracy and more speed
+  static phi: number            = 0.05e+1; // Phi time dilation factor
+  static innerDistance: number  = 1.00e+2; // Inner distance: Used by the Barnes Hut Tree to determine proximity
 
   //#region serialization
   static reset(){
@@ -203,9 +203,10 @@ export class Vertex implements locatable {
   }
 
   updateSingle(){
-    this.velocity.add(this.acceleration.clone().multiplyScalar(Constants.dt));
-    this.velocity.multiplyScalar(Constants.D);
-    this.position.add(this.velocity.clone().multiplyScalar(Constants.dt));
+    const dampingForce = this.velocity.clone().multiplyScalar(-Constants.D);
+    this.acceleration.add(dampingForce);
+    this.velocity.add(this.acceleration);
+    this.position.add(this.velocity);
     this.acceleration.set(0, 0, 0);
   }
 }
@@ -231,21 +232,21 @@ export class Edge {
     this.#strength = val;
   }
 
-  static attract(args: estimateable): Vector3 {  
-    const { source, target, strength } = args;
-    const difference = new Vector3().subVectors(target.position, source.position);
-    const distance = difference.length() || Constants.epsilon
-    return difference.normalize().multiplyScalar(Constants.K * distance * (strength ?? 1.0));
-  }
-
-  // static attract(args: estimatable): Vector3 {
+  // static attract(args: estimateable): Vector3 {  
   //   const { source, target, strength } = args;
   //   const difference = new Vector3().subVectors(target.position, source.position);
-  //   const distance = difference.length() || Constants.epsilon;
-  //   let distSq = difference.lengthSq();
-  //   if(distSq < Constants.epsilon) return new Vector3(0, 0, 0);
+  //   const distance = difference.length() || Constants.epsilon
   //   return difference.normalize().multiplyScalar(Constants.K * distance * (strength ?? 1.0));
   // }
+
+  static attract(args: estimateable): Vector3 {
+    const { source, target, strength } = args;
+    const difference = new Vector3().subVectors(target.position, source.position);
+    const distance = difference.length() || Constants.epsilon;
+    let distSq = difference.lengthSq();
+    if(distSq < Constants.epsilon) return new Vector3(0, 0, 0);
+    return difference.normalize().multiplyScalar(Constants.K * distance * (strength ?? 1.0));
+  }
 
   sharesVertex(other: Edge): boolean {
     return this.source.id === other.source.id
@@ -431,21 +432,26 @@ export class DynamicMatching {
   singleLevelLayout(){
     // estimate repulsion forces
     const vertices = Array.from(this.vertices.values());
+    const edges = Array.from(this.edges.values());
     
     for(const vertex of vertices){
       this.octree.insert(vertex); // todo reuse perfectly fine octree in the fridge
     }
-
+    
+    let i = 0;
     for(const vertex of vertices){
       const force = this.octree.estimate(vertex, Vertex.repel);
-      vertex.acceleration.add(force);
+      console.log('repulsion force', i++, force.length());
+      vertex.acceleration.copy(force);
     }
 
     // calculate attraction forces
-    for(const edge of this.edges.values()){
+    i = 0
+    for(const edge of edges){
       const force = Edge.attract(edge)
-      edge.source.acceleration.add(force);
-      edge.target.acceleration.sub(force);
+      console.log('attraction force', i++, force.length());
+      edge.source.acceleration.sub(force);
+      edge.target.acceleration.add(force);
     }
 
     // add acceleration to velocity to position
