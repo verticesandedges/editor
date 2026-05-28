@@ -162,7 +162,6 @@ export class Constants {
 }
 //#endregion
 
-// remove vertex for production
 export class Vertex implements locatable {
   private static nextId: number = 0;
   public static id(): VertexId { return `vertex-${++Vertex.nextId}`; }
@@ -204,12 +203,11 @@ export class Vertex implements locatable {
   }
 
   static repel(args: estimateable): Vector3 {
-    const { source, target } = args;
-    const difference: Vector3 = target.position.clone().sub(source.position);
-    const direction: Vector3 = difference.clone().divideScalar(Math.sqrt(difference.lengthSq()));
-    const scale: number = Constants.f0 / (Constants.epsilon + difference.length());
-    const force = direction.multiplyScalar(-1*scale);
-    return force;
+    const posA = args.source.position;
+    const posB = args.target.position;
+    const difference = new Vector3().subVectors(posA, posB);
+    const distance = difference.lengthSq() || Constants.epsilon;
+    return difference.multiplyScalar(Constants.f0 / Math.pow(distance, 2));
   }
 
   merge(other: Vertex){
@@ -217,10 +215,9 @@ export class Vertex implements locatable {
   }
 
   updateSingle(){
-    const dampingForce = this.velocity.clone().multiplyScalar(-Constants.D);
-    this.acceleration.add(dampingForce);
-    this.velocity.add(this.acceleration);
-    this.position.add(this.velocity);
+    this.velocity.add(this.acceleration.clone().multiplyScalar(Constants.dt));
+    this.velocity.multiplyScalar(Constants.D);
+    this.position.add(this.velocity.clone().multiplyScalar(Constants.dt));
     this.acceleration.set(0, 0, 0);
   }
 }
@@ -253,13 +250,24 @@ export class Edge {
   //   return difference.normalize().multiplyScalar(Constants.K * distance * (strength ?? 1.0));
   // }
 
+  // static attract(args: estimateable): Vector3 {
+  //   const { source, target, strength } = args;
+  //   const difference = new Vector3().subVectors(target.position, source.position);
+  //   const distance = difference.length() || Constants.epsilon;
+  //   let distSq = difference.lengthSq();
+  //   if(distSq < Constants.epsilon) return new Vector3(0, 0, 0);
+  //   return difference.normalize().multiplyScalar(Constants.K * distance * (strength ?? 1.0));
+  // }
+
   static attract(args: estimateable): Vector3 {
-    const { source, target, strength } = args;
-    const difference = new Vector3().subVectors(target.position, source.position);
+    const v1 = args.source.position;
+    const v2 = args.target.position;
+    const difference = new Vector3().subVectors(v1, v2);
     const distance = difference.length() || Constants.epsilon;
-    let distSq = difference.lengthSq();
-    if(distSq < Constants.epsilon) return new Vector3(0, 0, 0);
-    return difference.normalize().multiplyScalar(Constants.K * distance * (strength ?? 1.0));
+    const strength = (args as Edge).strength;
+    
+    const force = difference.multiplyScalar(Constants.K * distance * distance * strength);
+    return force;
   }
 
   sharesVertex(other: Edge): boolean {
@@ -446,24 +454,22 @@ export class DynamicMatching {
   singleLevelLayout(){
     // estimate repulsion forces
     const vertices = Array.from(this.vertices.values());
-    const edges = Array.from(this.edges.values());
-    
+    const octree = new Octree();
+
     for(const vertex of vertices){
       this.octree.insert(vertex); // todo reuse perfectly fine octree in the fridge
     }
-    
-    let i = 0;
+
     for(const vertex of vertices){
-      const force = this.octree.estimate(vertex, Vertex.repel);
-      console.log('repulsion force', i++, force.length());
-      vertex.acceleration.copy(force);
+      const force = octree.estimate(vertex, Vertex.repel);
+      vertex.acceleration.add(force);
     }
 
     // calculate attraction forces
-    i = 0
+    const edges = Array.from(this.edges.values());
+
     for(const edge of edges){
-      const force = Edge.attract(edge)
-      console.log('attraction force', i++, force.length());
+      const force = Edge.attract(edge);
       edge.source.acceleration.sub(force);
       edge.target.acceleration.add(force);
     }
