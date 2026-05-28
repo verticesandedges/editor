@@ -207,11 +207,11 @@
       });
     }
   }
-})({"iQYvj":[function(require,module,exports,__globalThis) {
+})({"9sirS":[function(require,module,exports,__globalThis) {
 var global = arguments[3];
 var HMR_HOST = null;
 var HMR_PORT = null;
-var HMR_SERVER_PORT = 41569;
+var HMR_SERVER_PORT = 1234;
 var HMR_SECURE = false;
 var HMR_ENV_HASH = "439701173a9199ea";
 var HMR_USE_SSE = false;
@@ -733,16 +733,7 @@ class GraphAppElement extends HTMLElement {
         });
         this.qs = this.shadowRoot.querySelector.bind(this.shadowRoot);
         this.qsa = this.shadowRoot.querySelectorAll.bind(this.shadowRoot);
-        this.setupUI();
-    }
-    async setupUI() {
-        await this.fetchStyle();
-        await this.fetchTemplate();
-        this.graph = this.qs('graph-el');
-        this.setupGraphMenuHandlers();
-        this.setupNotebookMenuHandlers();
-        this.setupVertexMenuHandlers();
-        this.setupEdgeMenuHandlers();
+        this.fetchStyle().then(()=>this.fetchTemplate()).then(()=>this.graph = this.qs('graph-el')).then(()=>this.setupGraphMenuHandlers()).then(()=>this.setupNotebookMenuHandlers()).then(()=>this.setupVertexMenuHandlers()).then(()=>this.setupEdgeMenuHandlers());
     }
     async fetchStyle() {
         const sheet = new CSSStyleSheet();
@@ -1791,14 +1782,14 @@ class $8c48e9b7732a26f4$export$75516b100afd281b extends HTMLElement {
     return this;
 };
 class $40f3f8b290647dff$export$a002182e51710d39 {
-    static f0 = 0.25e-1;
-    static K = 0.75e+1;
-    static dt = 0.05e+1;
-    static D = 0.85e+1;
-    static epsilon = 0.25e+1;
-    static theta = 0.10e+1;
-    static phi = 0.05e+1;
-    static innerDistance = 1.00e+2;
+    static f0 = 1.0e+2;
+    static K = 2.0e-2;
+    static dt = 0.02;
+    static D = 0.75;
+    static epsilon = 0.10;
+    static theta = 0.50;
+    static phi = 0.15;
+    static innerDistance = 100.0;
     //#region serialization
     static reset() {
         $40f3f8b290647dff$export$a002182e51710d39.fromJSON({
@@ -1807,9 +1798,9 @@ class $40f3f8b290647dff$export$a002182e51710d39 {
             dt: 0.02,
             D: 0.75,
             epsilon: 0.1,
-            theta: 0.1,
+            theta: 0.5,
             phi: 0.15,
-            innerDistance: 100.0
+            innerDistance: 10.0
         });
     }
     static toJSON() {
@@ -1879,21 +1870,19 @@ class $40f3f8b290647dff$export$3e8a3cc8713efbec {
         });
     }
     static repel(args) {
-        const { source: source, target: target } = args;
-        const difference = target.position.clone().sub(source.position);
-        const direction = difference.clone().divideScalar(Math.sqrt(difference.lengthSq()));
-        const scale = $40f3f8b290647dff$export$a002182e51710d39.f0 / ($40f3f8b290647dff$export$a002182e51710d39.epsilon + difference.length());
-        const force = direction.multiplyScalar(-1 * scale);
-        return force;
+        const posA = args.source.position;
+        const posB = args.target.position;
+        const difference = new (0, _three.Vector3)().subVectors(posA, posB);
+        const distance = difference.lengthSq() || $40f3f8b290647dff$export$a002182e51710d39.epsilon;
+        return difference.multiplyScalar($40f3f8b290647dff$export$a002182e51710d39.f0 / Math.pow(distance, 2));
     }
     merge(other) {
     // this.finers = this.finers.union(other.finers);
     }
     updateSingle() {
-        const dampingForce = this.velocity.clone().multiplyScalar(-$40f3f8b290647dff$export$a002182e51710d39.D);
-        this.acceleration.add(dampingForce);
-        this.velocity.add(this.acceleration);
-        this.position.add(this.velocity);
+        this.velocity.add(this.acceleration.clone().multiplyScalar($40f3f8b290647dff$export$a002182e51710d39.dt));
+        this.velocity.multiplyScalar($40f3f8b290647dff$export$a002182e51710d39.D);
+        this.position.add(this.velocity.clone().multiplyScalar($40f3f8b290647dff$export$a002182e51710d39.dt));
         this.acceleration.set(0, 0, 0);
     }
 }
@@ -1930,13 +1919,22 @@ class $40f3f8b290647dff$export$b9d9805c9b77a56d {
     //   const distance = difference.length() || Constants.epsilon
     //   return difference.normalize().multiplyScalar(Constants.K * distance * (strength ?? 1.0));
     // }
+    // static attract(args: estimateable): Vector3 {
+    //   const { source, target, strength } = args;
+    //   const difference = new Vector3().subVectors(target.position, source.position);
+    //   const distance = difference.length() || Constants.epsilon;
+    //   let distSq = difference.lengthSq();
+    //   if(distSq < Constants.epsilon) return new Vector3(0, 0, 0);
+    //   return difference.normalize().multiplyScalar(Constants.K * distance * (strength ?? 1.0));
+    // }
     static attract(args) {
-        const { source: source, target: target, strength: strength } = args;
-        const difference = new (0, _three.Vector3)().subVectors(target.position, source.position);
+        const v1 = args.source.position;
+        const v2 = args.target.position;
+        const difference = new (0, _three.Vector3)().subVectors(v1, v2);
         const distance = difference.length() || $40f3f8b290647dff$export$a002182e51710d39.epsilon;
-        let distSq = difference.lengthSq();
-        if (distSq < $40f3f8b290647dff$export$a002182e51710d39.epsilon) return new (0, _three.Vector3)(0, 0, 0);
-        return difference.normalize().multiplyScalar($40f3f8b290647dff$export$a002182e51710d39.K * distance * (strength ?? 1.0));
+        const strength = args.strength;
+        const force = difference.multiplyScalar($40f3f8b290647dff$export$a002182e51710d39.K * distance * distance * strength);
+        return force;
     }
     sharesVertex(other) {
         return this.source.id === other.source.id || this.source.id === other.target.id || this.target.id === other.source.id || this.target.id === other.target.id;
@@ -2113,19 +2111,16 @@ class $40f3f8b290647dff$export$cd8999526d73645f {
     singleLevelLayout() {
         // estimate repulsion forces
         const vertices = Array.from(this.vertices.values());
-        const edges = Array.from(this.edges.values());
+        const octree = new $40f3f8b290647dff$export$496119a8707366b3();
         for (const vertex of vertices)this.octree.insert(vertex); // todo reuse perfectly fine octree in the fridge
-        let i = 0;
         for (const vertex of vertices){
-            const force = this.octree.estimate(vertex, $40f3f8b290647dff$export$3e8a3cc8713efbec.repel);
-            console.log('repulsion force', i++, force.length());
-            vertex.acceleration.copy(force);
+            const force = octree.estimate(vertex, $40f3f8b290647dff$export$3e8a3cc8713efbec.repel);
+            vertex.acceleration.add(force);
         }
         // calculate attraction forces
-        i = 0;
+        const edges = Array.from(this.edges.values());
         for (const edge of edges){
             const force = $40f3f8b290647dff$export$b9d9805c9b77a56d.attract(edge);
-            console.log('attraction force', i++, force.length());
             edge.source.acceleration.sub(force);
             edge.target.acceleration.add(force);
         }
@@ -57998,6 +57993,6 @@ module.exports = module.bundle.resolve("graph-app.5ba69e74.css") + "?" + Date.no
 },{}],"46l3J":[function(require,module,exports,__globalThis) {
 module.exports = module.bundle.resolve("graph-app.edd9e63a.html") + "?" + Date.now();
 
-},{}]},["iQYvj","gH3Lb"], "gH3Lb", "parcelRequire0e4f", {}, "./", "/")
+},{}]},["9sirS","gH3Lb"], "gH3Lb", "parcelRequire0e4f", {}, "./", "/")
 
 //# sourceMappingURL=graph-canvas.20379891.js.map

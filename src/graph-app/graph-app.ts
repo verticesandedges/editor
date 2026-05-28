@@ -7,7 +7,7 @@ export class GraphAppElement extends HTMLElement {
 
   qs: (query: string) => HTMLElement;
   qsa: (query: string) => NodeList;
-  graph: GraphElement;
+  graph!: GraphElement;
 
   constructor(){
     super();
@@ -15,19 +15,13 @@ export class GraphAppElement extends HTMLElement {
     this.qs = this.shadowRoot!.querySelector.bind(this.shadowRoot);
     this.qsa = this.shadowRoot!.querySelectorAll.bind(this.shadowRoot);
 
-    this.setupUI();
-  }
-
-  async setupUI(): Promise<void> {
-    await this.fetchStyle();
-    await this.fetchTemplate();
-
-    this.graph = this.qs('graph-el') as GraphElement;
-
-    this.setupGraphMenuHandlers();
-    this.setupNotebookMenuHandlers();
-    this.setupVertexMenuHandlers();
-    this.setupEdgeMenuHandlers();
+    this.fetchStyle()
+    .then(() => this.fetchTemplate())
+    .then(() => this.graph = this.qs('graph-el') as GraphElement)
+    .then(() => this.setupGraphMenuHandlers())
+    .then(() => this.setupNotebookMenuHandlers())
+    .then(() => this.setupVertexMenuHandlers())
+    .then(() => this.setupEdgeMenuHandlers())
   }
 
   async fetchStyle(): Promise<void> {
