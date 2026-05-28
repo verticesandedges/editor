@@ -102,15 +102,16 @@ Matrix3.prototype.zeros = function(): Matrix3 {
 }
 //#endregion
 
+//#region Constants
 export class Constants { 
-  static f0: number             = 0.25e-1; // repulsion (magnets) constant; more f0, more repulsion
-  static K: number              = 0.75e+1; // attraction (spring) constant; more K, more attraction
-  static dt: number             = 0.05e+1; // time step; more dt, faster simulation
-  static D: number              = 0.85e+1; // damping constant; more D, more damping
-  static epsilon: number        = 0.25e+1; // minimum distance; to avoid division by zero
-  static theta: number          = 0.10e+1; // Barnes-Hut theta; more theta, less accuracy and more speed
-  static phi: number            = 0.05e+1; // Phi time dilation factor
-  static innerDistance: number  = 1.00e+2; // Inner distance: Used by the Barnes Hut Tree to determine proximity
+  static f0: number             = 1.0e+2; // repulsion (magnets) constant; more f0, more repulsion
+  static K: number              = 2.0e-2; // attraction (spring) constant; more K, more attraction
+  static dt: number             = 0.02; // time step; more dt, faster simulation
+  static D: number              = 0.75; // damping constant; more D, more damping
+  static epsilon: number        = 0.10; // minimum distance; to avoid division by zero
+  static theta: number          = 0.50; // Barnes-Hut theta; more theta, less accuracy and more speed
+  static phi: number            = 0.15; // Phi time dilation factor
+  static innerDistance: number  = 100.0; // Inner distance: Used by the Barnes Hut Tree to determine proximity
 
   //#region serialization
   static reset(){
@@ -120,9 +121,9 @@ export class Constants {
       dt: 0.02,
       D: 0.75,
       epsilon: 0.1,
-      theta: 0.1,
+      theta: 0.5,
       phi: 0.15,
-      innerDistance: 100.0
+      innerDistance: 10.0
     })
   }
 
@@ -159,24 +160,37 @@ export class Constants {
   }
   //#endregion
 }
+//#endregion
 
 // remove vertex for production
 export class Vertex implements locatable {
   private static nextId: number = 0;
   public static id(): VertexId { return `vertex-${++Vertex.nextId}`; }
-  private static S = 10.0;
+  private static S = 10.0; // random initial spread
 
   public acceleration = new Vector3();
   readonly velocity = new Vector3();
-  readonly position = new Vector3( Math.random() * Vertex.S, Math.random() * Vertex.S, Math.random() * Vertex.S );
+  readonly position = new Vector3( 
+    Math.random() * Vertex.S, 
+    Math.random() * Vertex.S, 
+    Math.random() * Vertex.S 
+  );
 
   public projectedAcceleration = new Vector3();
   readonly projectedVelocity = new Vector3();
-  readonly projectedPosition = new Vector3( Math.random(), Math.random(), Math.random() );
+  readonly projectedPosition = new Vector3( 
+    Math.random(), 
+    Math.random(), 
+    Math.random() 
+  );
 
   public __displacement = new Vector3();
   readonly _displacement = new Vector3();
-  readonly displacement = new Vector3( Math.random(), Math.random(), Math.random() );
+  readonly displacement = new Vector3( 
+    Math.random(), 
+    Math.random(), 
+    Math.random() 
+  );
 
   public finers = new Set<Vertex>();
   public coarser?: Vertex | undefined;
