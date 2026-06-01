@@ -21,6 +21,7 @@ ul.menu-main {
   display: flex;
   flex-direction: row;
   width: max-content;
+  align-items: center;
 
   hr.menu-separator {
     background-color: black;
@@ -29,6 +30,10 @@ ul.menu-main {
 
   .menu {
     background-color: lightblue;
+  }
+
+  li {
+    width: 100%;
   }
 
   button {
@@ -42,6 +47,8 @@ ul.menu-main {
 
   button:hover {
     border-bottom: 1px solid black;
+    background-color: black;
+    color: lightblue;
   }
 
   .menu:popover-open {
