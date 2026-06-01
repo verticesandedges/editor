@@ -207,11 +207,11 @@
       });
     }
   }
-})({"9sirS":[function(require,module,exports,__globalThis) {
+})({"8aH93":[function(require,module,exports,__globalThis) {
 var global = arguments[3];
 var HMR_HOST = null;
 var HMR_PORT = null;
-var HMR_SERVER_PORT = 1234;
+var HMR_SERVER_PORT = 37127;
 var HMR_SECURE = false;
 var HMR_ENV_HASH = "439701173a9199ea";
 var HMR_USE_SSE = false;
@@ -731,10 +731,14 @@ class GraphAppElement extends HTMLElement {
         this.attachShadow({
             mode: 'open'
         });
-        this.qs = this.shadowRoot.querySelector.bind(this.shadowRoot);
-        this.qsa = this.shadowRoot.querySelectorAll.bind(this.shadowRoot);
-        this.fetchStyle().then(()=>this.fetchTemplate()).then(()=>this.graph = this.qs('graph-el')).then(()=>this.setupGraphMenuHandlers()).then(()=>this.setupNotebookMenuHandlers()).then(()=>this.setupVertexMenuHandlers()).then(()=>this.setupEdgeMenuHandlers());
-    }
+        this.qs = (query)=>this.shadowRoot.querySelector(query);
+        this.qsa = (query)=>this.shadowRoot.querySelectorAll(query);
+        this.fetchStyle().then(()=>this.fetchTemplate()).then(()=>this.graph = this.qs('graph-el'));
+    /*.then(() => this.setupGraphMenuHandlers())
+    .then(() => this.setupNotebookMenuHandlers())
+    .then(() => this.setupVertexMenuHandlers())
+    .then(() => this.setupEdgeMenuHandlers())
+    */ }
     async fetchStyle() {
         const sheet = new CSSStyleSheet();
         const file = await fetch(new URL(require("faab26f8896d07ae")));
@@ -767,21 +771,23 @@ class GraphAppElement extends HTMLElement {
     // this.qs('.cut.vertex').addEventLister
     }
     setupEdgeMenuHandlers() {
-        this.qs('.add.edges').addEventListener('click', this.onAddEdgesClick);
-        this.qs('.remove.edges').addEventListener('click', this.onRemoveEdgesClick);
+        const ach = (query, handler)=>{
+            this.qs(query).addEventListener('click', handler.bind(this));
+        };
+        ach('.add.edges', this.onAddEdgesClick);
+        ach('.remove.edges', this.onRemoveEdgesClick);
     }
-    onAddEdgesClick(e) {
-        let prev = null;
-        this.graph.selected.forEach((v)=>{
-            if (prev !== null) {
-                const prevSel = `#${prev.getAttribute('id')}`;
-                const curSel = `#${v.getAttribute('id')};`;
-                this.graph.addEventListener(prevSel, curSel, {});
-            }
-            prev = v;
+    onAddEdgesClick() {
+        let first = null;
+        let previous = null;
+        this.graph.selected.forEach((current)=>{
+            first ??= current;
+            if (previous !== null) this.graph.addEdge(previous, current);
+            previous = current;
         });
+        if (first !== null && first !== previous) this.graph.addEdge(previous, first);
     }
-    onRemoveEdgesClick(e) {}
+    onRemoveEdgesClick() {}
     onSelectAllEdgesClick() {}
     //#region graph
     onOpenGraphClick() {}
@@ -825,6 +831,7 @@ parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "VertexElement", ()=>$854bed0ac3c3a143$export$ed30cc242fc1c50a);
 parcelHelpers.export(exports, "EdgeElement", ()=>$8c48e9b7732a26f4$export$75516b100afd281b);
 parcelHelpers.export(exports, "GraphElement", ()=>$763303308f85086c$export$2512fa2cfc4036cf);
+parcelHelpers.export(exports, "Constants", ()=>$149c1bd638913645$re_export$Constants);
 var _three = require("three");
 var _threeModule = require("three/build/three.module");
 var _line2 = require("three/examples/jsm/lines/Line2");
@@ -1090,6 +1097,7 @@ class $854bed0ac3c3a143$export$ed30cc242fc1c50a extends HTMLElement {
         return this.vertex.selected;
     }
     set selected(v) {
+        this.toggleAttribute('selected', v);
         this.vertex.selected = v;
     }
     get spline() {
@@ -1782,7 +1790,7 @@ class $8c48e9b7732a26f4$export$75516b100afd281b extends HTMLElement {
     return this;
 };
 class $40f3f8b290647dff$export$a002182e51710d39 {
-    static f0 = 1.0e+2;
+    static f0 = 2.0e+4;
     static K = 2.0e-2;
     static dt = 0.02;
     static D = 0.75;
@@ -1880,9 +1888,10 @@ class $40f3f8b290647dff$export$3e8a3cc8713efbec {
     // this.finers = this.finers.union(other.finers);
     }
     updateSingle() {
-        this.velocity.add(this.acceleration.clone().multiplyScalar($40f3f8b290647dff$export$a002182e51710d39.dt));
+        this.acceleration.multiplyScalar($40f3f8b290647dff$export$a002182e51710d39.dt);
+        this.velocity.add(this.acceleration);
         this.velocity.multiplyScalar($40f3f8b290647dff$export$a002182e51710d39.D);
-        this.position.add(this.velocity.clone().multiplyScalar($40f3f8b290647dff$export$a002182e51710d39.dt));
+        this.position.add(this.velocity);
         this.acceleration.set(0, 0, 0);
     }
 }
@@ -2535,11 +2544,8 @@ class $25151b2351682303$export$614db49f3febe941 {
         const allSelected = this.#selectionBox.select();
         for (let selected of allSelected)if (selected.name === 'cube') selected.parent.userData.vertex.selected = true;
     }
-    set constants(obj) {
-        $40f3f8b290647dff$export$a002182e51710d39.fromJSON(Object.assign($40f3f8b290647dff$export$a002182e51710d39.toJSON(), obj));
-    }
     get constants() {
-        return $40f3f8b290647dff$export$a002182e51710d39.toJSON();
+        return $40f3f8b290647dff$export$a002182e51710d39;
     }
     fromJSON(json) {
         this.clear();
@@ -2743,7 +2749,7 @@ class $763303308f85086c$export$2512fa2cfc4036cf extends HTMLElement {
         return this.querySelectorAll('edge-el');
     }
     get selected() {
-        return this.querySelectorAll('vertex-el[selected=true]');
+        return this.querySelectorAll('vertex-el[selected]');
     }
     addVertex(options = {}) {
         const vertexEl = document.createElement('vertex-el');
@@ -2752,6 +2758,8 @@ class $763303308f85086c$export$2512fa2cfc4036cf extends HTMLElement {
         return vertexEl;
     }
     addEdge(sourceSel, targetSel, options = {}) {
+        sourceSel = sourceSel instanceof $854bed0ac3c3a143$export$ed30cc242fc1c50a ? `#${sourceSel.getAttribute('id')}` : sourceSel;
+        targetSel = targetSel instanceof $854bed0ac3c3a143$export$ed30cc242fc1c50a ? `#${targetSel.getAttribute('id')}` : targetSel;
         const edgeEl = document.createElement('edge-el');
         edgeEl.setAttribute('source', sourceSel);
         edgeEl.setAttribute('target', targetSel);
@@ -57993,6 +58001,6 @@ module.exports = module.bundle.resolve("graph-app.5ba69e74.css") + "?" + Date.no
 },{}],"46l3J":[function(require,module,exports,__globalThis) {
 module.exports = module.bundle.resolve("graph-app.edd9e63a.html") + "?" + Date.now();
 
-},{}]},["9sirS","gH3Lb"], "gH3Lb", "parcelRequire0e4f", {}, "./", "/")
+},{}]},["8aH93","gH3Lb"], "gH3Lb", "parcelRequire0e4f", {}, "./", "/")
 
 //# sourceMappingURL=graph-canvas.20379891.js.map

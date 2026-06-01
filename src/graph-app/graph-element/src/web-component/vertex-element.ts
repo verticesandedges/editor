@@ -40,7 +40,10 @@ export class VertexElement extends HTMLElement {
   set visible(v){ this.vertex.visible = v; }
 
   get selected(){ return this.vertex.selected; }
-  set selected(v){ this.vertex.selected = v; }
+  set selected(v){ 
+    this.toggleAttribute('selected', v);
+    this.vertex.selected = v; 
+  }
 
   get spline(){ return this.vertex.spline; }
   set spline(v){ this.vertex.spline = v; }

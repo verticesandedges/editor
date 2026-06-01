@@ -104,7 +104,7 @@ Matrix3.prototype.zeros = function(): Matrix3 {
 
 //#region Constants
 export class Constants { 
-  static f0: number             = 1.0e+2; // repulsion (magnets) constant; more f0, more repulsion
+  static f0: number             = 2.0e+4; // repulsion (magnets) constant; more f0, more repulsion
   static K: number              = 2.0e-2; // attraction (spring) constant; more K, more attraction
   static dt: number             = 0.02; // time step; more dt, faster simulation
   static D: number              = 0.75; // damping constant; more D, more damping
@@ -215,9 +215,10 @@ export class Vertex implements locatable {
   }
 
   updateSingle(){
-    this.velocity.add(this.acceleration.clone().multiplyScalar(Constants.dt));
+    this.acceleration.multiplyScalar(Constants.dt);
+    this.velocity.add(this.acceleration);
     this.velocity.multiplyScalar(Constants.D);
-    this.position.add(this.velocity.clone().multiplyScalar(Constants.dt));
+    this.position.add(this.velocity);
     this.acceleration.set(0, 0, 0);
   }
 }

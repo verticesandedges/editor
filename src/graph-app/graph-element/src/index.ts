@@ -7,7 +7,8 @@ import { Constants } from './layout/dynamic-matching';
 export { 
   VertexElement,
   EdgeElement,
-  GraphElement
+  GraphElement,
+  Constants
 };
 
 customElements.define("vertex-el", VertexElement);

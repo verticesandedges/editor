@@ -1,27 +1,29 @@
 import "./graph-element/dist/main"
+import { Graph, Vertex, Edge } from "./graph-element/src/layout/dynamic-matching";
 import { GraphElement, VertexElement } from "./graph-element/dist/main";
 
 
 export class GraphAppElement extends HTMLElement {
   static template: string = ``;
 
-  qs: (query: string) => HTMLElement;
+  qs: (query: string) => HTMLElement | null;
   qsa: (query: string) => NodeList;
   graph!: GraphElement;
 
   constructor(){
     super();
     this.attachShadow({mode: 'open'});
-    this.qs = this.shadowRoot!.querySelector.bind(this.shadowRoot);
-    this.qsa = this.shadowRoot!.querySelectorAll.bind(this.shadowRoot);
+    this.qs = (query: string) => this.shadowRoot!.querySelector(query);
+    this.qsa = (query: string) => this.shadowRoot!.querySelectorAll(query);
 
     this.fetchStyle()
     .then(() => this.fetchTemplate())
     .then(() => this.graph = this.qs('graph-el') as GraphElement)
-    .then(() => this.setupGraphMenuHandlers())
+    /*.then(() => this.setupGraphMenuHandlers())
     .then(() => this.setupNotebookMenuHandlers())
     .then(() => this.setupVertexMenuHandlers())
     .then(() => this.setupEdgeMenuHandlers())
+    */
   }
 
   async fetchStyle(): Promise<void> {
@@ -48,7 +50,7 @@ export class GraphAppElement extends HTMLElement {
   setupVertexMenuHandlers(): void {
     // add click handler
     const ach = (query:string, handler: () => void): void => {
-      this.qs(query ).addEventListener('click', handler.bind(this))
+      this.qs(query).addEventListener('click', handler.bind(this))
     };
 
     ach('.add.vertex', this.onAddVertexClick);
@@ -64,24 +66,33 @@ export class GraphAppElement extends HTMLElement {
   }
 
   setupEdgeMenuHandlers(): void {
-    this.qs('.add.edges').addEventListener('click', this.onAddEdgesClick);
-    this.qs('.remove.edges').addEventListener('click', this.onRemoveEdgesClick);
+    const ach = (query: string, handler: () => void): void => {
+      this.qs(query).addEventListener('click', handler.bind(this));
+    }
+
+    ach('.add.edges', this.onAddEdgesClick);
+    ach('.remove.edges', this.onRemoveEdgesClick)
   }
 
-  onAddEdgesClick(e: PointerEvent): void {
-    let prev: VertexElement | null = null;
-    this.graph.selected.forEach(v => {
-      if(prev !== null){
-        const prevSel = `#${prev.getAttribute('id')}`;
-        const curSel = `#${v.getAttribute('id')};`
-        this.graph.addEventListener(prevSel, curSel, {})
+  onAddEdgesClick(): void {
+    let first: Vertex | null = null;
+    let previous: Vertex | null = null;
+    
+    this.graph.selected.forEach((current: VertexElement): void => {
+      first ??= current;
+
+      if(previous !== null){
+        this.graph.addEdge(previous, current);
       }
+      previous = current;
+    });
 
-      prev = v;
-    })
+    if((first !== null) && (first !== previous)){
+      this.graph.addEdge(previous, first);
+    }
   }
 
-  onRemoveEdgesClick(e: PointerEvent): void {
+  onRemoveEdgesClick(): void {
 
   }
 

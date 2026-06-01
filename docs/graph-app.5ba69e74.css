@@ -1,69 +1,153 @@
 :host {
-  --ui-color: black;
-  --bg-color: white;
   flex-direction: column;
   width: 100vw;
   height: 100vh;
-  font-size: 1.5rem;
   display: flex;
-}
-
-div.content-menus {
-  margin-left: 15px;
 }
 
 header {
-  border-bottom: 1px solid var(--ui-color);
+  background-color: #add8e6;
+  border-bottom: 1px solid #000;
+}
+
+ul.menu-main {
   flex-direction: row;
-  gap: 15px;
+  width: max-content;
+  padding-left: 20px;
+  list-style-type: none;
   display: flex;
-}
 
-menu {
-  margin-left: 0;
-  padding-left: 0;
-  list-style: inside none;
-}
+  & hr.menu-separator {
+    background-color: #000;
+    width: 100%;
+  }
 
-details.graph-menu-container {
-  margin-left: 15px;
-}
+  & .menu {
+    background-color: #add8e6;
+  }
 
-menu.graph, menu.notebook {
-  border: 1px solid var(--ui-color);
-}
+  & button {
+    interest-delay: .1s;
+    background-color: #0000;
+    border: none;
+    justify-content: space-between;
+    width: 100%;
+    display: flex;
+  }
 
-header > details {
-  position: relative;
-}
+  & button:hover {
+    border-bottom: 1px solid #000;
+  }
 
-header > details > menu {
-  z-index: 10;
-  background-color: var(--bg-color);
-  position: absolute;
-}
+  & .menu:popover-open {
+    border: 1px solid #000;
+    flex-direction: column;
+    align-items: start;
+    margin: 0;
+    display: flex;
+    position: absolute;
+  }
 
-summary {
-  font-weight: bold;
-}
+  & .menu {
+    width: max-content;
+    overflow-x: hidden;
+  }
 
-menu.graph, menu.notebook {
-  flex-direction: column;
-  display: flex;
+  & #file-menu-trigger {
+    anchor-name: --file-menu;
+  }
+
+  & #file-menu:popover-open {
+    position-anchor: --file-menu;
+    top: anchor(bottom);
+    left: anchor(left);
+  }
+
+  & #file-graph-trigger {
+    anchor-name: --file-graph-menu;
+  }
+
+  & #file-graph:popover-open {
+    position-anchor: --file-graph-menu;
+    top: anchor(top);
+    left: anchor(right);
+  }
+
+  & #file-graph-open-trigger {
+    anchor-name: --file-graph-open-menu;
+  }
+
+  & #file-graph-open:popover-open {
+    position-anchor: --file-graph-open-menu;
+    top: anchor(top);
+    left: anchor(right);
+  }
+
+  & #file-graph-save-trigger {
+    anchor-name: --file-graph-save-menu;
+  }
+
+  & #file-graph-save:popover-open {
+    position-anchor: --file-graph-save-menu;
+    top: anchor(top);
+    left: anchor(right);
+  }
+
+  & #file-notebook-trigger {
+    anchor-name: --file-notebook-menu;
+  }
+
+  & #file-notebook:popover-open {
+    position-anchor: --file-notebook-menu;
+    top: anchor(top);
+    left: anchor(right);
+  }
+
+  & #file-notebook-open-trigger {
+    anchor-name: --file-notebook-open-menu;
+  }
+
+  & #file-notebook-open:popover-open {
+    position-anchor: --file-notebook-open-menu;
+    top: anchor(top);
+    left: anchor(right);
+  }
+
+  & #file-notebook-save-trigger {
+    anchor-name: --file-notebook-save-menu;
+  }
+
+  & #file-notebook-save:popover-open {
+    position-anchor: --file-notebook-save-menu;
+    top: anchor(top);
+    left: anchor(right);
+  }
+
+  & #edit-menu-trigger {
+    anchor-name: --edit-menu;
+  }
+
+  & #edit-menu:popover-open {
+    position-anchor: --edit-menu;
+    top: anchor(bottom);
+    left: anchor(left);
+  }
+
+  & #selection-menu-trigger {
+    anchor-name: --selection-menu;
+  }
+
+  & #selection-menu:popover-open {
+    position-anchor: --selection-menu;
+    top: anchor(bottom);
+    left: anchor(left);
+  }
 }
 
 main {
   flex-direction: row;
   height: 100%;
   display: flex;
-}
-
-.content-menus {
-  border-right: 1px solid var(--ui-color);
-  flex-direction: column;
-  width: 20rem;
-  display: flex;
-  overflow-y: scroll;
 }
 
 graph-el {

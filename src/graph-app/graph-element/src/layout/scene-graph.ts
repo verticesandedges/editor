@@ -313,12 +313,8 @@ export class Graph {
     }
   }
 
-  set constants(obj: Constants){
-    Constants.fromJSON(Object.assign(Constants.toJSON(), obj));
-  }
-
   get constants(): Constants {
-    return Constants.toJSON();
+    return Constants;
   }
 
   fromJSON(json: {V: Array<VertexOptions>, E: Array<EdgeOptions>, constants: Constants, defaults: {vertices: VertexOptions, edges: EdgeOptions}}): void {

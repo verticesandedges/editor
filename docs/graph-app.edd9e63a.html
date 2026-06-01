@@ -1,77 +1,89 @@
 <html><head></head><body><header>
-  <!-- Graph Menu -->
-  <details class="graph-menu-container">
-    <summary>Graph</summary>
-    <menu class="graph">
-      <li class="open graph">Open</li>
-      <li class="save graph">Save</li>
-      <li class="clear graph">Clear</li>
-    </menu>
-  </details>
+  <nav class="menu-bar">
+    <ul class="menu-main">
+      
+      <li>
+        <button interestfor="file-menu" id="file-menu-trigger">File</button>
+        <ul popover="hint" id="file-menu" class="menu">
 
-  <!-- Notebook Menu -->
-  <details class="notebook-menu-container">
-    <summary>Notebook</summary>
-    <menu class="notebook">
-      <li class="open notebook">Open</li>
-      <li class="save notebook">Save</li>
-      <li class="run notebook">Run All</li>
-      <li class="clear notebook">Clear</li>
-      <li class="show hide notebook">Toggle</li>
-    </menu>
-  </details>
+          <li>
+            <button interestfor="file-graph" id="file-graph-trigger">Graph ▹</button>
+            <ul popover="hint" id="file-graph" class="menu">
+              <li>
+                <button>New</button>
+              </li>
+              <li>
+                <button interestfor="file-graph-open" id="file-graph-open-trigger">Open ▹</button>
+                <ul popover="hint" id="file-graph-open" class="menu">
+                  <li><button id="file-graph-open-file">File</button></li>
+                  <li><button id="file-graph-open-url">URL</button></li>
+                  <li><button id="file-graph-open-indexeddb">IndexedDB</button></li>
+                </ul>
+              </li>
+              <li>
+                <button interestfor="file-graph-save" id="file-graph-save-trigger">Save ▹</button>
+                <ul popover="hint" id="file-graph-save" class="menu">
+                  <li><button id="file-graph-save-file">File</button></li>
+                  <li><button id="file-graph-save-url">URL</button></li>
+                  <li><button id="file-graph-save-indexeddb">IndexedDB</button></li>
+                </ul>
+              </li>
+
+            </ul>
+          </li>
+
+          <li>
+            <button interestfor="file-notebook" id="file-notebook-trigger">Notebook ▹</button>
+            <ul popover="hint" id="file-notebook" class="menu">
+              <li>
+                <button>New</button>
+              </li>
+              <li>
+                <button interestfor="file-notebook-open" id="file-notebook-open-trigger">Open ▹</button>
+                <ul popover="hint" id="file-notebook-open" class="menu">
+                  <li><button id="file-notebook-open-file">File</button></li>
+                  <li><button id="file-notebook-open-url">URL</button></li>
+                  <li><button id="file-notebook-open-indexeddb">IndexedDB</button></li>
+                </ul>
+              </li>
+              <li>
+                <button interestfor="file-notebook-save" id="file-notebook-save-trigger">Save ▹</button>
+                <ul popover="hint" id="file-notebook-save" class="menu">
+                  <li><button id="file-notebook-save-file">File</button></li>
+                  <li><button id="file-notebook-save-url">URL</button></li>
+                  <li><button id="file-notebook-save-indexeddb">IndexedDB</button></li>
+                </ul>
+              </li>
+
+            </ul>
+          </li>
+        </ul>
+      </li>
+
+      <li>
+        <button interestfor="edit-menu" id="edit-menu-trigger">Edit</button>
+        <ul popover="hint" id="edit-menu" class="menu">
+          <li><button id="edit-menu-undo">Undo</button></li>
+          <li><button id="edit-menu-redo">Redo</button></li>
+          <hr class="menu-separator">
+          <li><button id="edit-menu-cut">Cut</button></li>
+          <li><button id="edit-menu-copy">Copy</button></li>
+          <li><button id="edit-menu-paste">Paste</button></li>
+          <hr class="menu-separator">
+        </ul>
+      </li>
+
+      <li>
+        <button interestfor="selection-menu" id="selection-menu-trigger">Selection</button>
+        <ul popover="hint" id="selection-menu" class="menu">
+          <li><button id="selection-menu-select-all">Select All</button></li>
+        </ul>
+      </li>
+
+    </ul>
+  </nav>
 </header>
 
 <main>
-  <div class="content-menus">
-    <!-- Vertex Menu -->
-    <details class="vertex-menu-container">
-      <summary>Vertex</summary>
-      <menu class="vertex">
-        <li class="add vertex">Add</li>
-        <li class="remove vertex">Remove</li>
-        <li class="select all">Select All</li>
-        <li class="cut vertex">Cut</li>
-        <li class="copy vertex">Copy</li>
-        <li class="paste vertex">Paste</li>
-        <li class="add neighbor">Add Neighbor</li>
-        <li class="edit vertex">Edit</li>
-      </menu>
-    </details>
-
-    <!-- Vertex List -->
-    <details>
-      <summary>Vertex List</summary>
-      <menu class="vertex list">
-        <li class="vertex list-item">A vertex</li>
-        <li class="vertex list-item">Another vertex</li>
-        <li class="vertex list-item">An other vertex</li>
-
-      </menu>
-    </details>
-
-    <!-- Edge Menu -->
-    <details class="edge-menu-container">
-      <summary>Edge</summary>
-      <menu class="edge">
-        <li class="add edges">Connect Selected</li>
-        <li class="remove edges">Disconnect Selected</li>
-        <li class="select all edges">Select All</li>
-      </menu>
-    </details>
-
-    <!-- Edge List -->
-    <details>
-      <summary>Edge List</summary>
-      <menu class="edge list">
-        <li class="edge list-item">An edge</li>
-        <li class="edge list-item">Another edge</li>
-        <li class="edge list-item">An other edge</li>
-      </menu>
-    </details>
-    
-  </div>
-
-  <graph-el>
-  </graph-el>
+  <graph-el></graph-el>
 </main><script src="/graph-app.4837616a.js"></script></body></html>

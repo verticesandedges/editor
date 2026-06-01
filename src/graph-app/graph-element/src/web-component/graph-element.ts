@@ -56,7 +56,7 @@ export class GraphElement extends HTMLElement {
   }
 
   get selected(): NodeList {
-    return this.querySelectorAll('vertex-el[selected=true]')
+    return this.querySelectorAll('vertex-el[selected]')
   }
 
   addVertex(options: VertexOptions = {}){
@@ -69,7 +69,10 @@ export class GraphElement extends HTMLElement {
     return vertexEl;
   }
 
-  addEdge(sourceSel: string, targetSel: string, options: EdgeOptions = {}){
+  addEdge(sourceSel: string | VertexElement, targetSel: string | VertexElement, options: EdgeOptions = {}){
+    sourceSel = sourceSel instanceof VertexElement ? `#${sourceSel.getAttribute('id')}` : sourceSel;
+    targetSel = targetSel instanceof VertexElement ? `#${targetSel.getAttribute('id')}` : targetSel;
+
     const edgeEl = document.createElement('edge-el') as EdgeElement;
 
     edgeEl.setAttribute('source', sourceSel)
