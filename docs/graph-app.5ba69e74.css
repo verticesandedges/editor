@@ -25,6 +25,8 @@ ul.menu-main {
 
   & .menu {
     background-color: #add8e6;
+    width: max-content;
+    overflow-x: hidden;
   }
 
   & li {
@@ -53,11 +55,6 @@ ul.menu-main {
     margin: 0;
     display: flex;
     position: absolute;
-  }
-
-  & .menu {
-    width: max-content;
-    overflow-x: hidden;
   }
 
   & #file-menu-trigger {
@@ -149,9 +146,19 @@ ul.menu-main {
     top: anchor(bottom);
     left: anchor(left);
   }
+
+  & #view-menu-trigger {
+    anchor-name: --view-menu;
+  }
+
+  & #view-menu:popover-open {
+    position-anchor: --view-menu;
+    top: anchor(bottom);
+    left: anchor(left);
+  }
 }
 
-main {
+div#graph-menu main {
   flex-direction: row;
   height: 100%;
   display: flex;

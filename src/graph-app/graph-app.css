@@ -29,6 +29,8 @@ ul.menu-main {
   }
 
   .menu {
+    width: max-content;
+    overflow-x: hidden;
     background-color: lightblue;
   }
 
@@ -60,11 +62,6 @@ ul.menu-main {
     align-items: start;
 
     border: 1px solid black;
-  }
-
-  .menu {
-    width: max-content;
-    overflow-x: hidden;
   }
 
   /* File Menu */
@@ -167,7 +164,22 @@ ul.menu-main {
     left: anchor(left);
   }
 
+  /* View Menu */
+
+  #view-menu-trigger {
+    anchor-name: --view-menu;
+  }
+
+  #view-menu:popover-open {
+    position-anchor: --view-menu;
+    top: anchor(bottom);
+    left: anchor(left);
+  }
 }
+
+/* Graph Menu */
+div#graph-menu
+
 
 /* Context Menu Styles */
 /* todo */ 

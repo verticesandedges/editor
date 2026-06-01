@@ -80,10 +80,27 @@
         </ul>
       </li>
 
+      <li>
+        <button interestfor="view-menu" id="view-menu-trigger">View</button>
+        <ul popover="hint" id="view-menu" class="menu">
+          <li><button id="toggle-vertex-editor">Toggle Vertex Editor</button></li>
+          <li><button id="toggle-edge-editor">Toggle Edge Editor</button></li>
+
+        </ul>
+      </li>
+
     </ul>
   </nav>
 </header>
 
 <main>
   <graph-el></graph-el>
+  <div popover id="graph-menu">
+    <ul class="floating-menu">
+      <li><button id="add-vertex">+</button></li>
+      <li><button id="remove-vertex">-</button></li>
+      <li><button id="add-neighbor">_[]</button></li>
+      <li><button interestfor="edit-vertex">~</button></li>
+    </ul>
+  </div>
 </main>
