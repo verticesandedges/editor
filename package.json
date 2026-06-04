@@ -25,5 +25,9 @@
   },
   "devDependencies": {
     "parcel": "^2.16.4"
+  },
+  "dependencies": {
+    "interestfor": "github:mfreed7/interestfor",
+    "invokers": "^2.2.0"
   }
 }
