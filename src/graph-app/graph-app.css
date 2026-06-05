@@ -186,7 +186,7 @@ ul.menu-main {
 }
 
 /* Vertex Menu */
-ul#tool-menu {
+ul#tool-menu:popover-open {
   position: absolute;
   left: 0px;
   top: 100px;
@@ -221,6 +221,10 @@ ul#tool-menu {
   .symbol {
     width: 35px;
   }
+}
+
+ul#tool-menu:not(:popover-open) {
+  display: none;
 }
 
 /* Main and GraphEl Styles */

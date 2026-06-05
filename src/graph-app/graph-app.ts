@@ -19,7 +19,7 @@ export class GraphAppElement extends HTMLElement {
     this.fetchStyle()
     .then(() => this.fetchTemplate())
     .then(() => this.graph = this.qs('graph-el') as GraphElement)
-    .then(() => this.wireEvents());
+    .then(() => this.wireToolMenu());
 
     /*.then(() => this.setupGraphMenuHandlers())
     .then(() => this.setupNotebookMenuHandlers())
@@ -28,9 +28,22 @@ export class GraphAppElement extends HTMLElement {
     */
   }
 
-  async wireEvents(){
-    // Options
-    
+  wireToolMenu(){
+    const button = this.qs('#toggle-tool-menu') as HTMLButtonElement;
+    const trigger = this.qs('#tool-menu-trigger') as HTMLInputElement;
+    const menu = this.qs('#tool-menu')!;
+
+    trigger.onchange = (e) => {
+      e.stopPropagation();
+      menu.togglePopover(trigger.checked);
+    }
+
+    button.onclick = (e) => {
+      e.stopPropagation();
+      trigger.toggleAttribute('checked');
+    }
+
+    trigger.onchange(new Event('change'));
   }
 
   async fetchStyle(): Promise<void> {

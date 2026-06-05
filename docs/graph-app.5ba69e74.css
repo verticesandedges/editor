@@ -165,7 +165,7 @@ ul.menu-main {
   }
 }
 
-ul#tool-menu {
+ul#tool-menu:popover-open {
   text-indent: 0;
   background-color: #add8e6;
   border: 1px solid #000;
@@ -199,6 +199,10 @@ ul#tool-menu {
   & .symbol {
     width: 35px;
   }
+}
+
+ul#tool-menu:not(:popover-open) {
+  display: none;
 }
 
 main {

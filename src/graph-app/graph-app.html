@@ -63,8 +63,8 @@
           <li>
             <label>Recent</label>
             <ul id="file-recent" class="menu">
-              <li><button id="notebook-Untitled%20Notebook">Untitled Notebook</button></li>
-              <li><button id="graph-Untitled%20Graph">Untitled Graph</button></li>
+              <li><button id="notebook-Untitled%20Notebook">Sample Untitled Notebook</button></li>
+              <li><button id="graph-Untitled%20Graph">Sample Untitled Graph</button></li>
             </ul>
           </li>
         </ul>
@@ -94,7 +94,7 @@
       <li>
         <button interestfor="view-menu" popovertarget="view-menu" id="view-menu-trigger">View</button>
         <ul popover="hint" id="view-menu" class="menu">
-          <li><button popovertarget="tool-menu" id="toggle-tool-menu">Tool Menu <input type="checkbox" checked></button></li>
+          <li><button popovertarget="tool-menu" id="toggle-tool-menu">Toggle Tool Menu <input id="tool-menu-trigger" type="checkbox" checked></button></li>
           <li><button popovertarget="notebook" id="toggle-notebook">Toggle Notebook <input type="checkbox"></button></li>
         </ul>
       </li>
@@ -107,7 +107,7 @@
   <graph-el></graph-el>
 </main>
 
-<ul popover="hint" id="tool-menu">
+<ul popover="manual" id="tool-menu">
   <label>Tools</label>
   <li><button id="add-vertex"><span class="symbol">+&#x25A0;</span><span class="word">Add Vertex</span></button></li>
   <li><button id="connect-vertices"><span class="symbol">+🔗&#xFE0E;</span><span class="word"> Add Edge(s)</span></button></li>

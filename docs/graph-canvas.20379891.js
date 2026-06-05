@@ -207,11 +207,11 @@
       });
     }
   }
-})({"16RGF":[function(require,module,exports,__globalThis) {
+})({"gEekO":[function(require,module,exports,__globalThis) {
 var global = arguments[3];
 var HMR_HOST = null;
 var HMR_PORT = null;
-var HMR_SERVER_PORT = 40805;
+var HMR_SERVER_PORT = 44301;
 var HMR_SECURE = false;
 var HMR_ENV_HASH = "439701173a9199ea";
 var HMR_USE_SSE = false;
@@ -733,14 +733,25 @@ class GraphAppElement extends HTMLElement {
         });
         this.qs = (query)=>this.shadowRoot.querySelector(query);
         this.qsa = (query)=>this.shadowRoot.querySelectorAll(query);
-        this.fetchStyle().then(()=>this.fetchTemplate()).then(()=>this.graph = this.qs('graph-el')).then(()=>this.wireEvents());
+        this.fetchStyle().then(()=>this.fetchTemplate()).then(()=>this.graph = this.qs('graph-el')).then(()=>this.wireToolMenu());
     /*.then(() => this.setupGraphMenuHandlers())
     .then(() => this.setupNotebookMenuHandlers())
     .then(() => this.setupVertexMenuHandlers())
     .then(() => this.setupEdgeMenuHandlers())
     */ }
-    async wireEvents() {
-    // Options
+    wireToolMenu() {
+        const button = this.qs('#toggle-tool-menu');
+        const trigger = this.qs('#tool-menu-trigger');
+        const menu = this.qs('#tool-menu');
+        trigger.onchange = (e)=>{
+            e.stopPropagation();
+            menu.togglePopover(trigger.checked);
+        };
+        button.onclick = (e)=>{
+            e.stopPropagation();
+            trigger.toggleAttribute('checked');
+        };
+        trigger.onchange(new Event('change'));
     }
     async fetchStyle() {
         const sheet = new CSSStyleSheet();
@@ -57934,6 +57945,6 @@ module.exports = module.bundle.resolve("graph-app.5ba69e74.css") + "?" + Date.no
 },{}],"6Rjm8":[function(require,module,exports,__globalThis) {
 module.exports = module.bundle.resolve("graph-app.edd9e63a.html") + "?" + Date.now();
 
-},{}]},["16RGF","gH3Lb"], "gH3Lb", "parcelRequire0e4f", {}, "./", "/")
+},{}]},["gEekO","gH3Lb"], "gH3Lb", "parcelRequire0e4f", {}, "./", "/")
 
 //# sourceMappingURL=graph-canvas.20379891.js.map
