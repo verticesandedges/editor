@@ -1,5 +1,4 @@
 import "./graph-element/dist/main"
-import { Graph, Vertex, Edge } from "./graph-element/src/layout/dynamic-matching";
 import { GraphElement, VertexElement } from "./graph-element/dist/main";
 
 import { NotebookElement } from "./notebook/src/notebook/notebook/notebook.ts";
