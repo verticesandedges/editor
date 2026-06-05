@@ -203,7 +203,7 @@ ul#tool-menu:popover-open {
   border: 1px solid black;
 
   button {
-    border: 1px solid #CCC;
+    border: none;
     background-color: lightblue;
     text-align: start;
     width: 100%;
@@ -213,7 +213,6 @@ ul#tool-menu:popover-open {
   }
 
   button:hover {
-    border: 1px solid black;
     background-color: black;
     color: lightblue;
   }
@@ -234,7 +233,29 @@ main {
   height: 100%;
 }
 
+/* Graph Element */
+
 graph-el {
   width: 100%;
   height: 100%;
+}
+
+/* Notebook Element */
+
+notebook-el {
+  right: 0;
+  top: 100px;
+}
+
+notebook-el:popover-open {
+  display: block;
+  position: absolute;
+  right: 0;
+  top: 100px;
+  width: 80ch;
+  height: fit-content;
+}
+
+notebook-el:not(:popover-open) {
+  display: none;
 }

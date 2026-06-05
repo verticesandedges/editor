@@ -9,13 +9,31 @@
     "notebook"
   ],
   "license": "UNLICENSED",
-  "author": "Joshua M. Moore <illogical.alliteration@gmail.com>",
+  "author": "Joshua M. Moore <joshua.moore@verticesandedges.net>",
   "type": "module",
+  "source": "src/notebook/notebook/notebook.ts",
+  "main": "dist/main.js",
+  "module": "dist/module.js",
+  "types": "dist/types.d.ts",
+  "targets": {
+    "main": {
+      "isLibrary": true
+    },
+    "page": {
+      "source": "src/index.html",
+      "distDir": "dist/page",
+      "engines": {
+        "browsers": "> 0.5%, last 2 versions, not dead"
+      }
+    }
+  },
+
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "parcel src/index.html --dist-dir docs",
     "start": "http-server docs/",
     "clean": "rm -rf .parcel-cache/ docs/",
+    "build:lib": "parcel watch --target main",
     "build:folder": "parcel src/index.html --dist-dir docs/notebook/ --public-url /notebook/",
     "copy:folder": "cp -r ./examples/ ./docs/notebook/. && cp src/notebook/spiral-small.png ./docs/notebook/.",
     "start:folder": "http-server docs/",

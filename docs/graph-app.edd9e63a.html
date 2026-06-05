@@ -47,11 +47,11 @@
                 </ul>
               </li>
               <li>
-                <button interestfor="file-notebook-save" popovertarget="file-notebook-save" ="file-notebook-save-trigger"="">Save ▹</button>
+                <button interestfor="file-notebook-save" popovertarget="file-notebook-save" id="file-notebook-save-trigger">Save ▹</button>
                 <ul popover="hint" id="file-notebook-save" class="menu">
-                  <li><button id="file-notebook-save-file">File</button></li>
-                  <li><button id="file-notebook-save-url">URL</button></li>
-                  <li><button id="file-notebook-save-indexeddb">IndexedDB</button></li>
+                  <li><button id="file-notebook-save-file" class="menu-option">File</button></li>
+                  <li><button id="file-notebook-save-url" class="menu-option">URL</button></li>
+                  <li><button id="file-notebook-save-indexeddb" class="menu-option">IndexedDB</button></li>
                 </ul>
               </li>
 
@@ -94,28 +94,31 @@
       <li>
         <button interestfor="view-menu" popovertarget="view-menu" id="view-menu-trigger">View</button>
         <ul popover="hint" id="view-menu" class="menu">
-          <li><button popovertarget="tool-menu" id="toggle-tool-menu">Toggle Tool Menu <input id="tool-menu-trigger" type="checkbox" checked=""></button></li>
-          <li><button popovertarget="notebook" id="toggle-notebook">Toggle Notebook <input type="checkbox"></button></li>
+          <li><button popovertarget="tool-menu" id="tool-menu-button">Toggle Tool Menu <input id="tool-menu-checkbox" type="checkbox" checked=""></button></li>
+          <li><button popovertarget="notebook" id="notebook-button">Toggle Notebook <input id="notebook-checkbox" type="checkbox" checked=""></button></li>
         </ul>
       </li>
 
     </ul>
-  </nav>
+  </nav>  
 </header>
 
 <main>
   <graph-el></graph-el>
-</main>
 
-<ul popover="manual" id="tool-menu">
-  <label>Tools</label>
-  <li><button id="add-vertex"><span class="symbol">+■</span><span class="word">Add Vertex</span></button></li>
-  <li><button id="connect-vertices"><span class="symbol">+🔗︎</span><span class="word"> Add Edge(s)</span></button></li>
-  <li><button id="select-all"><span class="symbol">⬚∀</span><span class="word">Select All</span></button></li>
-  <li><button id="select-none"><span class="symbol">⬚∅</span><span class="word">Select None</span></button></li>
-  <li><button id="remove-vertex"><span class="symbol">−■</span><span class="word">Remove Vertices</span></button></li>
-  <li><button id="remove-edge"><span class="symbol">−🔗︎</span><span class="word">Remove Edges</span></button></li>
-  <li><button id="edit-vertex"><span class="symbol">🛠■</span><span class="word">Vertex Settings</span></button></li> 
-  <li><button id="edit-edge"><span class="symbol">🛠🔗︎</span><span class="word">Edge Settings</span></button></li>
-  <li><button id="edit-constants"><span class="symbol">🛠</span><span class="word">Constants</span></button></li>
-</ul><script src="/graph-app.4837616a.js"></script></body></html>
+  <ul popover="manual" id="tool-menu">
+    <label>Tools</label>
+    <li><button id="add-vertex"><span class="symbol">+■</span><span class="word">Add Vertex</span></button></li>
+    <li><button id="connect-vertices"><span class="symbol">+🔗︎</span><span class="word"> Add Edge(s)</span></button></li>
+    <li><button id="select-all"><span class="symbol">⬚∀</span><span class="word">Select All</span></button></li>
+    <li><button id="select-none"><span class="symbol">⬚∅</span><span class="word">Select None</span></button></li>
+    <li><button id="remove-vertex"><span class="symbol">−■</span><span class="word">Remove Vertices</span></button></li>
+    <li><button id="remove-edge"><span class="symbol">−🔗︎</span><span class="word">Remove Edges</span></button></li>
+    <li><button id="edit-vertex"><span class="symbol">🛠■</span><span class="word">Vertex Settings</span></button></li> 
+    <li><button id="edit-edge"><span class="symbol">🛠🔗︎</span><span class="word">Edge Settings</span></button></li>
+    <li><button id="edit-constants"><span class="symbol">🛠</span><span class="word">Constants</span></button></li>
+  </ul>
+
+  <notebook-el popover="manual" id="notebook"></notebook-el>
+</main>
+<script src="/graph-app.4837616a.js"></script></body></html>

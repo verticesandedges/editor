@@ -2,6 +2,23 @@ import "./graph-element/dist/main"
 import { Graph, Vertex, Edge } from "./graph-element/src/layout/dynamic-matching";
 import { GraphElement, VertexElement } from "./graph-element/dist/main";
 
+import { NotebookElement } from "./notebook/src/notebook/notebook/notebook.ts";
+import { CellTypeSelector } from "./notebook/src/notebook/cell-type-selector/cell-type-selector";
+import { MarkdownCellElement } from "./notebook/src/notebook/markdown-cell/markdown-cell";
+import { CellActionsElement } from "./notebook/src/notebook/cell-actions/cell-actions";
+import { JavascriptCellElement } from "./notebook/src/notebook/javascript-cell/javascript-cell";
+import { TypescriptCellElement } from "./notebook/src/notebook/typescript-cell/typescript-cell";
+import { NotebookActionsElement } from "./notebook/src/notebook/notebook-actions/notebook-actions";
+import { NotebookAppElement } from "./notebook/src/notebook/notebook-app/notebook-app";
+
+window.customElements.define("markdown-cell", MarkdownCellElement);
+window.customElements.define("notebook-el", NotebookElement);
+window.customElements.define("cell-type", CellTypeSelector)
+window.customElements.define("cell-actions", CellActionsElement);
+window.customElements.define("javascript-cell", JavascriptCellElement);
+window.customElements.define('typescript-cell', TypescriptCellElement);
+window.customElements.define('notebook-actions', NotebookActionsElement);
+window.customElements.define('notebook-app', NotebookAppElement);
 
 export class GraphAppElement extends HTMLElement {
   static template: string = ``;
@@ -19,7 +36,8 @@ export class GraphAppElement extends HTMLElement {
     this.fetchStyle()
     .then(() => this.fetchTemplate())
     .then(() => this.graph = this.qs('graph-el') as GraphElement)
-    .then(() => this.wireToolMenu());
+    .then(() => this.wireToolMenu())
+    .then(() => this.wireNotebook());
 
     /*.then(() => this.setupGraphMenuHandlers())
     .then(() => this.setupNotebookMenuHandlers())
@@ -29,13 +47,31 @@ export class GraphAppElement extends HTMLElement {
   }
 
   wireToolMenu(){
-    const button = this.qs('#toggle-tool-menu') as HTMLButtonElement;
-    const trigger = this.qs('#tool-menu-trigger') as HTMLInputElement;
+    const button = this.qs('#tool-menu-button') as HTMLButtonElement;
+    const trigger = this.qs('#tool-menu-checkbox')! as HTMLInputElement;
     const menu = this.qs('#tool-menu')!;
 
     trigger.onchange = (e) => {
       e.stopPropagation();
       menu.togglePopover(trigger.checked);
+    }
+
+    button.onclick = (e) => {
+      e.stopPropagation();
+      trigger.toggleAttribute('checked');
+    }
+
+    trigger.onchange(new Event('change'));
+  }
+
+  wireNotebook(){
+    const button = this.qs('#notebook-button') as HTMLButtonElement;
+    const trigger = this.qs('#notebook-checkbox')! as HTMLInputElement;
+    const notebook = this.qs('#notebook')! as NotebookElement;
+
+    trigger.onchange = (e) => {
+      e.stopPropagation();
+      notebook.togglePopover(trigger.checked);
     }
 
     button.onclick = (e) => {

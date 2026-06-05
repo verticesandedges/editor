@@ -183,7 +183,7 @@ ul#tool-menu:popover-open {
   & button {
     text-align: start;
     background-color: #add8e6;
-    border: 1px solid #ccc;
+    border: none;
     flex-direction: row;
     align-items: center;
     width: 100%;
@@ -193,7 +193,6 @@ ul#tool-menu:popover-open {
   & button:hover {
     color: #add8e6;
     background-color: #000;
-    border: 1px solid #000;
   }
 
   & .symbol {
@@ -214,5 +213,23 @@ main {
 graph-el {
   width: 100%;
   height: 100%;
+}
+
+notebook-el {
+  top: 100px;
+  right: 0;
+}
+
+notebook-el:popover-open {
+  width: 80ch;
+  height: fit-content;
+  display: block;
+  position: absolute;
+  top: 100px;
+  right: 0;
+}
+
+notebook-el:not(:popover-open) {
+  display: none;
 }
 /*# sourceMappingURL=graph-app.5ba69e74.css.map */
