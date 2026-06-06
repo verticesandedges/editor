@@ -247,6 +247,10 @@ notebook-el:popover-open {
   margin-top: 100px;
   width: 80ch;
   background-color: white;
+  
+  max-height: calc(100vh - 100px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
 }
 
 notebook-el:not(:popover-open) {

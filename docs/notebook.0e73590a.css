@@ -16,6 +16,7 @@
     background-size: var(--spiral-width);
     max-width: 80ch;
     padding-left: calc(var(--spiral-width) + 15px);
+    background-attachment: local;
     border: 1px solid #000;
     border-left: none;
     flex-direction: column;

@@ -217,10 +217,13 @@ graph-el {
 }
 
 notebook-el:popover-open {
+  overscroll-behavior: contain;
   background-color: #fff;
   width: 80ch;
+  max-height: calc(100vh - 100px);
   margin-top: 100px;
   margin-right: 0;
+  overflow-y: auto;
 }
 
 notebook-el:not(:popover-open) {

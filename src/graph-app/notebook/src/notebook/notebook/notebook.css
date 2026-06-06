@@ -27,6 +27,7 @@
     padding-bottom: 25px;
     border: 1px solid black;
     border-left: none;
+    background-attachment: local;
   }
 }
 

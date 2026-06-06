@@ -207,11 +207,11 @@
       });
     }
   }
-})({"jUxBd":[function(require,module,exports,__globalThis) {
+})({"fMAWC":[function(require,module,exports,__globalThis) {
 var global = arguments[3];
 var HMR_HOST = null;
 var HMR_PORT = null;
-var HMR_SERVER_PORT = 36071;
+var HMR_SERVER_PORT = 1234;
 var HMR_SECURE = false;
 var HMR_ENV_HASH = "439701173a9199ea";
 var HMR_USE_SSE = false;
@@ -310024,6 +310024,6 @@ module.exports = module.bundle.resolve("graph-app.5ba69e74.css") + "?" + Date.no
 },{}],"6Rjm8":[function(require,module,exports,__globalThis) {
 module.exports = module.bundle.resolve("graph-app.edd9e63a.html") + "?" + Date.now();
 
-},{}]},["jUxBd","gH3Lb"], "gH3Lb", "parcelRequire0e4f", {}, "./", "/")
+},{}]},["fMAWC","gH3Lb"], "gH3Lb", "parcelRequire0e4f", {}, "./", "/")
 
 //# sourceMappingURL=graph-canvas.20379891.js.map
