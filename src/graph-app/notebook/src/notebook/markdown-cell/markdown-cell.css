@@ -6,6 +6,7 @@
   --cell-border: 1px solid black;
   --ui-color: 0x000000;
   --bg-color: 0xffffff;
+  font-size: inherit;
 }
 
 section.cell.markdown-cell {
@@ -22,7 +23,7 @@ fieldset.cell-actions {
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
-  font-size: var(--font-size);
+  font-size: inherit;
 }
 
 .cell-actions button {
@@ -32,7 +33,7 @@ fieldset.cell-actions {
 
   color: var(--ui-color);
   background-color: var(--bg-color);
-  font-size: var(--font-size);
+  font-size: inherit;
 }
 
 fieldset {
@@ -59,7 +60,7 @@ cell-type {
 
 .cm-line {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  font-size: 20px;
+  font-size: inherit;
 }
 
 hr {
@@ -74,5 +75,5 @@ hr {
 }
 
 math {
-  font-size: 24px;
+  font-size: inherit;
 }

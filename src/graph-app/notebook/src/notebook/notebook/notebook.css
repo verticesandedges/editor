@@ -1,14 +1,16 @@
 :root {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: inherit;
+  background-color: yellowgreen;
 }
 
 :host {
+  font-size: inherit;
 }
 
-@media screen and (min-width: 800px){
-  :host {  
-    --font-size: 20px;
 
+@media screen and (min-width: 800px){
+  :host {
+    font-size: inherit;
     margin: 50px transparent;
     
     max-width: 80ch;
@@ -17,7 +19,7 @@
     display: flex;
     flex-direction: column;
 
-    --spiral-width: 75px;
+    --spiral-width: 45px;
     background: url('./spiral-small.png') left top repeat-y;
     background-size: var(--spiral-width);
     padding-left: calc(var(--spiral-width) + 15px);
@@ -31,7 +33,7 @@
 h1 {
   border: none;
   border-bottom: 1px solid black;
-  font-family: serif;
+  font-family: inherit;
 }
 
 h1:focus {
@@ -49,12 +51,12 @@ button {
   border: 0;
   padding: 0;
 
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  font-size: 20px;
+  font-family: inherit;
+  font-size: inherit;
 
   color: var(--ui-color);
   background-color: var(--bg-color);
-  font-size: var(--font-size);
+  font-size: inherit;
 }
 
 .cover {

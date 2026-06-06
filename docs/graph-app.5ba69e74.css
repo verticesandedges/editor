@@ -2,6 +2,7 @@
   flex-direction: column;
   width: 100vw;
   height: 100vh;
+  font-size: 12px;
   display: flex;
 }
 
@@ -216,6 +217,7 @@ graph-el {
 }
 
 notebook-el:popover-open {
+  background-color: #fff;
   width: 80ch;
   margin-top: 100px;
   margin-right: 0;

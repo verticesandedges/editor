@@ -4,6 +4,7 @@
   flex-direction: column;
   width: 100vw;
   height: 100vh;
+  font-size: 12px;
 }
 
 
@@ -245,6 +246,7 @@ notebook-el:popover-open {
   margin-right: 0px;
   margin-top: 100px;
   width: 80ch;
+  background-color: white;
 }
 
 notebook-el:not(:popover-open) {

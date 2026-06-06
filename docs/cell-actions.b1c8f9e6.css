@@ -1,5 +1,5 @@
 :host {
-  --font-size: 20px;
+  font-size: inherit;
   border: none;
   outline: none;
   flex-direction: row;
@@ -9,12 +9,17 @@
 }
 
 button {
-  color: var(--ui-color);
-  background-color: var(--bg-color);
-  font-size: var(--font-size);
+  color: #000;
+  font-size: inherit;
+  background-color: #0000;
   border: 0;
   margin: 0;
   padding: 0;
+}
+
+button:hover {
+  color: #fff;
+  background-color: #000;
 }
 
 @media not screen {
