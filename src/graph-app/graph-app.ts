@@ -79,6 +79,10 @@ export class GraphAppElement extends HTMLElement {
     }
 
     trigger.onchange(new Event('change'));
+
+    notebook.context = {
+      graph: this.graph
+    }
   }
 
   async fetchStyle(): Promise<void> {
