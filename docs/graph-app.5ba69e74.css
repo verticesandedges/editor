@@ -215,18 +215,10 @@ graph-el {
   height: 100%;
 }
 
-notebook-el {
-  top: 100px;
-  right: 0;
-}
-
 notebook-el:popover-open {
   width: 80ch;
-  height: fit-content;
-  display: block;
-  position: absolute;
-  top: 100px;
-  right: 0;
+  margin-top: 100px;
+  margin-right: 0;
 }
 
 notebook-el:not(:popover-open) {

@@ -185,7 +185,7 @@ ul.menu-main {
   }
 }
 
-/* Vertex Menu */
+/* Tool Menu */
 ul#tool-menu:popover-open {
   position: absolute;
   left: 0px;
@@ -241,19 +241,10 @@ graph-el {
 }
 
 /* Notebook Element */
-
-notebook-el {
-  right: 0;
-  top: 100px;
-}
-
 notebook-el:popover-open {
-  display: block;
-  position: absolute;
-  right: 0;
-  top: 100px;
+  margin-right: 0px;
+  margin-top: 100px;
   width: 80ch;
-  height: fit-content;
 }
 
 notebook-el:not(:popover-open) {

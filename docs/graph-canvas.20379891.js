@@ -207,11 +207,11 @@
       });
     }
   }
-})({"eopb8":[function(require,module,exports,__globalThis) {
+})({"8ncyl":[function(require,module,exports,__globalThis) {
 var global = arguments[3];
 var HMR_HOST = null;
 var HMR_PORT = null;
-var HMR_SERVER_PORT = 39027;
+var HMR_SERVER_PORT = 44123;
 var HMR_SECURE = false;
 var HMR_ENV_HASH = "439701173a9199ea";
 var HMR_USE_SSE = false;
@@ -799,13 +799,13 @@ class GraphAppElement extends HTMLElement {
     }
 }
 
-},{"./graph-element/dist/main":"fAQ8M","faab26f8896d07ae":"1EHYx","a50ebb808dd5d5c0":"6Rjm8","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT","./notebook/src/notebook/notebook/notebook.ts":"jbqbh","./notebook/src/notebook/cell-type-selector/cell-type-selector":"x43Pu","./notebook/src/notebook/markdown-cell/markdown-cell":"8trOH","./notebook/src/notebook/cell-actions/cell-actions":"1zM9a","./notebook/src/notebook/javascript-cell/javascript-cell":"k62UV","./notebook/src/notebook/typescript-cell/typescript-cell":"3pTzO","./notebook/src/notebook/notebook-actions/notebook-actions":"9AIuS","./notebook/src/notebook/notebook-app/notebook-app":"4dcy8"}],"fAQ8M":[function(require,module,exports,__globalThis) {
+},{"./graph-element/dist/main":"fAQ8M","./notebook/src/notebook/notebook/notebook.ts":"jbqbh","./notebook/src/notebook/cell-type-selector/cell-type-selector":"x43Pu","./notebook/src/notebook/markdown-cell/markdown-cell":"8trOH","./notebook/src/notebook/cell-actions/cell-actions":"1zM9a","./notebook/src/notebook/javascript-cell/javascript-cell":"k62UV","./notebook/src/notebook/typescript-cell/typescript-cell":"3pTzO","./notebook/src/notebook/notebook-actions/notebook-actions":"9AIuS","./notebook/src/notebook/notebook-app/notebook-app":"4dcy8","faab26f8896d07ae":"1EHYx","a50ebb808dd5d5c0":"6Rjm8","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}],"fAQ8M":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "VertexElement", ()=>$854bed0ac3c3a143$export$ed30cc242fc1c50a);
 parcelHelpers.export(exports, "EdgeElement", ()=>$8c48e9b7732a26f4$export$75516b100afd281b);
 parcelHelpers.export(exports, "GraphElement", ()=>$763303308f85086c$export$2512fa2cfc4036cf);
-parcelHelpers.export(exports, "Constants", ()=>$149c1bd638913645$re_export$Constants);
+parcelHelpers.export(exports, "Constants", ()=>$40f3f8b290647dff$export$a002182e51710d39);
 var _three = require("three");
 var _threeModule = require("three/build/three.module");
 var _line2 = require("three/examples/jsm/lines/Line2");
@@ -57969,13 +57969,7 @@ var _three = require("three");
     }
 }
 
-},{"three":"8mzOV","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}],"1EHYx":[function(require,module,exports,__globalThis) {
-module.exports = module.bundle.resolve("graph-app.5ba69e74.css") + "?" + Date.now();
-
-},{}],"6Rjm8":[function(require,module,exports,__globalThis) {
-module.exports = module.bundle.resolve("graph-app.edd9e63a.html") + "?" + Date.now();
-
-},{}],"jbqbh":[function(require,module,exports,__globalThis) {
+},{"three":"8mzOV","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}],"jbqbh":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "NotebookElement", ()=>NotebookElement);
@@ -310024,6 +310018,12 @@ module.exports = module.bundle.resolve("notebook-app.0bf5bb9b.css") + "?" + Date
 },{}],"aKZO5":[function(require,module,exports,__globalThis) {
 module.exports = module.bundle.resolve("notebook-app.54730308.html") + "?" + Date.now();
 
-},{}]},["eopb8","gH3Lb"], "gH3Lb", "parcelRequire0e4f", {}, "./", "/")
+},{}],"1EHYx":[function(require,module,exports,__globalThis) {
+module.exports = module.bundle.resolve("graph-app.5ba69e74.css") + "?" + Date.now();
+
+},{}],"6Rjm8":[function(require,module,exports,__globalThis) {
+module.exports = module.bundle.resolve("graph-app.edd9e63a.html") + "?" + Date.now();
+
+},{}]},["8ncyl","gH3Lb"], "gH3Lb", "parcelRequire0e4f", {}, "./", "/")
 
 //# sourceMappingURL=graph-canvas.20379891.js.map
