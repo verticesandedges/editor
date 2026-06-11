@@ -5,6 +5,10 @@
   width: 100vw;
   height: 100vh;
   font-size: 12px;
+  --bg-color: slategray;
+  --ui-color: black;
+  background-color: var(--bg-color);
+  color: var(--ui-color);
 }
 
 
@@ -12,8 +16,9 @@
 /* todo  .menu-bar */
 
 header{
-  border-bottom: 1px solid black;
-  background-color: lightblue;
+  border-bottom: 1px solid var(--ui-color);
+  color: var(--ui-color);
+  background-color: var(--bg-color);
 }
 
 ul.menu-main {
@@ -25,23 +30,27 @@ ul.menu-main {
   align-items: center;
 
   hr.menu-separator {
-    background-color: black;
+    background-color: var(--ui-color);
     width: 100%;
   }
 
   .menu {
     width: max-content;
     overflow-x: hidden;
-    background-color: lightblue;
+    background-color: var(--bg-color);
+    color: var(--ui-color);
   }
 
   li {
     width: 100%;
+    background-color: var(--bg-color);
+    color: var(--ui-color);
   }
 
   button {
     border: none;
-    background-color: transparent;
+    background-color: var(--bg-color);
+    color: var(--ui-color);
     interest-delay: 0.1s;
     width: 100%;
     display: flex;
@@ -49,9 +58,9 @@ ul.menu-main {
   }
 
   button:hover {
-    border-bottom: 1px solid black;
-    background-color: black;
-    color: lightblue;
+    border-bottom: 1px solid var(--ui-color);
+    background-color: var(--ui-color);
+    color: var(--bg-color);
   }
 
   .menu:popover-open {
@@ -62,7 +71,10 @@ ul.menu-main {
     flex-direction: column;
     align-items: start;
 
-    border: 1px solid black;
+    border: 1px solid var(--ui-color);
+
+    background-color: var(--bg-color);
+    color: var(--ui-color);
   }
 
   /* File Menu */
@@ -194,18 +206,20 @@ ul#tool-menu:popover-open {
   margin: 0;
   list-style-type: none;
   text-indent: 0;
-  background-color: lightblue;
+  background-color: var(--bg-color);
+  color: var(--ui-color);
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
   width: max-content;
   gap: 5px;
   justify-content: start;
-  border: 1px solid black;
+  border: 1px solid var(--ui-color);
 
   button {
     border: none;
-    background-color: lightblue;
+    background-color: var(--bg-color);
+    color: var(--ui-color);
     text-align: start;
     width: 100%;
     display: flex;
@@ -214,8 +228,8 @@ ul#tool-menu:popover-open {
   }
 
   button:hover {
-    background-color: black;
-    color: lightblue;
+    background-color: var(--ui-color);
+    color: var(--bg-color);
   }
 
   .symbol {
@@ -225,6 +239,8 @@ ul#tool-menu:popover-open {
 
 ul#tool-menu:not(:popover-open) {
   display: none;
+  background-color: var(--bg-color);
+  color: var(--ui-color);
 }
 
 /* Main and GraphEl Styles */
@@ -246,7 +262,7 @@ notebook-el:popover-open {
   margin-right: 0px;
   margin-top: 100px;
   width: 80ch;
-  background-color: white;
+  background-color: var(--bg-color);
   
   max-height: calc(100vh - 100px);
   overflow-y: auto;

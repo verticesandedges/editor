@@ -104,3 +104,5 @@ export class GraphElement extends HTMLElement {
     this.setAttribute('background-color', String(val));
   }
 }
+
+customElements.define('graph-el', GraphElement)

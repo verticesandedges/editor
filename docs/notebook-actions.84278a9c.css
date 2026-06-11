@@ -1,5 +1,9 @@
 :host {
   font-size: inherit;
+  --bg-color: inherit;
+  --ui-color: inherit;
+  background-color: var(--bg-color);
+  color: var(--ui-color);
   border: none;
   outline: none;
   flex-direction: row;
@@ -10,17 +14,17 @@
 }
 
 button {
-  color: #000;
+  background-color: var(--bg-color);
+  color: var(--ui-color);
   font-size: inherit;
-  background-color: #0000;
   border: 0;
   margin: 0;
   padding: 0;
 }
 
 button:hover {
-  color: #fff;
-  background-color: #000;
+  color: var(--bg-color);
+  background-color: var(--ui-color);
 }
 
 @media not screen {

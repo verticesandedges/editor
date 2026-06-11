@@ -5,6 +5,10 @@
 
 :host {
   font-size: inherit;
+  --bg-color: inherit;
+  --ui-color: inherit;
+  background-color: var(--bg-color, white);
+  color: var(--ui-color, black);
 }
 
 
@@ -21,20 +25,28 @@
 
     --spiral-width: 45px;
     background: url('./spiral-small.png') left top repeat-y;
+    background-color: var(--bg-color);
     background-size: var(--spiral-width);
+
     padding-left: calc(var(--spiral-width) + 15px);
     padding-right: 25px;
     padding-bottom: 25px;
-    border: 1px solid black;
+    border: 1px solid var(--ui-color);
     border-left: none;
     background-attachment: local;
+  }
+
+  :host::before {
+    filter: invert(1);
   }
 }
 
 h1 {
   border: none;
-  border-bottom: 1px solid black;
+  border-bottom: 1px solid var(--ui-color);
   font-family: inherit;
+  background-color: var(--bg-color);
+  color: var(--ui-color);
 }
 
 h1:focus {
@@ -63,7 +75,7 @@ button {
 .cover {
   width: 28px;
   height: 0px;
-  border: 1px solid white;
+  border: 1px solid var(--bg-color);
   position: relative;
   left: -92px;
 }

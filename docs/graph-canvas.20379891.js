@@ -207,11 +207,11 @@
       });
     }
   }
-})({"btrNE":[function(require,module,exports,__globalThis) {
+})({"l2WSy":[function(require,module,exports,__globalThis) {
 var global = arguments[3];
 var HMR_HOST = null;
 var HMR_PORT = null;
-var HMR_SERVER_PORT = 40381;
+var HMR_SERVER_PORT = 38483;
 var HMR_SECURE = false;
 var HMR_ENV_HASH = "439701173a9199ea";
 var HMR_USE_SSE = false;
@@ -805,7 +805,11 @@ class GraphAppElement extends HTMLElement {
 },{"./graph-element/dist/main":"fAQ8M","./notebook/src/notebook/notebook/notebook.ts":"jbqbh","./notebook/src/notebook/cell-type-selector/cell-type-selector":"x43Pu","./notebook/src/notebook/markdown-cell/markdown-cell":"8trOH","./notebook/src/notebook/cell-actions/cell-actions":"1zM9a","./notebook/src/notebook/javascript-cell/javascript-cell":"k62UV","./notebook/src/notebook/typescript-cell/typescript-cell":"3pTzO","./notebook/src/notebook/notebook-actions/notebook-actions":"9AIuS","./notebook/src/notebook/notebook-app/notebook-app":"4dcy8","faab26f8896d07ae":"1EHYx","a50ebb808dd5d5c0":"6Rjm8","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}],"fAQ8M":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "VertexElement", ()=>$854bed0ac3c3a143$export$ed30cc242fc1c50a);
+/*
+customElements.define("vertex-el", VertexElement);
+customElements.define("edge-el", EdgeElement);
+customElements.define("graph-el", GraphElement)
+*/ parcelHelpers.export(exports, "VertexElement", ()=>$854bed0ac3c3a143$export$ed30cc242fc1c50a);
 parcelHelpers.export(exports, "EdgeElement", ()=>$8c48e9b7732a26f4$export$75516b100afd281b);
 parcelHelpers.export(exports, "GraphElement", ()=>$763303308f85086c$export$2512fa2cfc4036cf);
 parcelHelpers.export(exports, "Constants", ()=>$40f3f8b290647dff$export$a002182e51710d39);
@@ -1121,6 +1125,7 @@ class $854bed0ac3c3a143$export$ed30cc242fc1c50a extends HTMLElement {
         return vo;
     }
 }
+customElements.define('vertex-el', $854bed0ac3c3a143$export$ed30cc242fc1c50a);
 class $93afb3fc7beadade$export$a94506fb574265ab {
     //#region generate functions
     /**
@@ -1724,6 +1729,7 @@ class $8c48e9b7732a26f4$export$75516b100afd281b extends HTMLElement {
         return options;
     }
 }
+customElements.define('edge-el', $8c48e9b7732a26f4$export$75516b100afd281b);
 (0, _three.Vector3).prototype.transpose = function(v2) {
     return new (0, _three.Matrix3)().set(this.x * v2.x, this.x * v2.y, this.x * v2.z, this.y * v2.x, this.y * v2.y, this.y * v2.z, this.z * v2.x, this.z * v2.y, this.z * v2.z);
 // return new Matrix3(
@@ -2759,9 +2765,7 @@ class $763303308f85086c$export$2512fa2cfc4036cf extends HTMLElement {
         this.setAttribute('background-color', String(val));
     }
 }
-customElements.define("vertex-el", $854bed0ac3c3a143$export$ed30cc242fc1c50a);
-customElements.define("edge-el", $8c48e9b7732a26f4$export$75516b100afd281b);
-customElements.define("graph-el", $763303308f85086c$export$2512fa2cfc4036cf);
+customElements.define('graph-el', $763303308f85086c$export$2512fa2cfc4036cf);
 
 },{"three":"8mzOV","three/build/three.module":"8mzOV","three/examples/jsm/lines/Line2":"Xs3z8","three/examples/jsm/lines/LineGeometry":"dcLM2","three/examples/jsm/lines/LineMaterial":"iZtK0","three/examples/jsm/controls/OrbitControls.js":"bfXh4","three/examples/jsm/interactive/SelectionBox.js":"gZXYz","three/examples/jsm/interactive/SelectionHelper.js":"3IS6j","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}],"8mzOV":[function(require,module,exports,__globalThis) {
 /**
@@ -310027,6 +310031,6 @@ module.exports = module.bundle.resolve("graph-app.5ba69e74.css") + "?" + Date.no
 },{}],"6Rjm8":[function(require,module,exports,__globalThis) {
 module.exports = module.bundle.resolve("graph-app.edd9e63a.html") + "?" + Date.now();
 
-},{}]},["btrNE","gH3Lb"], "gH3Lb", "parcelRequire0e4f", {}, "./", "/")
+},{}]},["l2WSy","gH3Lb"], "gH3Lb", "parcelRequire0e4f", {}, "./", "/")
 
 //# sourceMappingURL=graph-canvas.20379891.js.map

@@ -7,6 +7,10 @@
   border: none;
   font-size: inherit;
   font-family: inherit;
+  --bg-color: inherit;
+  --ui-color: inherit;
+  background-color: var(--bg-color);
+  color: var(--ui-color);
 }
 
 button {
@@ -14,14 +18,14 @@ button {
   border: 0;
   padding: 0;
 
-  color: black;
-  background-color: transparent;
+  background-color: var(--bg-color);
+  color: var(--ui-color);
   font-size: inherit;
 }
 
 button:hover {
-  color: white;
-  background-color: black;;
+  color: var(--bg-color);
+  background-color: var(--ui-color);
 }
 
 

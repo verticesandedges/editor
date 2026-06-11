@@ -1,14 +1,19 @@
 :host {
-  flex-direction: column;
+  --bg-color: slategray;
+  --ui-color: black;
+  background-color: var(--bg-color);
   width: 100vw;
   height: 100vh;
+  color: var(--ui-color);
+  flex-direction: column;
   font-size: 12px;
   display: flex;
 }
 
 header {
-  background-color: #add8e6;
-  border-bottom: 1px solid #000;
+  border-bottom: 1px solid var(--ui-color);
+  color: var(--ui-color);
+  background-color: var(--bg-color);
 }
 
 ul.menu-main {
@@ -20,23 +25,27 @@ ul.menu-main {
   display: flex;
 
   & hr.menu-separator {
-    background-color: #000;
+    background-color: var(--ui-color);
     width: 100%;
   }
 
   & .menu {
-    background-color: #add8e6;
+    background-color: var(--bg-color);
     width: max-content;
+    color: var(--ui-color);
     overflow-x: hidden;
   }
 
   & li {
+    background-color: var(--bg-color);
     width: 100%;
+    color: var(--ui-color);
   }
 
   & button {
+    background-color: var(--bg-color);
+    color: var(--ui-color);
     interest-delay: .1s;
-    background-color: #0000;
     border: none;
     justify-content: space-between;
     width: 100%;
@@ -44,13 +53,15 @@ ul.menu-main {
   }
 
   & button:hover {
-    color: #add8e6;
-    background-color: #000;
-    border-bottom: 1px solid #000;
+    border-bottom: 1px solid var(--ui-color);
+    background-color: var(--ui-color);
+    color: var(--bg-color);
   }
 
   & .menu:popover-open {
-    border: 1px solid #000;
+    border: 1px solid var(--ui-color);
+    background-color: var(--bg-color);
+    color: var(--ui-color);
     flex-direction: column;
     align-items: start;
     margin: 0;
@@ -168,8 +179,9 @@ ul.menu-main {
 
 ul#tool-menu:popover-open {
   text-indent: 0;
-  background-color: #add8e6;
-  border: 1px solid #000;
+  background-color: var(--bg-color);
+  color: var(--ui-color);
+  border: 1px solid var(--ui-color);
   flex-flow: column wrap;
   justify-content: start;
   gap: 5px;
@@ -182,8 +194,9 @@ ul#tool-menu:popover-open {
   left: 0;
 
   & button {
+    background-color: var(--bg-color);
+    color: var(--ui-color);
     text-align: start;
-    background-color: #add8e6;
     border: none;
     flex-direction: row;
     align-items: center;
@@ -192,8 +205,8 @@ ul#tool-menu:popover-open {
   }
 
   & button:hover {
-    color: #add8e6;
-    background-color: #000;
+    background-color: var(--ui-color);
+    color: var(--bg-color);
   }
 
   & .symbol {
@@ -202,6 +215,8 @@ ul#tool-menu:popover-open {
 }
 
 ul#tool-menu:not(:popover-open) {
+  background-color: var(--bg-color);
+  color: var(--ui-color);
   display: none;
 }
 
@@ -217,8 +232,8 @@ graph-el {
 }
 
 notebook-el:popover-open {
+  background-color: var(--bg-color);
   overscroll-behavior: contain;
-  background-color: #fff;
   width: 80ch;
   max-height: calc(100vh - 100px);
   margin-top: 100px;

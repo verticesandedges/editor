@@ -1,3 +1,7 @@
+:host {
+  --bg-color: inherit;
+}
+
 .katex-html {
   display: none;
 }

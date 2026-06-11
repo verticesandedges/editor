@@ -95,3 +95,5 @@ export class VertexElement extends HTMLElement {
     return vo;
   }
 }
+
+customElements.define('vertex-el', VertexElement);

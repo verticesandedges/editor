@@ -11,6 +11,8 @@ export {
   Constants
 };
 
+/*
 customElements.define("vertex-el", VertexElement);
 customElements.define("edge-el", EdgeElement);
 customElements.define("graph-el", GraphElement)
+*/

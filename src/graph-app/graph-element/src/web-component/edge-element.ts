@@ -97,3 +97,5 @@ export class EdgeElement extends HTMLElement {
     return options;
   }
 }
+
+customElements.define('edge-el', EdgeElement);

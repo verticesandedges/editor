@@ -98,6 +98,4 @@ export class GraphAppElement extends HTMLElement {
     const html = await file.text();
     this.shadowRoot!.innerHTML = html;
   }
-
-
 }
