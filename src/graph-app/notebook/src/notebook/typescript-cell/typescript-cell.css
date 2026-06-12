@@ -1,5 +1,7 @@
 :host {
   font-size: inherit;
+  --bg-color: inherit;
+  --ui-color: inherit;
 }
 
 fieldset.cell-editor {
@@ -24,7 +26,8 @@ fieldset.cell-outputs {
 }
 
 hr {
-  border: none;
+  border: 0;
+  border-top: 1px solid var(--ui-color);
   height: 1px;
-  background-image: linear-gradient(to right, transparent, #000, transparent);
+  /*background-image: linear-gradient(to right, transparent, #000, transparent);*/
 }

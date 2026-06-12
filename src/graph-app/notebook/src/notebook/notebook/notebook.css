@@ -13,6 +13,18 @@
 
 @media screen and (min-width: 800px){
   :host {
+    --spiral-width: 45px;
+    position: relative;
+    left: 0;
+    background: url('./spiral-small.png') left top repeat-y;
+    background-color: transparent; /* var(--bg-color); */
+    background-size: var(--spiral-width);
+    background-attachment: local;
+    border: 1px solid var(--ui-color);
+    border-left: none;
+  }
+
+  article {
     font-size: inherit;
     margin: 50px transparent;
     
@@ -22,21 +34,9 @@
     display: flex;
     flex-direction: column;
 
-    --spiral-width: 45px;
-    background: url('./spiral-small.png') left top repeat-y;
-    background-color: var(--bg-color);
-    background-size: var(--spiral-width);
-
-    padding-left: calc(var(--spiral-width) + 15px);
+    margin-left: calc(var(--spiral-width) + 15px);
     padding-right: 25px;
     padding-bottom: 25px;
-    border: 1px solid var(--ui-color);
-    border-left: none;
-    background-attachment: local;
-  }
-
-  :host::before {
-    filter: invert(1);
   }
 }
 

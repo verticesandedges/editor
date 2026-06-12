@@ -24,8 +24,8 @@ fieldset.cell-outputs {
 }
 
 hr {
-  background-image: linear-gradient(to right, #0000, #000, #0000);
-  border: none;
+  border: 0;
+  border-top: 1px solid var(--ui-color);
   height: 1px;
 }
 /*# sourceMappingURL=javascript-cell.011af87f.css.map */

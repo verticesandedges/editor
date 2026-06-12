@@ -4,8 +4,8 @@
 :host {
   --font-size: 20px;
   --cell-border: 1px solid black;
-  --ui-color: 0x000000;
-  --bg-color: 0xffffff;
+  --ui-color: inherit;
+  --bg-color: inherit;
   font-size: inherit;
 }
 
@@ -64,9 +64,10 @@ cell-type {
 }
 
 hr {
-  border: none;
+  border: 0;
+  border-top: 1px solid black;
   height: 1px;
-  background-image: linear-gradient(to right, transparent, #000, transparent);
+  /*background-image: linear-gradient(to right, transparent, #000, transparent);*/
 }
 
 
