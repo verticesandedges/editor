@@ -17,29 +17,31 @@ export class GraphElement extends HTMLElement {
 
   constructor(){
     super();
+
     this.attachShadow({mode: "open"});
-
-    this.shadowRoot!.innerHTML = `
-    <style>
-      :host {
-        display: flex;
-        flex-grow: 1;
-      }
-
-      div { 
-        width: 100%; 
-        height: 100%; 
-      } 
-    </style>  
-    
-    <div>
-    </div>
-    `
-    const div = this.shadowRoot!.querySelector('div')!;
-    this.graph = new Graph( div );
-
     this.qs = this.shadowRoot?.querySelector.bind(this.shadowRoot);
     this.qsa = this.shadowRoot?.querySelectorAll.bind(this.shadowRoot);
+
+    // element setup, fetchStyle (css), fetchTemplate (html)
+    this.fetchStyle()
+    .then(() => this.fetchTemplate())
+    .then(() => {
+      const div = this.shadowRoot!.querySelector('div')!;
+      this.graph = new Graph( div );
+    });
+
+  }
+
+  async fetchStyle(): Promise<void> {
+    const sheet = new CSSStyleSheet();
+    const file = await fetch(new URL('./graph-element.css', import.meta.url));
+    const css = await file.text();
+    sheet.replaceSync(css);
+    this.shadowRoot!.adoptedStyleSheets = [sheet];
+  }
+
+  async fetchTemplate(): Promise<void> {
+    this.shadowRoot!.innerHTML = '<div></div>';
   }
 
   attributeChangedCallback(attr: string, old: string, value: string){

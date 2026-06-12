@@ -21,7 +21,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "parcel src/index.html --dist-dir docs/",
-    "start": "http-server docs/"
+    "start": "http-server docs/",
+    "clean": "rm -rf .parcel-cache/ docs/"
   },
   "devDependencies": {
     "parcel": "^2.16.4",

@@ -4,36 +4,6 @@
   Joshua M. Moore (2026)
   joshua.moore@verticesandedges.net
 
-  Vertex
-  .id                 (get)
-  .group              (get)
-  .color              (get, set)
-  .resetColor(color)
-  .texture            (get, set)
-  .selectionColor     (get, set)
-  .size               (get, set)
-  .selected           (get, set)
-  .update()
-  .remove()
-  .pos                (get, set)
-  .position           (get, set) (alias)
-
-  Edge
-  .id                 (get)
-  .group              (get)
-  .source             (get)
-  .target             (get)
-  .update()
-  .remove()
-  .color              (get, set)
-
-  Graph
-  .constructor(parent)
-  .backgrouundColor   (set)
-  .addVertex(options)                   => Vertex
-  .addEdge(sourceId, targetId, options) => Edge
-  .removeVertex(id)            => true
-  .removeEdge(id)              => true
 
 */
 
@@ -99,10 +69,12 @@ export class Graph {
     this.#renderer = new three.WebGLRenderer({ antialias: true });
     this.#renderer.setSize( elem.clientWidth, elem.clientHeight );
     this.#renderer.setPixelRatio( elem.clientWidth / elem.clientHeight );
-    this.#renderer.setClearColor( 'white' );
+    // this.#renderer.setClearColor( 'transparent' );
+    this.#renderer.setClearAlpha( 0x00000000 );
     this.#renderer.domElement.style.width = '100%';
     this.#renderer.domElement.style.height = '100%';
     this.#renderer.domElement.style.display = 'block';
+    this.#renderer.domElement.style.backgroundColor = 'rgba(ff, ff, ff, 0%)';
     this.#renderer.setAnimationLoop( this.#animate.bind( this ) );
     this.#controls = new OrbitControls( this.#camera, this.#renderer.domElement );
     

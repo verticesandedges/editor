@@ -5,7 +5,7 @@
   width: 100vw;
   height: 100vh;
   font-size: 12px;
-  --bg-color: slategray;
+  --bg-color: white;
   --ui-color: black;
   background-color: var(--bg-color);
   color: var(--ui-color);

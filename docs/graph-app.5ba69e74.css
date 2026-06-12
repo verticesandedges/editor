@@ -1,5 +1,5 @@
 :host {
-  --bg-color: slategray;
+  --bg-color: white;
   --ui-color: black;
   background-color: var(--bg-color);
   width: 100vw;
