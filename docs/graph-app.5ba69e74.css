@@ -1,6 +1,6 @@
 :host {
-  --bg-color: white;
-  --ui-color: black;
+  --bg-color: #001106;
+  --ui-color: #297c48;
   background-color: var(--bg-color);
   width: 100vw;
   height: 100vh;
@@ -8,6 +8,15 @@
   flex-direction: column;
   font-size: 12px;
   display: flex;
+}
+
+graph-el {
+  --bg-color: #022938;
+}
+
+notebook-el {
+  --bg-color: #72ac88;
+  --ui-color: #004118;
 }
 
 header {
@@ -231,14 +240,23 @@ graph-el {
   height: 100%;
 }
 
+notebook-el {
+  background: none;
+  border: none;
+  width: auto;
+  height: auto;
+  margin: 0;
+  padding: 0;
+  overflow: visible;
+}
+
 notebook-el:popover-open {
-  background-color: var(--bg-color);
-  overscroll-behavior: contain;
+  box-sizing: border-box;
   width: 80ch;
-  max-height: calc(100vh - 100px);
-  margin-top: 100px;
-  margin-right: 0;
-  overflow-y: auto;
+  margin: 0;
+  display: block;
+  position: fixed;
+  inset: 100px 0 auto auto;
 }
 
 notebook-el:not(:popover-open) {

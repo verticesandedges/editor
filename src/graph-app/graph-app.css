@@ -5,10 +5,19 @@
   width: 100vw;
   height: 100vh;
   font-size: 12px;;
-  --bg-color: white;
-  --ui-color: black;
+  --bg-color: #001106; /* white */
+  --ui-color: #297C48; /* black */
   background-color: var(--bg-color);
   color: var(--ui-color);
+}
+
+graph-el {
+  --bg-color: #022938;
+}
+
+notebook-el {
+  --bg-color: #72AC88;
+  --ui-color: #004118;
 }
 
 
@@ -258,15 +267,28 @@ graph-el {
 }
 
 /* Notebook Element */
+notebook-el {
+  background: transparent;
+  border: none;
+  padding: 0;
+  width: auto;
+  height: auto;
+  margin: 0;
+  overflow: visible;
+}
+
 notebook-el:popover-open {
-  margin-right: 0px;
-  margin-top: 100px;
-  width: 80ch;
-  background-color: var(--bg-color);
+  display: block;
+  position: fixed;
+  box-sizing: border-box;
+
+  left: auto;
+  right: 0;
+  top: 100px;
+  bottom: auto;
   
-  max-height: calc(100vh - 100px);
-  overflow-y: auto;
-  overscroll-behavior: contain;
+  margin: 0;
+  width: 80ch;
 }
 
 notebook-el:not(:popover-open) {
