@@ -86,8 +86,8 @@
       <li>
         <button interestfor="selection-menu" popovertarget="selection-menu" id="selection-menu-trigger">Selection</button>
         <ul popover="hint" id="selection-menu" class="menu">
-          <li><button id="select-all">⬚∀ Select All</button></li>
-          <li><button id="select-none">⬚∅ Select None</button></li>
+          <li><button id="main-select-all">⬚∀ Select All</button></li>
+          <li><button id="main-select-none">⬚∅ Select None</button></li>
         </ul>
       </li>
 
@@ -95,7 +95,7 @@
         <button interestfor="view-menu" popovertarget="view-menu" id="view-menu-trigger">View</button>
         <ul popover="hint" id="view-menu" class="menu">
           <li><button popovertarget="tool-menu" id="tool-menu-button">Toggle Tool Menu <input id="tool-menu-checkbox" type="checkbox" checked=""></button></li>
-          <li><button popovertarget="notebook" id="notebook-button">Toggle Notebook <input id="notebook-checkbox" type="checkbox" checked=""></button></li>
+          <li><button popovertarget="notebook" id="notebook-button">Toggle Notebook <input id="notebook-checkbox" type="checkbox"></button></li>
         </ul>
       </li>
 
@@ -110,12 +110,12 @@
     <label>Tools</label>
     <li><button id="add-vertex"><span class="symbol">+■</span><span class="word">Add Vertex</span></button></li>
     <li><button id="connect-vertices"><span class="symbol">+🔗︎</span><span class="word"> Add Edge(s)</span></button></li>
-    <li><button id="select-all"><span class="symbol">⬚∀</span><span class="word">Select All</span></button></li>
-    <li><button id="select-none"><span class="symbol">⬚∅</span><span class="word">Select None</span></button></li>
-    <li><button id="remove-vertex"><span class="symbol">−■</span><span class="word">Remove Vertices</span></button></li>
-    <li><button id="remove-edge"><span class="symbol">−🔗︎</span><span class="word">Remove Edges</span></button></li>
-    <li><button id="edit-vertex"><span class="symbol">🛠■</span><span class="word">Vertex Settings</span></button></li> 
-    <li><button id="edit-edge"><span class="symbol">🛠🔗︎</span><span class="word">Edge Settings</span></button></li>
+    <li><button id="tool-select-all"><span class="symbol">⬚∀</span><span class="word">Select All</span></button></li>
+    <li><button id="tool-select-none"><span class="symbol">⬚∅</span><span class="word">Select None</span></button></li>
+    <li><button id="remove-vertices"><span class="symbol">−■</span><span class="word">Remove Vertices</span></button></li>
+    <li><button id="remove-edges"><span class="symbol">−🔗︎</span><span class="word">Remove Edges</span></button></li>
+    <li><button id="edit-vertices"><span class="symbol">🛠■</span><span class="word">Vertex Settings</span></button></li> 
+    <li><button id="edit-edges"><span class="symbol">🛠🔗︎</span><span class="word">Edge Settings</span></button></li>
     <li><button id="edit-constants"><span class="symbol">🛠</span><span class="word">Constants</span></button></li>
     <li><button id="clear-graph"><span class="symbol">⭯</span><span class="word">Clear Graph</span></button></li>
   </ul>

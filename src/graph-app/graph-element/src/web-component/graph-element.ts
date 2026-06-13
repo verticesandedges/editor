@@ -19,8 +19,9 @@ export class GraphElement extends HTMLElement {
     super();
 
     this.attachShadow({mode: "open"});
-    this.qs = this.shadowRoot?.querySelector.bind(this.shadowRoot);
-    this.qsa = this.shadowRoot?.querySelectorAll.bind(this.shadowRoot);
+
+    this.qs = this.shadowRoot!.querySelector.bind(this.shadowRoot);
+    this.qsa = this.shadowRoot!.querySelectorAll.bind(this.shadowRoot);
 
     // element setup, fetchStyle (css), fetchTemplate (html)
     this.fetchStyle()
@@ -88,13 +89,32 @@ export class GraphElement extends HTMLElement {
     return edgeEl;
   }
 
-  removeVertex(sel: string): void {
-    const vertex = this.shadowRoot!.querySelector(sel);
+  removeVertex(sel: string | VertexElement): void {
+    let vertex: VertexElement;
+    if(typeof sel === 'string'){
+      vertex = this.shadowRoot!.querySelector(sel);
+    }else if(sel instanceof VertexElement){
+      vertex = sel;
+    }
+
+    vertex.edges.forEach(e => {
+      e.remove();
+    })
+    
     vertex?.remove();
   }
 
-  removeEdge(sel: string): void {
-    const edge = this.shadowRoot!.querySelector(sel);
+  removeEdge(sel: string | EdgeElement): void {
+    let edge!: EdgeElement;
+    if(typeof sel === 'string'){
+      edge = this.shadowRoot!.querySelector(sel);
+    }else if(sel instanceof EdgeElement){
+      edge = sel;
+    }
+
+    (edge as EdgeElement)?.source?.edges.delete(edge);
+    (edge as EdgeElement)?.target?.edges.delete(edge);
+
     edge?.remove();
   }
 

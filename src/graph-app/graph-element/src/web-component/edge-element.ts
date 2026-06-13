@@ -1,4 +1,5 @@
 import { Edge, EdgeId, EdgeOptions } from '../layout/scene-edge';
+import { VertexElement } from './vertex-element';
 import { GraphElement } from './graph-element';
 
 function propName(attrStr: string){
@@ -8,6 +9,8 @@ function propName(attrStr: string){
 export class EdgeElement extends HTMLElement {
   static observedAttributes = ['arrow', 'spline', 'visible', 'color', 'width', 'label'];
   edge!: Edge;
+  source!: VertexElement;
+  target!: VertexElement;
 
   constructor(){
     super();
@@ -46,20 +49,26 @@ export class EdgeElement extends HTMLElement {
       const [sourceId, targetId]= this.readPoints();
       const options = this.readAttributes();
       this.edge = parent.graph.addEdge(sourceId, targetId, options);
+
+      this.source = parent.qs(sourceId) as VertexElement;
+      this.target = parent.qs(targetId) as VertexElement;
     }else{
       setTimeout(() => {
         if(parent?.graph){
           const [sourceId, targetId]= this.readPoints();
           const options = this.readAttributes()
           this.edge = parent.graph.addEdge(sourceId, targetId, options);
+
+          this.source.edges.add(this);
+          this.target.edges.add(this);
         }
       }, 0);
     }
   }
 
   disconnectedCallback(){
-    const parent = this.parentElement as GraphElement;
-    parent.graph.removeEdge(this.id);
+    const parent = this.parentElement;
+    (parent as GraphElement)?.removeEdge(this);
   }
 
   readPoints(): string[] {

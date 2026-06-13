@@ -1,4 +1,5 @@
 import { Vertex, VertexId, VertexOptions } from '../layout/scene-vertex';
+import { EdgeElement } from './edge-element';
 import { GraphElement } from './graph-element';
 
 function propName(attrStr: string){
@@ -8,6 +9,7 @@ function propName(attrStr: string){
 export class VertexElement extends HTMLElement {
   static observedAttributes = ['color', 'texture', 'selection-color', 'size', 'label', 'visible', 'selected', 'spline'];
   vertex!: Vertex;
+  edges = new Set<EdgeElement>();
 
   constructor(){
     super();

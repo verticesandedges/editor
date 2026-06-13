@@ -207,11 +207,11 @@
       });
     }
   }
-})({"ltMeX":[function(require,module,exports,__globalThis) {
+})({"5VgUb":[function(require,module,exports,__globalThis) {
 var global = arguments[3];
 var HMR_HOST = null;
 var HMR_PORT = null;
-var HMR_SERVER_PORT = 45607;
+var HMR_SERVER_PORT = 35741;
 var HMR_SECURE = false;
 var HMR_ENV_HASH = "439701173a9199ea";
 var HMR_USE_SSE = false;
@@ -756,7 +756,7 @@ class GraphAppElement extends HTMLElement {
     .then(() => this.setupEdgeMenuHandlers())
     */ }
     wireToolMenu() {
-        const button = this.qs('#tool-menu-button');
+        /* main menu: tool menu toggle (button & checkbox for show-hide)*/ const button = this.qs('#tool-menu-button');
         const trigger = this.qs('#tool-menu-checkbox');
         const menu = this.qs('#tool-menu');
         trigger.onchange = (e)=>{
@@ -768,6 +768,33 @@ class GraphAppElement extends HTMLElement {
             trigger.toggleAttribute('checked');
         };
         trigger.onchange(new Event('change'));
+        /* tool menu buttons */ this.qs('#add-vertex')?.addEventListener('click', ()=>{
+            this.graph.addVertex();
+        });
+        this.qs('#connect-vertices')?.addEventListener('click', ()=>{
+            const selected = [
+                ...this.graph.selected
+            ];
+            for(let i = 0; i < selected.length; i++)if (i > 0) this.graph.addEdge(selected.at(i - 1), selected.at(i));
+            if (selected.length > 2) this.graph.addEdge(selected.at(-1), selected.at(0));
+        });
+        this.qs('#tool-select-all')?.addEventListener('click', ()=>{
+            this.graph.vertices.forEach((v)=>v.selected = true);
+        });
+        this.qs('#tool-select-none')?.addEventListener('click', ()=>{
+            this.graph.selected.forEach((v)=>v.selected = false);
+        });
+        this.qs('#remove-vertices')?.addEventListener('click', ()=>{
+            this.graph.selected.forEach((v)=>this.graph.removeVertex(v));
+        });
+        this.qs('#remove-edges')?.addEventListener('click', ()=>{
+            this.graph.edges.forEach((e)=>{
+                const source = this.qs(e.getAttribute('source'));
+                const target = this.qs(e.getAttribute('target'));
+                const selected = new Set(this.graph.selected);
+                if (selected.has(source) || selected.has(target)) this.graph.removeEdge(e);
+            });
+        });
     }
     wireNotebook() {
         const button = this.qs('#notebook-button');
@@ -1028,6 +1055,7 @@ class $854bed0ac3c3a143$export$ed30cc242fc1c50a extends HTMLElement {
         'spline'
     ];
     vertex;
+    edges = new Set();
     constructor(){
         super();
     // for(let attr of VertexElement.observedAttributes){
@@ -1634,6 +1662,8 @@ class $8c48e9b7732a26f4$export$75516b100afd281b extends HTMLElement {
         'label'
     ];
     edge;
+    source;
+    target;
     constructor(){
         super();
     // for(let attr of EdgeElement.observedAttributes){
@@ -1686,17 +1716,21 @@ class $8c48e9b7732a26f4$export$75516b100afd281b extends HTMLElement {
             const [sourceId, targetId] = this.readPoints();
             const options = this.readAttributes();
             this.edge = parent.graph.addEdge(sourceId, targetId, options);
+            this.source = parent.qs(sourceId);
+            this.target = parent.qs(targetId);
         } else setTimeout(()=>{
             if (parent?.graph) {
                 const [sourceId, targetId] = this.readPoints();
                 const options = this.readAttributes();
                 this.edge = parent.graph.addEdge(sourceId, targetId, options);
+                this.source.edges.add(this);
+                this.target.edges.add(this);
             }
         }, 0);
     }
     disconnectedCallback() {
         const parent = this.parentElement;
-        parent.graph.removeEdge(this.id);
+        parent?.removeEdge(this);
     }
     readPoints() {
         const sourceSel = this.getAttribute('source');
@@ -2702,8 +2736,8 @@ class $763303308f85086c$export$2512fa2cfc4036cf extends HTMLElement {
         this.attachShadow({
             mode: "open"
         });
-        this.qs = this.shadowRoot?.querySelector.bind(this.shadowRoot);
-        this.qsa = this.shadowRoot?.querySelectorAll.bind(this.shadowRoot);
+        this.qs = this.shadowRoot.querySelector.bind(this.shadowRoot);
+        this.qsa = this.shadowRoot.querySelectorAll.bind(this.shadowRoot);
         // element setup, fetchStyle (css), fetchTemplate (html)
         this.fetchStyle().then(()=>this.fetchTemplate()).then(()=>{
             const div = this.shadowRoot.querySelector('div');
@@ -2752,11 +2786,20 @@ class $763303308f85086c$export$2512fa2cfc4036cf extends HTMLElement {
         return edgeEl;
     }
     removeVertex(sel) {
-        const vertex = this.shadowRoot.querySelector(sel);
+        let vertex;
+        if (typeof sel === 'string') vertex = this.shadowRoot.querySelector(sel);
+        else if (sel instanceof $854bed0ac3c3a143$export$ed30cc242fc1c50a) vertex = sel;
+        vertex.edges.forEach((e)=>{
+            e.remove();
+        });
         vertex?.remove();
     }
     removeEdge(sel) {
-        const edge = this.shadowRoot.querySelector(sel);
+        let edge;
+        if (typeof sel === 'string') edge = this.shadowRoot.querySelector(sel);
+        else if (sel instanceof $8c48e9b7732a26f4$export$75516b100afd281b) edge = sel;
+        edge?.source?.edges.delete(edge);
+        edge?.target?.edges.delete(edge);
         edge?.remove();
     }
     get backgroundColor() {
@@ -310035,6 +310078,6 @@ module.exports = module.bundle.resolve("graph-app.5ba69e74.css") + "?" + Date.no
 },{}],"6Rjm8":[function(require,module,exports,__globalThis) {
 module.exports = module.bundle.resolve("graph-app.edd9e63a.html") + "?" + Date.now();
 
-},{}]},["ltMeX","gH3Lb"], "gH3Lb", "parcelRequire0e4f", {}, "./", "/")
+},{}]},["5VgUb","gH3Lb"], "gH3Lb", "parcelRequire0e4f", {}, "./", "/")
 
 //# sourceMappingURL=graph-canvas.20379891.js.map
