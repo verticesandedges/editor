@@ -1,6 +1,14 @@
+:root {
+  --app-bg-color: white;
+  --app-ui-color: black;
+  --graph-bg-color: white;
+  --nb-bg-color: white;
+  --nb-ui-color: black;
+}
+
 :host {
-  --bg-color: #001106;
-  --ui-color: #297c48;
+  --bg-color: var(--app-bg-color, white);
+  --ui-color: var(--app-ui-color, black);
   background-color: var(--bg-color);
   width: 100vw;
   height: 100vh;
@@ -11,12 +19,12 @@
 }
 
 graph-el {
-  --bg-color: #022938;
+  --bg-color: var(--graph-bg-color, white);
 }
 
 notebook-el {
-  --bg-color: #72ac88;
-  --ui-color: #004118;
+  --bg-color: var(--nb-bg-color, white);
+  --ui-color: var(--nb-ui-color, black);
 }
 
 header {

@@ -46,6 +46,7 @@ export class GraphAppElement extends HTMLElement {
   }
 
   wireToolMenu(){
+    /* Tool Menu Toggle in the Main Menu */
     /* main menu: tool menu toggle (button & checkbox for show-hide)*/
     const button = this.qs('#tool-menu-button') as HTMLButtonElement;
     const trigger = this.qs('#tool-menu-checkbox')! as HTMLInputElement;
@@ -64,10 +65,14 @@ export class GraphAppElement extends HTMLElement {
     trigger.onchange(new Event('change'));
 
     /* tool menu buttons */
+    /* Click Handlers */
+
+    // add vertex
     this.qs('#add-vertex')?.addEventListener('click', () => {
       this.graph.addVertex();
     });
 
+    // add edges
     this.qs('#connect-vertices')?.addEventListener('click', () => {
       const selected = [...this.graph.selected];
       for(let i=0; i<selected.length; i++){
@@ -80,18 +85,22 @@ export class GraphAppElement extends HTMLElement {
       }
     })
 
+    // select all
     this.qs('#tool-select-all')?.addEventListener('click', () => {
       this.graph.vertices.forEach(v => v.selected = true)
     });
 
+    // select none
     this.qs('#tool-select-none')?.addEventListener('click', () => {
       this.graph.selected.forEach(v => v.selected = false);
     });
 
+    // remove selected vertices
     this.qs('#remove-vertices')?.addEventListener('click', () => {
       this.graph.selected.forEach(v => this.graph.removeVertex(v));
     });
 
+    // remove selected edges
     this.qs('#remove-edges')?.addEventListener('click', () => {
       this.graph.edges.forEach(e => {
         const source: VertexElement = this.qs(e.getAttribute('source'));

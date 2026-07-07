@@ -1,23 +1,32 @@
 /* Web Component Style */
+
+:root {
+  --app-bg-color: white;
+  --app-ui-color: black;
+  --graph-bg-color: white;
+  --nb-bg-color: white;
+  --nb-ui-color: black;
+}
+
 :host {
   display: flex;
   flex-direction: column;
   width: 100vw;
   height: 100vh;
   font-size: 12px;;
-  --bg-color: #001106; /* white */
-  --ui-color: #297C48; /* black */
+  --bg-color: var(--app-bg-color, white); /* white */
+  --ui-color: var(--app-ui-color, black); /* black */
   background-color: var(--bg-color);
   color: var(--ui-color);
 }
 
 graph-el {
-  --bg-color: #022938;
+  --bg-color: var(--graph-bg-color, white);
 }
 
 notebook-el {
-  --bg-color: #72AC88;
-  --ui-color: #004118;
+  --bg-color: var(--nb-bg-color, white);
+  --ui-color: var(--nb-ui-color, black);
 }
 
 

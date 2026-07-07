@@ -1,5 +1,7 @@
 :host {
   font-size: inherit;
+  --bg-color: inherit;
+  --ui-color: inherit;
 }
 
 fieldset.cell-editor {

@@ -1,6 +1,5 @@
 :host {
   --font-size: 20px;
-  --cell-border: 1px solid black;
   --ui-color: inherit;
   --bg-color: inherit;
   font-size: inherit;
@@ -61,7 +60,7 @@ cell-type {
 
 hr {
   border: 0;
-  border-top: 1px solid #000;
+  border-top: 1px solid var(--ui-color);
   height: 1px;
 }
 

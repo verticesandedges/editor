@@ -49,6 +49,7 @@
   background-color: transparent; /* var(--bg-color); */
   background-size: var(--spiral-width);
   background-attachment: local;
+  --filter: invert(38%) sepia(57%) saturate(464%) hue-rotate(90deg) brightness(92%) contrast(94%);
 }
 
 .spiral,

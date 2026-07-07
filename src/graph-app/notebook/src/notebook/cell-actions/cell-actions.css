@@ -6,6 +6,8 @@
   outline: none;
   border: none;
   font-size: inherit;
+  --bg-color: inherit;
+  --ui-color: inherit;
 }
 
 button {
@@ -13,14 +15,14 @@ button {
   border: 0;
   padding: 0;
 
-  color: black;
-  background-color: transparent;
+  color: var(--ui-color);
+  background-color: var(--bg-color);
   font-size: inherit;
 }
 
 button:hover {
-  color: white;
-  background-color: black;
+  color: var(--ui-color);
+  background-color: var(--bg-color);
 }
 
 @media not screen {

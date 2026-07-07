@@ -207,11 +207,11 @@
       });
     }
   }
-})({"5VgUb":[function(require,module,exports,__globalThis) {
+})({"b3zpR":[function(require,module,exports,__globalThis) {
 var global = arguments[3];
 var HMR_HOST = null;
 var HMR_PORT = null;
-var HMR_SERVER_PORT = 35741;
+var HMR_SERVER_PORT = 35523;
 var HMR_SECURE = false;
 var HMR_ENV_HASH = "439701173a9199ea";
 var HMR_USE_SSE = false;
@@ -756,7 +756,7 @@ class GraphAppElement extends HTMLElement {
     .then(() => this.setupEdgeMenuHandlers())
     */ }
     wireToolMenu() {
-        /* main menu: tool menu toggle (button & checkbox for show-hide)*/ const button = this.qs('#tool-menu-button');
+        /* Tool Menu Toggle in the Main Menu */ /* main menu: tool menu toggle (button & checkbox for show-hide)*/ const button = this.qs('#tool-menu-button');
         const trigger = this.qs('#tool-menu-checkbox');
         const menu = this.qs('#tool-menu');
         trigger.onchange = (e)=>{
@@ -768,9 +768,11 @@ class GraphAppElement extends HTMLElement {
             trigger.toggleAttribute('checked');
         };
         trigger.onchange(new Event('change'));
-        /* tool menu buttons */ this.qs('#add-vertex')?.addEventListener('click', ()=>{
+        /* tool menu buttons */ /* Click Handlers */ // add vertex
+        this.qs('#add-vertex')?.addEventListener('click', ()=>{
             this.graph.addVertex();
         });
+        // add edges
         this.qs('#connect-vertices')?.addEventListener('click', ()=>{
             const selected = [
                 ...this.graph.selected
@@ -778,15 +780,19 @@ class GraphAppElement extends HTMLElement {
             for(let i = 0; i < selected.length; i++)if (i > 0) this.graph.addEdge(selected.at(i - 1), selected.at(i));
             if (selected.length > 2) this.graph.addEdge(selected.at(-1), selected.at(0));
         });
+        // select all
         this.qs('#tool-select-all')?.addEventListener('click', ()=>{
             this.graph.vertices.forEach((v)=>v.selected = true);
         });
+        // select none
         this.qs('#tool-select-none')?.addEventListener('click', ()=>{
             this.graph.selected.forEach((v)=>v.selected = false);
         });
+        // remove selected vertices
         this.qs('#remove-vertices')?.addEventListener('click', ()=>{
             this.graph.selected.forEach((v)=>this.graph.removeVertex(v));
         });
+        // remove selected edges
         this.qs('#remove-edges')?.addEventListener('click', ()=>{
             this.graph.edges.forEach((e)=>{
                 const source = this.qs(e.getAttribute('source'));
@@ -310078,6 +310084,6 @@ module.exports = module.bundle.resolve("graph-app.5ba69e74.css") + "?" + Date.no
 },{}],"6Rjm8":[function(require,module,exports,__globalThis) {
 module.exports = module.bundle.resolve("graph-app.edd9e63a.html") + "?" + Date.now();
 
-},{}]},["5VgUb","gH3Lb"], "gH3Lb", "parcelRequire0e4f", {}, "./", "/")
+},{}]},["b3zpR","gH3Lb"], "gH3Lb", "parcelRequire0e4f", {}, "./", "/")
 
 //# sourceMappingURL=graph-canvas.20379891.js.map

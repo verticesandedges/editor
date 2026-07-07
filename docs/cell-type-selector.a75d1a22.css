@@ -1,5 +1,8 @@
 :host {
   font-size: inherit;
+  --bg-color: inherit;
+  --ui-color: inherit;
+  color: var(--ui-color);
   border: none;
   outline: none;
   flex-direction: row;
@@ -15,11 +18,13 @@ input {
 label {
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif;
   font-size: inherit;
+  background-color: var(--bg-color);
+  color: var(--ui-color);
 }
 
 label:hover {
-  color: #fff;
-  background-color: #000;
+  background-color: var(--ui-color);
+  color: var(--bg-color);
 }
 
 @media not screen {
