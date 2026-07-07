@@ -1,0 +1,33 @@
+:host {
+  font-size: inherit;
+  --bg-color: inherit;
+  --ui-color: inherit;
+}
+
+fieldset.cell-editor {
+  border: none;
+  outline: none;
+}
+
+.cell-outputs {
+  width: content;
+  height: content;
+  overflow-wrap: anywhere;
+  display: block;
+}
+
+.error {
+  color: red;
+}
+
+fieldset.cell-outputs {
+  border: none;
+  outline: none;
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid var(--ui-color);
+  height: 1px;
+}
+/*# sourceMappingURL=javascript-cell.a5e0a626.css.map */

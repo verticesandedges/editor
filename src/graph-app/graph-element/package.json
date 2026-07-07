@@ -56,6 +56,7 @@
   },
   "scripts": {
     "build:lib": "parcel watch --target main",
+    "build:app": "parcel build --target main",
     "build:demo": "parcel build --target demo",
     "build:tests": "parcel build --target test_page --no-scope-hoist",
     "build:all": "parcel build --target main --target demo --target test_page --no-scope-hoist",
