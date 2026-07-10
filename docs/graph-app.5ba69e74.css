@@ -194,7 +194,7 @@ ul.menu-main {
   }
 }
 
-ul#tool-menu:popover-open {
+drill-down#tool-menu:popover-open {
   text-indent: 0;
   background-color: var(--bg-color);
   color: var(--ui-color);
@@ -221,7 +221,7 @@ ul#tool-menu:popover-open {
     display: flex;
   }
 
-  & button:hover {
+  & :hover {
     background-color: var(--ui-color);
     color: var(--bg-color);
   }
@@ -231,7 +231,7 @@ ul#tool-menu:popover-open {
   }
 }
 
-ul#tool-menu:not(:popover-open) {
+drill-down#tool-menu:not(:popover-open) {
   background-color: var(--bg-color);
   color: var(--ui-color);
   display: none;

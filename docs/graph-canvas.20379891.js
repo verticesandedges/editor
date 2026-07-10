@@ -730,6 +730,7 @@ var _javascriptCell = require("./notebook/src/notebook/javascript-cell/javascrip
 var _typescriptCell = require("./notebook/src/notebook/typescript-cell/typescript-cell");
 var _notebookActions = require("./notebook/src/notebook/notebook-actions/notebook-actions");
 var _notebookApp = require("./notebook/src/notebook/notebook-app/notebook-app");
+var _drillDownTs = require("./drill-down/src/drill-down.ts");
 window.customElements.define("markdown-cell", (0, _markdownCell.MarkdownCellElement));
 window.customElements.define("notebook-el", (0, _notebookTs.NotebookElement));
 window.customElements.define("cell-type", (0, _cellTypeSelector.CellTypeSelector));
@@ -769,31 +770,31 @@ class GraphAppElement extends HTMLElement {
         };
         trigger.onchange(new Event('change'));
         /* tool menu buttons */ /* Click Handlers */ // add vertex
-        this.qs('#add-vertex')?.addEventListener('click', ()=>{
+        this.addEventListener('add-vertex', ()=>{
             this.graph.addVertex();
         });
         // add edges
-        this.qs('#connect-vertices')?.addEventListener('click', ()=>{
+        this.addEventListener('connect-vertices', ()=>{
             const selected = [
                 ...this.graph.selected
             ];
             for(let i = 0; i < selected.length; i++)if (i > 0) this.graph.addEdge(selected.at(i - 1), selected.at(i));
             if (selected.length > 2) this.graph.addEdge(selected.at(-1), selected.at(0));
         });
-        // select all
-        this.qs('#tool-select-all')?.addEventListener('click', ()=>{
+        // select all 
+        this.addEventListener('tool-select-all', ()=>{
             this.graph.vertices.forEach((v)=>v.selected = true);
         });
-        // select none
-        this.qs('#tool-select-none')?.addEventListener('click', ()=>{
+        // select none 
+        this.addEventListener('tool-select-none', ()=>{
             this.graph.selected.forEach((v)=>v.selected = false);
         });
         // remove selected vertices
-        this.qs('#remove-vertices')?.addEventListener('click', ()=>{
+        this.addEventListener('remove-vertices', ()=>{
             this.graph.selected.forEach((v)=>this.graph.removeVertex(v));
         });
         // remove selected edges
-        this.qs('#remove-edges')?.addEventListener('click', ()=>{
+        this.addEventListener('remove-edge', ()=>{
             this.graph.edges.forEach((e)=>{
                 const source = this.qs(e.getAttribute('source'));
                 const target = this.qs(e.getAttribute('target'));
@@ -835,7 +836,7 @@ class GraphAppElement extends HTMLElement {
     }
 }
 
-},{"./graph-element/dist/main":"fAQ8M","./notebook/src/notebook/notebook/notebook.ts":"jbqbh","./notebook/src/notebook/cell-type-selector/cell-type-selector":"x43Pu","./notebook/src/notebook/markdown-cell/markdown-cell":"8trOH","./notebook/src/notebook/cell-actions/cell-actions":"1zM9a","./notebook/src/notebook/javascript-cell/javascript-cell":"k62UV","./notebook/src/notebook/typescript-cell/typescript-cell":"3pTzO","./notebook/src/notebook/notebook-actions/notebook-actions":"9AIuS","./notebook/src/notebook/notebook-app/notebook-app":"4dcy8","faab26f8896d07ae":"1EHYx","a50ebb808dd5d5c0":"6Rjm8","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}],"fAQ8M":[function(require,module,exports,__globalThis) {
+},{"./graph-element/dist/main":"fAQ8M","./notebook/src/notebook/notebook/notebook.ts":"jbqbh","./notebook/src/notebook/cell-type-selector/cell-type-selector":"x43Pu","./notebook/src/notebook/markdown-cell/markdown-cell":"8trOH","./notebook/src/notebook/cell-actions/cell-actions":"1zM9a","./notebook/src/notebook/javascript-cell/javascript-cell":"k62UV","./notebook/src/notebook/typescript-cell/typescript-cell":"3pTzO","./notebook/src/notebook/notebook-actions/notebook-actions":"9AIuS","./notebook/src/notebook/notebook-app/notebook-app":"4dcy8","faab26f8896d07ae":"1EHYx","a50ebb808dd5d5c0":"6Rjm8","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT","./drill-down/src/drill-down.ts":"4iKFE"}],"fAQ8M":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 /*
@@ -310083,6 +310084,76 @@ module.exports = module.bundle.resolve("graph-app.5ba69e74.css") + "?" + Date.no
 
 },{}],"6Rjm8":[function(require,module,exports,__globalThis) {
 module.exports = module.bundle.resolve("graph-app.edd9e63a.html") + "?" + Date.now();
+
+},{}],"4iKFE":[function(require,module,exports,__globalThis) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "DrillDown", ()=>DrillDown);
+class DrillDown extends HTMLElement {
+    constructor(){
+        super();
+        this.attachShadow({
+            mode: 'open'
+        });
+        // setup convenience shortcuts querySelector and querySelectorAll
+        this.qs = this.shadowRoot?.querySelector.bind(this.shadowRoot);
+        this.qsa = this.shadowRoot?.querySelectorAll.bind(this.shadowRoot);
+        // fetch and apply styles and templates
+        this.fetchStyle().then(()=>this.fetchTemplate()).then(()=>{
+            this.titleEl = this.qs('#title');
+            this.back = this.qs('#back');
+            this.menu = this.qs('#menu');
+        }).then(()=>{
+            const option = JSON.parse(this.textContent);
+            this.parseLevel(option, null);
+        });
+    }
+    parseLevel(option, parent) {
+        this.menu.innerHTML = '';
+        option.parent = parent;
+        // assign option title to title element
+        this.titleEl.innerHTML = option.title;
+        // set display to none if top level
+        if (parent) {
+            this.back.style.display = 'block';
+            this.back.onclick = ()=>this.parseLevel(option.parent, option.parent.parent);
+        } else this.back.style.display = 'none';
+        this.menu.append(...option.options.map((sub)=>{
+            const li = document.createElement('li');
+            li.innerHTML = sub.title;
+            if (!sub.options) {
+                if (sub.onclick) li.onclick = ()=>eval(sub.onclick);
+                if (sub.event) li.onclick = ()=>this.dispatchEvent(new CustomEvent(sub.event, {
+                        bubbles: true,
+                        composed: true
+                    }));
+            } else li.onclick = ()=>this.parseLevel(sub, option);
+            if (sub.id) li.id = sub.id;
+            return li;
+        }));
+    }
+    async fetchStyle() {
+        const sheet = new CSSStyleSheet();
+        const file = await fetch(new URL(require("4b68fd15a1aa6394")));
+        const css = await file.text();
+        sheet.replaceSync(css);
+        this.shadowRoot.adoptedStyleSheets = [
+            sheet
+        ];
+    }
+    async fetchTemplate() {
+        const file = await fetch(new URL(require("5221f94ae48316e9")));
+        const html = await file.text();
+        this.shadowRoot.innerHTML = html;
+    }
+}
+window.customElements.define('drill-down', DrillDown);
+
+},{"4b68fd15a1aa6394":"9v7QY","5221f94ae48316e9":"ixKsY","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}],"9v7QY":[function(require,module,exports,__globalThis) {
+module.exports = module.bundle.resolve("drill-down.483b0a49.css") + "?" + Date.now();
+
+},{}],"ixKsY":[function(require,module,exports,__globalThis) {
+module.exports = module.bundle.resolve("drill-down.092c19dd.html") + "?" + Date.now();
 
 },{}]},["fMAWC","gH3Lb"], "gH3Lb", "parcelRequire0e4f", {}, "./", "/")
 

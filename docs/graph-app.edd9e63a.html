@@ -118,9 +118,35 @@
     <li><button id="edit-vertices"><span class="symbol">🛠&#x25A0;</span><span class="word">Vertex Settings</span></button></li> 
     <li><button id="edit-edges"><span class="symbol">🛠🔗&#xFE0E;</span><span class="word">Edge Settings</span></button></li>
     <li><button id="edit-constants"><span class="symbol">🛠</span><span class="word">Constants</span></button></li>
+
     <li><button id="clear-graph"><span class="symbol">⭯</span><span class="word">Clear Graph</span></button></li>
   </ul>
   -->
+
+  <drill-down popover="manual" id="tool-menu">
+    {
+      "title": "Tools",
+      "options": [
+        { "event": "add-vertex",       "title": "<span class="symbol">+■</span><span class="word">Add Vertex</span>" },
+        { "event": "connect-vertices", "title": "<span class="symbol">+🔗︎</span><span class="word">Add Edge(s)</span>" },
+        { "event": "tool-select-all",  "title": "<span class="symbol">⬚∀</span><span class="word">Select All</span>" },
+        { "event": "tool-select-none", "title": "<span class="symbol">⬚∅</span><span class="word">Select None</span>" },
+        { "event": "remove-vertices",  "title": "<span class="symbol">■</span><span class="word">Remove Vertices</span>" },
+        { "event": "remove-edges",     "title": "<span class="symbol">−🔗︎</span><span class="word">Remove Edges</span>" },
+        { "event": "edit-vertices",    "title": "<span class="symbol">🛠■</span><span class="word">Vertex Settings</span>" },
+        { "event": "edit-edges",       "title": "<span class="symbol">🛠🔗︎</span><span class="word">Edge Settings</span>" },
+        { "event": "edit-constants",   "title": "<span class="symbol">🛠</span><span class="word">Constants</span>" },
+        { "evnet": "clear-graph",      "title": "<span class="symbol">⭯</span><span class="word">Clear Graph</span>" },
+        { 
+          "title": "Test",
+          "options": [
+            {"title": "test 1", "onclick": "alert(1)" },
+            {"title": "test 1", "onclick": "alert(2)" }
+          ]
+        }
+      ]
+    }
+  </drill-down>
 
 
 

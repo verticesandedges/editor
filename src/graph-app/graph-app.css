@@ -217,7 +217,7 @@ ul.menu-main {
 }
 
 /* Tool Menu */
-ul#tool-menu:popover-open {
+drill-down#tool-menu:popover-open {
   position: absolute;
   left: 0px;
   top: 100px;
@@ -245,7 +245,7 @@ ul#tool-menu:popover-open {
     align-items: center;
   }
 
-  button:hover {
+  *:hover {
     background-color: var(--ui-color);
     color: var(--bg-color);
   }
@@ -255,7 +255,7 @@ ul#tool-menu:popover-open {
   }
 }
 
-ul#tool-menu:not(:popover-open) {
+drill-down#tool-menu:not(:popover-open) {
   display: none;
   background-color: var(--bg-color);
   color: var(--ui-color);

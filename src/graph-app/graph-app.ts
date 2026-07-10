@@ -9,6 +9,7 @@ import { JavascriptCellElement } from "./notebook/src/notebook/javascript-cell/j
 import { TypescriptCellElement } from "./notebook/src/notebook/typescript-cell/typescript-cell";
 import { NotebookActionsElement } from "./notebook/src/notebook/notebook-actions/notebook-actions";
 import { NotebookAppElement } from "./notebook/src/notebook/notebook-app/notebook-app";
+import "./drill-down/src/drill-down.ts";
 
 window.customElements.define("markdown-cell", MarkdownCellElement);
 window.customElements.define("notebook-el", NotebookElement);
@@ -68,12 +69,13 @@ export class GraphAppElement extends HTMLElement {
     /* Click Handlers */
 
     // add vertex
-    this.qs('#add-vertex')?.addEventListener('click', () => {
+
+    this.addEventListener('add-vertex', () => {
       this.graph.addVertex();
     });
 
     // add edges
-    this.qs('#connect-vertices')?.addEventListener('click', () => {
+    this.addEventListener('connect-vertices', () => {
       const selected = [...this.graph.selected];
       for(let i=0; i<selected.length; i++){
         if(i>0){
@@ -85,23 +87,23 @@ export class GraphAppElement extends HTMLElement {
       }
     })
 
-    // select all
-    this.qs('#tool-select-all')?.addEventListener('click', () => {
+    // select all 
+    this.addEventListener('tool-select-all', () => {
       this.graph.vertices.forEach(v => v.selected = true)
     });
 
-    // select none
-    this.qs('#tool-select-none')?.addEventListener('click', () => {
+    // select none 
+    this.addEventListener('tool-select-none', () => {
       this.graph.selected.forEach(v => v.selected = false);
     });
 
     // remove selected vertices
-    this.qs('#remove-vertices')?.addEventListener('click', () => {
+    this.addEventListener('remove-vertices', () => {
       this.graph.selected.forEach(v => this.graph.removeVertex(v));
     });
 
     // remove selected edges
-    this.qs('#remove-edges')?.addEventListener('click', () => {
+    this.addEventListener('remove-edge', () => {
       this.graph.edges.forEach(e => {
         const source: VertexElement = this.qs(e.getAttribute('source'));
         const target: VertexElement = this.qs(e.getAttribute('target'));
