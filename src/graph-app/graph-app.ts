@@ -114,6 +114,10 @@ export class GraphAppElement extends HTMLElement {
         }
       })
     });
+
+    this.addEventListener('clear-graph', () => {
+      this.graph.clear();
+    })
   }
 
   wireNotebook(){

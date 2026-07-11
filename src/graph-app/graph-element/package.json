@@ -55,12 +55,11 @@
     "util": "^0.12.5"
   },
   "scripts": {
-    "build:lib": "parcel watch --target main",
-    "build:app": "parcel build --target main",
+    "warch:lib": "parcel watch --target main",
+    "build:lib": "parcel build --target main",
     "build:demo": "parcel build --target demo",
     "build:tests": "parcel build --target test_page --no-scope-hoist",
     "build:all": "parcel build --target main --target demo --target test_page --no-scope-hoist",
-    "watch:lib": "parcel watch --target main",
     "watch:demo": "parcel watch --target demo",
     "watch:tests": "parcel watch --target test_page",
     "start:demo": "http-server dist/demo/ -c-1",

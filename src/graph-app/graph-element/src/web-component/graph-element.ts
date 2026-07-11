@@ -118,6 +118,16 @@ export class GraphElement extends HTMLElement {
     edge?.remove();
   }
 
+  clear(): void {
+    for(let edge of this.graph.edges){
+      edge.remove();
+    }
+
+    for(let vertex of this.graph.vertices){
+      vertex.remove();
+    }
+  }
+
   get backgroundColor(): string {
     return this.getAttribute('background-color') ?? 'white';
   }

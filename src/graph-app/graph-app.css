@@ -13,7 +13,7 @@
   flex-direction: column;
   width: 100vw;
   height: 100vh;
-  font-size: 12px;;
+  font-size: 12px;
   --bg-color: var(--app-bg-color, white); /* white */
   --ui-color: var(--app-ui-color, black); /* black */
   background-color: var(--bg-color);
@@ -234,7 +234,7 @@ drill-down#tool-menu:popover-open {
   justify-content: start;
   border: 1px solid var(--ui-color);
 
-  button {
+  li {
     border: none;
     background-color: var(--bg-color);
     color: var(--ui-color);
@@ -253,7 +253,7 @@ drill-down#tool-menu:popover-open {
   .symbol {
     width: 35px;
   }
-}
+}z
 
 drill-down#tool-menu:not(:popover-open) {
   display: none;
