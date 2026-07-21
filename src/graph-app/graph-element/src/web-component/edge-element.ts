@@ -42,6 +42,17 @@ export class EdgeElement extends HTMLElement {
   get label(){ return this.edge.label; }
   set label(v){ this.edge.label = v; }
 
+  toJSON(){
+    return {
+      color: this.color,
+      arrow: this.arrow,
+      width: this.width,
+      label: this.label,
+      visible: this.visible,
+      spline: this.spline
+    }
+  }
+
   connectedCallback(){
     const parent = this.parentElement as GraphElement;
 
@@ -107,4 +118,6 @@ export class EdgeElement extends HTMLElement {
   }
 }
 
-customElements.define('edge-el', EdgeElement);
+if(!customElements.get('edge-el')){
+  customElements.define('edge-el', EdgeElement);
+}

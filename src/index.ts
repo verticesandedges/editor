@@ -1,2 +1,5 @@
 import { GraphAppElement } from "./graph-app/graph-app";
-customElements.define("graph-app", GraphAppElement);
+
+if(!customElements.get("graph-app")){
+  customElements.define("graph-app", GraphAppElement);
+}

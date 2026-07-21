@@ -104,8 +104,10 @@ Matrix3.prototype.zeros = function(): Matrix3 {
 
 //#region Constants
 export class Constants { 
-  static f0: number             = 2.0e+4; // repulsion (magnets) constant; more f0, more repulsion
-  static K: number              = 2.0e-2; // attraction (spring) constant; more K, more attraction
+  // For a connected pair, equilibrium is K*d ~= f0/d^2 => d ~= (f0/K)^(1/3).
+  // With K=2.0e-2 and target d~25px, f0~3.125e2.
+  static f0: number             = 3.125e+2; // repulsion (magnets) constant; more f0, more repulsion
+  static K: number              = 2.0e-0; // attraction (spring) constant; more K, more attraction
   static dt: number             = 0.02; // time step; more dt, faster simulation
   static D: number              = 0.75; // damping constant; more D, more damping
   static epsilon: number        = 0.10; // minimum distance; to avoid division by zero
@@ -117,13 +119,13 @@ export class Constants {
   static reset(){
     Constants.fromJSON({
       K: 2.0e-2,
-      f0: 1.0e+2,
+      f0: 3.125e+2,
       dt: 0.02,
       D: 0.75,
       epsilon: 0.1,
       theta: 0.5,
       phi: 0.15,
-      innerDistance: 10.0
+      innerDistance: 100.0
     })
   }
 
@@ -206,8 +208,9 @@ export class Vertex implements locatable {
     const posA = args.source.position;
     const posB = args.target.position;
     const difference = new Vector3().subVectors(posA, posB);
-    const distance = difference.lengthSq() || Constants.epsilon;
-    return difference.multiplyScalar(Constants.f0 / Math.pow(distance, 2));
+    const distance = Math.max(difference.length(), Constants.epsilon);
+    // Scale by 1/r^3 on the direction vector so force magnitude becomes 1/r^2.
+    return difference.multiplyScalar(Constants.f0 / Math.pow(distance, 3));
   }
 
   merge(other: Vertex){
@@ -263,12 +266,14 @@ export class Edge {
   static attract(args: estimateable): Vector3 {
     const v1 = args.source.position;
     const v2 = args.target.position;
-    const difference = new Vector3().subVectors(v1, v2);
-    const distance = difference.length() || Constants.epsilon;
+    const difference = new Vector3().subVectors(v2, v1);
+    const distance = Math.max(difference.length(), Constants.epsilon);
     const strength = (args as Edge).strength;
-    
-    const force = difference.multiplyScalar(Constants.K * distance * distance * strength);
-    return force;
+
+    // Hooke-like spring attraction: linear in distance.
+    return difference
+      .normalize()
+      .multiplyScalar(Constants.K * distance * strength);
   }
 
   sharesVertex(other: Edge): boolean {
@@ -458,7 +463,7 @@ export class DynamicMatching {
     const octree = new Octree();
 
     for(const vertex of vertices){
-      this.octree.insert(vertex); // todo reuse perfectly fine octree in the fridge
+      octree.insert(vertex);
     }
 
     for(const vertex of vertices){
@@ -471,8 +476,8 @@ export class DynamicMatching {
 
     for(const edge of edges){
       const force = Edge.attract(edge);
-      edge.source.acceleration.sub(force);
-      edge.target.acceleration.add(force);
+      edge.source.acceleration.add(force);
+      edge.target.acceleration.sub(force);
     }
 
     // add acceleration to velocity to position

@@ -7,14 +7,30 @@ import { TypescriptCellElement } from "./notebook/typescript-cell/typescript-cel
 import { NotebookActionsElement } from "./notebook/notebook-actions/notebook-actions";
 import { NotebookAppElement } from "./notebook/notebook-app/notebook-app";
 
-window.customElements.define("markdown-cell", MarkdownCellElement);
-window.customElements.define("notebook-el", NotebookElement);
-window.customElements.define("cell-type", CellTypeSelector)
-window.customElements.define("cell-actions", CellActionsElement);
-window.customElements.define("javascript-cell", JavascriptCellElement);
-window.customElements.define('typescript-cell', TypescriptCellElement);
-window.customElements.define('notebook-actions', NotebookActionsElement);
-window.customElements.define('notebook-app', NotebookAppElement);
+if(!customElements.get('markdown-cell')){
+  window.customElements.define('markdown-cell', MarkdownCellElement);
+}
+if(!customElements.get('notebook-el')){
+  window.customElements.define('notebook-el', NotebookElement);
+}
+if(!customElements.get('cell-type')){
+  window.customElements.define('cell-type', CellTypeSelector)
+}
+if(!customElements.get('cell-actions')){
+  window.customElements.define('cell-actions', CellActionsElement);
+}
+if(!customElements.get('javascript-cell')){
+  window.customElements.define('javascript-cell', JavascriptCellElement);
+}
+if(!customElements.get('typescript-cell')){
+  window.customElements.define('typescript-cell', TypescriptCellElement);
+}
+if(!customElements.get('notebook-actions')){
+  window.customElements.define('notebook-actions', NotebookActionsElement);
+}
+if(!customElements.get('notebook-app')){
+  window.customElements.define('notebook-app', NotebookAppElement);
+} 
 
 if("serviceWorker" in navigator){
   window.addEventListener('load', () => {

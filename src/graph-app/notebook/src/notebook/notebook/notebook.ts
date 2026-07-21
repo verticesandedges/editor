@@ -88,6 +88,14 @@ export class NotebookElement extends HTMLElement {
     return notebook;
   }
 
+  clear(){
+    this.title = 'Untitled Notebook';
+    const cells = this.qs('.cells');
+    cells.innerHTML = '';
+    const jsCell = document.createElement('javascript-cell', {is: JavascriptCellElement});
+    cells.appendChild(jsCell);
+  }
+
   fromJSON(obj: any, clearFirst: boolean=false): void {
     this.ready.then(() => {
       const cells = this.qs('.cells');

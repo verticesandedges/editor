@@ -10,7 +10,7 @@
             <button interestfor="file-graph" popovertarget="file-graph" id="file-graph-trigger">Graph ▹</button>
             <ul popover="hint" id="file-graph" class="menu">
               <li>
-                <button>New</button>
+                <button id="new-graph">New</button>
               </li>
               <li>
                 <button interestfor="file-graph-open" popovertarget="file-graph-open" id="file-graph-open-trigger">Open ▹</button>
@@ -36,7 +36,7 @@
             <button interestfor="file-notebook" popovertarget="file-notebook" id="file-notebook-trigger">Notebook ▹</button>
             <ul popover="hint" id="file-notebook" class="menu">
               <li>
-                <button>New</button>
+                <button id="new-notebook">New</button>
               </li>
               <li>
                 <button interestfor="file-notebook-open" popovertarget="file-notebook-open" id="file-notebook-open-trigger">Open ▹</button>
@@ -163,7 +163,6 @@
     }
   </drill-down>
 
-
-
   <notebook-el popover="manual" id="notebook"></notebook-el>
 </main>
+<input type="file" id="graph-upload" hidden>

@@ -284,6 +284,7 @@ notebook-el {
   height: auto;
   margin: 0;
   overflow: visible;
+  top: 100px;
 }
 
 notebook-el:popover-open {
@@ -293,11 +294,11 @@ notebook-el:popover-open {
 
   left: auto;
   right: 0;
-  top: 100px;
   bottom: auto;
   
   margin: 0;
   width: 80ch;
+  margin-right: 20px;
 }
 
 notebook-el:not(:popover-open) {

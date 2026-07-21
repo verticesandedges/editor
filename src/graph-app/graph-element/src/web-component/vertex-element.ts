@@ -50,6 +50,18 @@ export class VertexElement extends HTMLElement {
   get spline(){ return this.vertex.spline; }
   set spline(v){ this.vertex.spline = v; }
 
+  toJSON(){
+    return {
+      color: this.color,
+      texture: this.texture,      size: this.size,
+      label: this.label,
+      visible: this.visible,
+      spline: this.spline,
+      selected: this.selected,
+      selectionColor: this.selectionColor
+    }
+  }
+
   connectedCallback(){
     const parent = this.parentElement as GraphElement;
 
@@ -98,4 +110,6 @@ export class VertexElement extends HTMLElement {
   }
 }
 
-customElements.define('vertex-el', VertexElement);
+if(!customElements.get('vertex-el')){
+  customElements.define('vertex-el', VertexElement);
+}
