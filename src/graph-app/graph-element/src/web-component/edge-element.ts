@@ -7,7 +7,7 @@ function propName(attrStr: string){
 }
 
 export class EdgeElement extends HTMLElement {
-  static observedAttributes = ['arrow', 'spline', 'visible', 'color', 'width', 'label'];
+  static observedAttributes = ['arrow', 'spline', 'visible', 'color', 'width', 'label', 'strength'];
   edge!: Edge;
   source!: VertexElement;
   target!: VertexElement;
@@ -48,6 +48,9 @@ export class EdgeElement extends HTMLElement {
 
   get label(){ return this.edge.label; }
   set label(v){ this.edge.label = v; }
+
+  get strength(){ return this.edge.strength; }
+  set strength(v){ this.edge.strength = v; }
 
   toJSON(){
     return {
