@@ -6,6 +6,12 @@ function propName(attrStr: string){
   return attrStr.replace(/-([a-z])/g, (match, letter) => letter.toUpperCase());
 }
 
+function readColor(value: string | null, fallback: any) {
+  if (value == null) return fallback;
+  const numeric = Number(value);
+  return Number.isFinite(numeric) ? numeric : value;
+}
+
 export class VertexElement extends HTMLElement {
   static observedAttributes = ['color', 'texture', 'selection-color', 'size', 'label', 'visible', 'selected', 'spline'];
   vertex!: Vertex;
@@ -35,8 +41,8 @@ export class VertexElement extends HTMLElement {
   get size(){ return this.vertex.size; }
   set size(v){ this.vertex.size = v; }
 
-  get label(){ return this.vertex.label; }
-  set label(v){ this.vertex.label = v; }
+  get label(){ return (this.vertex.label instanceof HTMLElement ? this.vertex.label.innerHTML : this.vertex.label) ?? null; }
+  set label(v){ if(v !== null) this.vertex.label = v; }
 
   get visible(){ return this.vertex.visible; }
   set visible(v){ this.vertex.visible = v; }
@@ -53,7 +59,8 @@ export class VertexElement extends HTMLElement {
   toJSON(){
     return {
       color: this.color,
-      texture: this.texture,      size: this.size,
+      texture: this.texture,      
+      size: this.size,
       label: this.label,
       visible: this.visible,
       spline: this.spline,
@@ -96,9 +103,9 @@ export class VertexElement extends HTMLElement {
     
     const vo: VertexOptions = {
       id: this.getAttribute('id') ?? Vertex.id(),
-      color: this.getAttribute('color') ?? parent.graph.defaults.vertex.color,
+      color: readColor(this.getAttribute('color'), parent.graph.defaults.vertex.color),
       texture: this.getAttribute('texture') ?? parent.graph.defaults.vertex.texture,
-      selectionColor: this.getAttribute('selection-color') ?? parent.graph.defaults.vertex.selectionColor,
+      selectionColor: readColor(this.getAttribute('selection-color'), parent.graph.defaults.vertex.selectionColor),
       size: this.hasAttribute('size') ? parseFloat(this.getAttribute('size')!) : parent.graph.defaults.vertex.size,
       label: this.getAttribute('label') ?? parent.graph.defaults.vertex.label,
       visible: this.hasAttribute('visible') ? this.getAttribute('visible') == 'true' : parent.graph.defaults.vertex.visible,

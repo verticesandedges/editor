@@ -6,6 +6,12 @@ function propName(attrStr: string){
   return attrStr.replace(/-([a-z])/g, (match, letter) => letter.toUpperCase());
 }
 
+function readColor(value: string | null, fallback: any) {
+  if (value == null) return fallback;
+  const numeric = Number(value);
+  return Number.isFinite(numeric) ? numeric : value;
+}
+
 export class EdgeElement extends HTMLElement {
   static observedAttributes = ['arrow', 'spline', 'visible', 'color', 'width', 'label', 'strength'];
   edge!: Edge;
@@ -46,8 +52,8 @@ export class EdgeElement extends HTMLElement {
   get width(){ return this.edge.width; }
   set width(v){ this.edge.width = v; }
 
-  get label(){ return this.edge.label; }
-  set label(v){ this.edge.label = v; }
+  get label(){ return (this.edge.label instanceof HTMLElement ? this.edge.label.innerHTML : this.edge.label) ?? null; }
+  set label(v){ if(v !== null) this.edge.label = v; }
 
   get strength(){ return this.edge.strength; }
   set strength(v){ this.edge.strength = v; }
@@ -56,8 +62,8 @@ export class EdgeElement extends HTMLElement {
     return {
       color: this.color,
       arrow: this.arrow,
-      width: this.width,
-      label: this.label,
+      width: this.width,      
+      label: this.label instanceof HTMLElement ? this.label.outerHTML : this.label,
       visible: this.visible,
       spline: this.spline
     }
@@ -138,7 +144,7 @@ export class EdgeElement extends HTMLElement {
       arrow: this.hasAttribute('arrow') ? this.getAttribute('arrow') == 'true' : parent.graph.defaults.edge.arrow,
       spline: this.hasAttribute('spline') ? this.getAttribute('spline') == 'true' : parent.graph.defaults.edge.spline,
       visible: this.hasAttribute('visible') ? this.getAttribute('visible') == 'true' : parent.graph.defaults.edge.visible,
-      color: this.getAttribute('color') ?? parent.graph.defaults.edge.color,
+      color: readColor(this.getAttribute('color'), parent.graph.defaults.edge.color),
       width: this.hasAttribute('width') ? parseFloat(this.getAttribute('width')!) : parent.graph.defaults.edge.width,
       label: this.getAttribute('label') ?? parent.graph.defaults.edge.label,
       strength: this.hasAttribute('strength') ? parseFloat(this.getAttribute('strength')!) : parent.graph.defaults.edge.strength

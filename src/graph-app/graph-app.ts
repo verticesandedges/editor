@@ -28,6 +28,15 @@ export class GraphAppElement extends HTMLElement {
   graph!: GraphElement;
   notebook!: NotebookElement;
 
+  #clipboard = {
+    V: new Map(),
+    E: new Map(),
+    clear: function(){
+      this.V.clear();
+      this.E.clear();
+    }
+  }
+
   constructor(){
     super();
     this.attachShadow({mode: 'open'});
@@ -61,7 +70,8 @@ export class GraphAppElement extends HTMLElement {
     this.qs('#file-graph-save-indexedDB')?.addEventListener('click', () => this.saveGraphIndexedDB());
 
     // notebook
-    this.qs('#new-notebook')?.addEventListener('click', () => this.notebook.clear())
+    this.qs('#new-notebook')?.addEventListener('click', () => this.notebook.clear());
+    this.qs('#run-notebook')?.addEventListener('click', () => this.notebook.runAll());
     this.qs('#file-notebook-open-file')?.addEventListener('click', () => this.openNotebookFile());
     this.qs('#file-notebook-open-url')?.addEventListener('click', () => this.openNotebookURL());
     this.qs('#file-notebook-open-indexeddb')?.addEventListener('click', () => this.openNotebookIndexedDB());
@@ -69,9 +79,71 @@ export class GraphAppElement extends HTMLElement {
     this.qs('#file-notebook-save-url')?.addEventListener('click', () => this.saveNotebookURL());
     this.qs('#file-notebook-save-indexeddb')?.addEventListener('click', () => this.saveNotebookIndexedDB());
 
+    this.qs('#edit-cut')?.addEventListener('click', () => this.cut());
+    this.qs('#edit-copy')?.addEventListener('click', () => this.copy());
+    this.qs('#edit-paste')?.addEventListener('click', () => this.paste());
+
     // selection
     this.qs('#selection-select-all')?.addEventListener('click', () => this.graph.vertices.forEach(v => v.selected = true));
     this.qs('#selection-select-none')?.addEventListener('click', () => this.graph.selected.forEach(v => v.selected = false));
+  }
+
+  cut(){
+    this.#clipboard.clear();
+
+    const selected = [...this.graph.vertices].filter((v: any) => (v as VertexElement).selected) as VertexElement[];
+
+
+    selected.forEach((v: VertexElement) => {
+      this.#clipboard.V.set(v.id, v.toJSON());
+      
+      [...v.edges]
+      .filter((e: EdgeElement) => selected.includes(e.source) && selected.includes(e.target))
+      .forEach((e: EdgeElement) => this.#clipboard.E.set(e.id, {
+        ...e.toJSON(),
+        sourceId: e.source.id,
+        targetId: e.target.id
+      }));
+      
+      this.graph.removeVertex(v.id);
+    });
+  }
+
+  copy(){
+    this.#clipboard.clear();
+
+    const selected = [...this.graph.vertices]
+    .filter((v: any) => (v as VertexElement).selected) as VertexElement[];
+
+    selected.forEach((v: VertexElement) => {
+      this.#clipboard.V.set(v.id, v.toJSON());
+
+      [...v.edges]
+      .filter((e: EdgeElement) => selected.includes(e.source) && selected.includes(e.target))
+      .forEach((e: EdgeElement) => this.#clipboard.E.set(e.id, {
+        ...e.toJSON(),
+        sourceId: e.source.id,
+        targetId: e.target.id
+      }));
+    });
+  }
+
+  async paste(){
+    const pastedV = new Map<string, string>();
+
+    this.#clipboard.V.forEach((old: any, oldId: string) => {
+      const fresh = this.graph.addVertex({...old, id: null, selected: false });
+      pastedV.set(oldId, fresh.id);
+    });
+
+    this.#clipboard.E.forEach((old: any) => {
+      const sourceId = pastedV.get(old.sourceId);
+      const targetId = pastedV.get(old.targetId);
+      if(!sourceId || !targetId) return;
+
+      const { sourceId: _s, targetId: _t, ...edgeOptions } = old;
+      this.graph.addEdge(sourceId, targetId, {...edgeOptions, id: null });
+    });
   }
 
   //#region graph file functions

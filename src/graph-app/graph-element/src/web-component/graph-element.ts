@@ -37,14 +37,14 @@ export class GraphElement extends HTMLElement {
   }
 
   toJSON(){
-    const vertices = [...this.qsa('vertex-el')].map(el => (el as VertexElement).toJSON());
-    const edges = [...this.qsa('edge-el')].map(el => (el as EdgeElement).toJSON());
+    const V = [...this.qsa('vertex-el')].map(el => (el as VertexElement).toJSON());
+    const E = [...this.qsa('edge-el')].map(el => (el as EdgeElement).toJSON());
     const constants = Constants.toJSON();
     const defaults = Object.assign({}, this.defaults);
 
     return {
-      vertices,
-      edges,
+      V,
+      E,
       constants,
       defaults
     };
@@ -96,7 +96,8 @@ export class GraphElement extends HTMLElement {
   }
 
   get selected(): NodeList {
-    return this.querySelectorAll('vertex-el[selected]')
+    // return this.querySelectorAll('vertex-el[selected]');
+    return [...this.vertices].filter((el => (el as VertexElement).selected)) as unknown as  NodeList;
   }
 
   private hasChildWithId(id: string): boolean {
@@ -116,7 +117,9 @@ export class GraphElement extends HTMLElement {
       options.id = this.nextId('vertex');
     }
     for(let prop of Object.keys(options)){
-      vertexEl.setAttribute(prop, options[prop]);
+      if(options[prop] !== null){
+        vertexEl.setAttribute(prop, String(options[prop]));
+      }
     }
     
     this.appendChild(vertexEl);
@@ -140,7 +143,9 @@ export class GraphElement extends HTMLElement {
     }
 
     for(let prop of Object.keys(options)){
-      edgeEl.setAttribute(prop, options[prop]);
+      if(options[prop] !== null){
+        edgeEl.setAttribute(prop, options[prop]);
+      }
     }
 
     this.appendChild(edgeEl);
