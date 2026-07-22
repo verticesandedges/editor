@@ -68,6 +68,10 @@ export class GraphAppElement extends HTMLElement {
     this.qs('#file-notebook-save-file')?.addEventListener('click', () => this.saveNotebookFile());
     this.qs('#file-notebook-save-url')?.addEventListener('click', () => this.saveNotebookURL());
     this.qs('#file-notebook-save-indexeddb')?.addEventListener('click', () => this.saveNotebookIndexedDB());
+
+    // selection
+    this.qs('#selection-select-all')?.addEventListener('click', () => this.graph.vertices.forEach(v => v.selected = true));
+    this.qs('#selection-select-none')?.addEventListener('click', () => this.graph.selected.forEach(v => v.selected = false));
   }
 
   //#region graph file functions
