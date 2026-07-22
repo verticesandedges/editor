@@ -52,9 +52,8 @@ export class GraphAppElement extends HTMLElement {
   }
 
   wireTopMenu(){
-    // 1. file menu
-    // 1.1 graph
-    // [x] 1.1.1 new 
+    // file menu
+    // graph
     this.qs('#new-graph')?.addEventListener('click', () => this.graph.clear())
     this.qs('#file-graph-open-file')?.addEventListener('click', () => this.openGraphFile());
     this.qs('#file-graph-open-url')?.addEventListener('click', () => this.openGraphURL());
@@ -63,17 +62,14 @@ export class GraphAppElement extends HTMLElement {
     this.qs('#file-graph-save-url')?.addEventListener('click', () => this.saveGraphURL());
     this.qs('#file-graph-save-indexedDB')?.addEventListener('click', () => this.saveGraphIndexedDB());
 
-    // 1.2 notebook
-    // [ ] 1.2.1 new
+    // notebook
     this.qs('#new-notebook')?.addEventListener('click', () => this.notebook.clear())
-    // 1.2.2 open
-    // [ ] 1.2.2.1 file
-    // [ ] 1.2.2.2 url
-    // [ ] 1.2.2.3 indexedDB
-    // 1.2.3 save
-    // [ ] 1.2.3.1 file
-    // [ ] 1.2.3.2 url
-    // [ ] 1.2.3.3 indexedDB
+    this.qs('#file-notebook-open-file')?.addEventListener('click', () => this.openNotebookFile());
+    this.qs('#file-notebook-open-url')?.addEventListener('click', () => this.openNotebookURL());
+    this.qs('#file-notebook-open-indexeddb')?.addEventListener('click', () => this.openNotebookIndexedDB());
+    this.qs('#file-notebook-save-file')?.addEventListener('click', () => this.saveNotebookFile());
+    this.qs('#file-notebook-save-url')?.addEventListener('click', () => this.saveNotebookURL());
+    this.qs('#file-notebook-save-indexeddb')?.addEventListener('click', () => this.saveNotebookIndexedDB());
   }
 
   //#region graph file functions
@@ -230,8 +226,9 @@ export class GraphAppElement extends HTMLElement {
     if("showOpenFilePicker" in window){
       const [fileHandle] = await window.showOpenFilePicker({multiple: false});
       const file: File = await fileHandle.getFile();
-      const contents = await file.json();
-      nb.fromJSON(contents, true);
+      const contents = await file.text();
+      const json = JSON.parse(contents);
+      nb.fromString(json, true);
     }else{
       const input = document.createElement('input');
       input.type = 'file';
@@ -239,8 +236,9 @@ export class GraphAppElement extends HTMLElement {
       input.onchange = async () => {
         if(input.files!.length){
           const file = input.files![0];
-          const contents = await file.json();
-          this.notebook.fromJSON(contents, true);
+          const contents = await file.text();
+          const json = JSON.parse(contents);
+          this.notebook.fromJSON(json, true);
         }
       }
     }
