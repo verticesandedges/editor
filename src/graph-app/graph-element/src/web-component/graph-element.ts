@@ -124,8 +124,8 @@ export class GraphElement extends HTMLElement {
   }
 
   addEdge(sourceSel: string | VertexElement, targetSel: string | VertexElement, options: EdgeOptions = {}){
-    sourceSel = sourceSel instanceof VertexElement ? `#${sourceSel.getAttribute('id')}` : sourceSel;
-    targetSel = targetSel instanceof VertexElement ? `#${targetSel.getAttribute('id')}` : targetSel;
+    sourceSel = sourceSel instanceof VertexElement ? `#${sourceSel.getAttribute('id')}` : sourceSel.startsWith('#') ? sourceSel : `#${sourceSel}`;
+    targetSel = targetSel instanceof VertexElement ? `#${targetSel.getAttribute('id')}` : targetSel.startsWith('#') ? targetSel : `#${targetSel}`;
 
     const edgeEl = document.createElement('edge-el') as EdgeElement;
 
