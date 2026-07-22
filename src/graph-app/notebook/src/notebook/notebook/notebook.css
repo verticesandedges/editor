@@ -1,3 +1,24 @@
+:host {
+  --spiral-width: 45px;
+  --padding-left: 28px;
+  --panel-max-h: calc(100vh - 140px);
+  display: block;
+}
+
+h1.title {
+  border-bottom: 1px solid var(--ui-color);
+  outline: none;
+}
+
+h1.title:focus {
+  outline: none;
+}
+
+.notebook-shell {
+  position: relative;
+  overflow: visible;
+}
+
 .notebook-scroll {
   max-height: var(--panel-max-h);
   overflow-y: auto;
@@ -6,6 +27,8 @@
   padding-right: 10px;
   padding-bottom: 16px;
   background: var(--bg-color);
+  border-top: 1px solid var(--ui-color);
+  border-bottom: 1px solid var(--ui-color);
 }
 
 .notebook-content {
@@ -16,9 +39,22 @@
   position: absolute;
   top: 0;
   bottom: 0;
-  left: 0;
+  left: calc(var(--padding-left) - var(--spiral-width));
   width: var(--spiral-width);
   background: url('./spiral-small.png') left top repeat-y;
   background-size: var(--spiral-width);
+  background-color: transparent;
+  pointer-events: none;
+}
+
+.border {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: var(--padding-left);
+  box-sizing: border-box;
+  border: 1px solid var(--ui-color);
+  border-left: 0;
   pointer-events: none;
 }
