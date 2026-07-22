@@ -80,8 +80,23 @@ export class GraphAppElement extends HTMLElement {
     this.qs('#file-notebook-save-indexeddb')?.addEventListener('click', () => this.saveNotebookIndexedDB());
 
     // recent
-    const recent = this.getRecent();
+    this.buildRecentMenu();
+
+    // edit
+    this.qs('#edit-cut')?.addEventListener('click', () => this.cut());
+    this.qs('#edit-copy')?.addEventListener('click', () => this.copy());
+    this.qs('#edit-paste')?.addEventListener('click', () => this.paste());
+
+    // selection
+    this.qs('#selection-select-all')?.addEventListener('click', () => this.graph.vertices.forEach(v => v.selected = true));
+    this.qs('#selection-select-none')?.addEventListener('click', () => this.graph.selected.forEach(v => v.selected = false));
+  }
+
+  buildRecentMenu(){
     const recentMenu = this.qs('#file-recent')!;
+    recentMenu.innerHTML = '';
+
+    const recent = this.getRecent();
     recent.forEach((item: any) => {
       const li = document.createElement('li');
       const button = document.createElement('button');
@@ -96,20 +111,13 @@ export class GraphAppElement extends HTMLElement {
       recentMenu.appendChild(li);
     }
 
-    // edit
-    this.qs('#edit-cut')?.addEventListener('click', () => this.cut());
-    this.qs('#edit-copy')?.addEventListener('click', () => this.copy());
-    this.qs('#edit-paste')?.addEventListener('click', () => this.paste());
-
-    // selection
-    this.qs('#selection-select-all')?.addEventListener('click', () => this.graph.vertices.forEach(v => v.selected = true));
-    this.qs('#selection-select-none')?.addEventListener('click', () => this.graph.selected.forEach(v => v.selected = false));
   }
 
   registerRecent(filename: string, type: 'graph' | 'notebook', method: 'url' | 'indexeddb'){
     const recent = JSON.parse(localStorage.getItem('recent') || '[]');
     recent.unshift({ filename, type, method });
     localStorage.setItem('recent', JSON.stringify(recent));
+    this.buildRecentMenu();
   }
 
   getRecent(){
