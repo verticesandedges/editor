@@ -1,4 +1,3 @@
-import "./graph-element/dist/main"
 import { GraphElement, VertexElement, EdgeElement } from "./graph-element/src/index.ts";
 
 import { NotebookElement } from "./notebook/src/notebook/notebook/notebook.ts";
@@ -8,19 +7,18 @@ import { CellActionsElement } from "./notebook/src/notebook/cell-actions/cell-ac
 import { JavascriptCellElement } from "./notebook/src/notebook/javascript-cell/javascript-cell";
 import { TypescriptCellElement } from "./notebook/src/notebook/typescript-cell/typescript-cell";
 import { NotebookActionsElement } from "./notebook/src/notebook/notebook-actions/notebook-actions";
-import { NotebookAppElement } from "./notebook/src/notebook/notebook-app/notebook-app";
+// import { NotebookAppElement } from "./notebook/src/notebook/notebook-app/notebook-app";
 import "./drill-down/src/drill-down.ts";
 import { Constants } from "./graph-element/src/index.ts";
 
-
-window.customElements.define("markdown-cell", MarkdownCellElement);
-window.customElements.define("notebook-el", NotebookElement);
-window.customElements.define("cell-type", CellTypeSelector)
-window.customElements.define("cell-actions", CellActionsElement);
-window.customElements.define("javascript-cell", JavascriptCellElement);
-window.customElements.define('typescript-cell', TypescriptCellElement);
-window.customElements.define('notebook-actions', NotebookActionsElement);
-window.customElements.define('notebook-app', NotebookAppElement);
+if(!customElements.get('markdown-cell')) customElements.define("markdown-cell", MarkdownCellElement);
+if(!customElements.get('notebook-el')) customElements.define("notebook-el", NotebookElement);
+if(!customElements.get('cell-type')) customElements.define("cell-type", CellTypeSelector);
+if(!customElements.get('cell-actions')) customElements.define("cell-actions", CellActionsElement);
+if(!customElements.get('javascript-cell')) customElements.define("javascript-cell", JavascriptCellElement);
+if(!customElements.get('typescript-cell')) customElements.define('typescript-cell', TypescriptCellElement);
+if(!customElements.get('notebook-actions')) customElements.define('notebook-actions', NotebookActionsElement);
+// if(!customElements.get('notebook-app')) customElements.define('notebook-app', NotebookAppElement);
 
 export class GraphAppElement extends HTMLElement {
   static template: string = ``;
@@ -410,16 +408,13 @@ export class GraphAppElement extends HTMLElement {
     });
 
     // remove selected edges
-    this.addEventListener('remove-edge', () => {
-      this.graph.edges.forEach(e => {
-        const source: VertexElement = this.qs(e.getAttribute('source'));
-        const target: VertexElement = this.qs(e.getAttribute('target'));
-
-        const selected: Set<VertexElement> = new Set(this.graph.selected);
-        if(selected.has(source) || selected.has(target)){
-          this.graph.removeEdge(e);
+    this.addEventListener('remove-edges', () => {
+      const edges = Array.from(this.graph.edges) as EdgeElement[];
+      for(const edge of edges){
+        if(edge.source?.selected && edge.target?.selected){
+          this.graph.removeEdge(edge);
         }
-      })
+      }
     });
 
     this.addEventListener('clear-graph', () => {

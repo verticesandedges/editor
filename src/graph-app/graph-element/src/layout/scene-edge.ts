@@ -313,8 +313,19 @@ export class Edge {
   }
 
   remove(){
-    this.#graph.removeEdge(this);
-    this.#line.geometry.dispose();
-    this.#line.material.dispose();
+    this.#graph.removeEdge(this.id);  
+    
+    const line = this.#group.getObjectByName('line');
+
+    line?.material.dispose();
+    line?.geometry.dispose();
+
+    const spline = this.#group.getObjectByName('spline');
+    spline?.material.dispose();
+    spline?.geometry.dispose();
+
+    const cone = this.#group.getObjectByName('cone');
+    cone?.material.dispose();
+    cone?.geometry.dispose();
   }
 }

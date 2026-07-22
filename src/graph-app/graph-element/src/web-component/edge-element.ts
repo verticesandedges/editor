@@ -66,24 +66,26 @@ export class EdgeElement extends HTMLElement {
   connectedCallback(){
     const parent = this.parentElement as GraphElement;
 
-    if(parent && parent.graph){
+    const initialize = () => {
+      if(!parent?.graph) return;
+      
       const [sourceId, targetId]= this.readPoints();
+      if(!sourceId || !targetId) return;
+
       const options = this.readAttributes();
       this.edge = parent.graph.addEdge(sourceId, targetId, options);
 
-      this.source = parent.qs(sourceId) as VertexElement;
-      this.target = parent.qs(targetId) as VertexElement;
-    }else{
-      setTimeout(() => {
-        if(parent?.graph){
-          const [sourceId, targetId]= this.readPoints();
-          const options = this.readAttributes()
-          this.edge = parent.graph.addEdge(sourceId, targetId, options);
+      this.source = parent.querySelector(`#${CSS.escape(sourceId)}`) as VertexElement;
+      this.target = parent.querySelector(`#${CSS.escape(targetId)}`) as VertexElement;
 
-          this.source.edges.add(this);
-          this.target.edges.add(this);
-        }
-      }, 0);
+      this.source?.edges.add(this);
+      this.target?.edges.add(this);
+    };
+
+    if(parent?.graph){
+      initialize();
+    }else{
+      setTimeout(initialize, 0);
     }
   }
 
@@ -105,8 +107,9 @@ export class EdgeElement extends HTMLElement {
   }
 
   disconnectedCallback(){
-    const parent = this.parentElement;
-    (parent as GraphElement)?.removeEdge(this);
+    this.edge.remove();
+    // const parent = this.parentElement;
+    // (parent as GraphElement)?.removeEdge(this);
   }
 
   readPoints(): string[] {

@@ -148,32 +148,37 @@ export class GraphElement extends HTMLElement {
   }
 
   removeVertex(sel: string | VertexElement): void {
-    let vertex: VertexElement;
+    let vertex: VertexElement | null = null;
+
     if(typeof sel === 'string'){
-      vertex = this.shadowRoot!.querySelector(sel);
+      const selector = sel.startsWith('#') ? sel : `#${sel}`;
+      vertex = this.querySelector(selector) as VertexElement;
     }else if(sel instanceof VertexElement){
       vertex = sel;
     }
 
-    vertex.edges.forEach(e => {
-      e.remove();
-    })
-    
-    vertex?.remove();
+    if(!vertex) return;
+
+    vertex.edges.forEach(edge => edge.remove())
+    vertex.remove();
   }
 
   removeEdge(sel: string | EdgeElement): void {
-    let edge!: EdgeElement;
+    let edge!: EdgeElement | null = null;
+
     if(typeof sel === 'string'){
-      edge = this.shadowRoot!.querySelector(sel);
+      const selector = sel.startsWith('#') ? sel : `#${sel}`;
+      edge = this.querySelector(selector) as EdgeElement;
     }else if(sel instanceof EdgeElement){
       edge = sel;
     }
 
-    (edge as EdgeElement)?.source?.edges.delete(edge);
-    (edge as EdgeElement)?.target?.edges.delete(edge);
+    if(!edge) return;
 
-    edge?.remove();
+    edge.source?.edges.delete(edge);
+    edge.target?.edges.delete(edge);
+    
+    edge.remove();
   }
 
   clear(): void {
