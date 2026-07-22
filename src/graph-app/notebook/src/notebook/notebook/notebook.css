@@ -5,6 +5,15 @@
   display: block;
 }
 
+h1.title {
+  border-bottom: 1px solid var(--ui-color);
+  outline: none;
+}
+
+h1.title:focus {
+  outline: none;
+}
+
 .notebook-shell {
   position: relative;
   overflow: visible;

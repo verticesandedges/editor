@@ -1,109 +1,60 @@
-:root {
-  font-family: inherit;
-}
-
 :host {
-  --bg-color: inherit;
-  --ui-color: inherit;
   --spiral-width: 45px;
   --padding-left: 28px;
-  font-size: inherit;
-  background-color: var(--bg-color);
-  border: 0;
-  height: fit-content;
-  margin-top: 0;
-  padding-top: 0;
+  --panel-max-h: calc(100vh - 140px);
+  display: block;
 }
 
-.notebook {
-  padding-top: 0;
-  padding-left: var(--padding-left);
-  background-color: var(--bg-color);
-  margin-top: 0;
-  padding-bottom: 16px;
-  padding-right: 10px;
+h1.title {
+  border-bottom: 1px solid var(--ui-color);
+  outline: none;
+}
+
+h1.title:focus {
+  outline: none;
+}
+
+.notebook-shell {
   position: relative;
   overflow: visible;
 }
 
-.border {
-  box-sizing: border-box;
-  border: 1px solid #000;
-  border-left: 0;
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
+.notebook-scroll {
+  max-height: var(--panel-max-h);
+  padding-left: var(--padding-left);
+  background: var(--bg-color);
+  border-top: 1px solid var(--ui-color);
+  border-bottom: 1px solid var(--ui-color);
+  padding-bottom: 16px;
+  padding-right: 10px;
+  overflow: hidden auto;
+}
+
+.notebook-content {
+  position: relative;
 }
 
 .spiral {
-  left: calc(-1 * var(--spiral-width) + var(--padding-left));
+  top: 0;
+  bottom: 0;
+  left: calc(var(--padding-left) - var(--spiral-width));
+  width: var(--spiral-width);
   background: url("spiral-small.fa3f8702.png") repeat-y;
   background-size: var(--spiral-width);
-  --filter: invert(38%) sepia(57%) saturate(464%) hue-rotate(90deg) brightness(92%) contrast(94%);
-  background-attachment: local;
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  top: 0;
-}
-
-.spiral, .border {
   pointer-events: none;
+  background-color: #0000;
+  position: absolute;
 }
 
-h1 {
-  border: none;
-  border-bottom: 1px solid var(--ui-color);
-  background-color: var(--bg-color);
-  color: var(--ui-color);
-  padding-top: 16px;
-  font-family: inherit;
-}
-
-h1:focus {
-  outline: none;
-}
-
-.notebook-actions {
-  flex-direction: row;
-  gap: 15px;
-  display: flex;
-}
-
-button {
-  font-family: inherit;
-  font-size: inherit;
-  color: var(--ui-color);
-  background-color: var(--bg-color);
-  font-size: inherit;
-  border: 0;
-  margin: 0;
-  padding: 0;
-}
-
-.cover {
-  border: 1px solid var(--bg-color);
-  width: 28px;
-  height: 0;
-  position: relative;
-  left: -92px;
-}
-
-.cover.top {
-  top: -1px;
-}
-
-.cover.bottom {
-  bottom: -26px;
-}
-
-notebook-actions:first-of-type {
-  margin-bottom: 15px;
-}
-
-notebook-actions:last-of-type {
-  margin-top: 15px;
+.border {
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: var(--padding-left);
+  box-sizing: border-box;
+  border: 1px solid var(--ui-color);
+  pointer-events: none;
+  border-left: 0;
+  position: absolute;
 }
 /*# sourceMappingURL=notebook.a9920b33.css.map */
