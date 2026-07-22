@@ -116,7 +116,7 @@ export class GraphElement extends HTMLElement {
       options.id = this.nextId('vertex');
     }
     for(let prop of Object.keys(options)){
-      vertexEl[prop] = options[prop];
+      vertexEl.setAttribute(prop, options[prop]);
     }
     
     this.appendChild(vertexEl);
@@ -140,7 +140,7 @@ export class GraphElement extends HTMLElement {
     }
 
     for(let prop of Object.keys(options)){
-      edgeEl[prop] = options[prop];
+      edgeEl.setAttribute(prop, options[prop]);
     }
 
     this.appendChild(edgeEl);

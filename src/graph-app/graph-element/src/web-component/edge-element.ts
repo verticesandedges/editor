@@ -34,7 +34,14 @@ export class EdgeElement extends HTMLElement {
   set visible(v){ this.edge.visible = v; }
 
   get color(){ return this.edge.color; }
-  set color(v){ this.edge.color = v; }
+  set color(v){ 
+    if(!this.edge){
+      this.setAttribute('color', String(v));
+      return;
+    }  
+    
+    this.edge.color = v; 
+  }
 
   get width(){ return this.edge.width; }
   set width(v){ this.edge.width = v; }
@@ -77,6 +84,23 @@ export class EdgeElement extends HTMLElement {
     }
   }
 
+  attributeChangedCallback(attr: string, old: string, value: string){
+    if(!this.isConnected || !this.edge || value === null) return;
+
+    const prop = propName(attr);
+    if(attr === 'arrow' || attr === "spline" || attr === "visible"){
+      (this.edge as any)[prop] = value === 'true';
+      return;
+    }
+
+    if(attr === 'width'){
+      this.edge.width = parseFloat(value);
+      return;
+    }
+
+    (this.edge as any)[prop] = value;
+  }
+
   disconnectedCallback(){
     const parent = this.parentElement;
     (parent as GraphElement)?.removeEdge(this);
@@ -105,7 +129,7 @@ export class EdgeElement extends HTMLElement {
 
     const options: EdgeOptions = {
       id: this.getAttribute('id') ?? Edge.id(),
-      arrow: this.hasAttribute('arrow') ? parent.getAttribute('arrow') == 'true' : parent.graph.defaults.edge.arrow,
+      arrow: this.hasAttribute('arrow') ? this.getAttribute('arrow') == 'true' : parent.graph.defaults.edge.arrow,
       spline: this.hasAttribute('spline') ? this.getAttribute('spline') == 'true' : parent.graph.defaults.edge.spline,
       visible: this.hasAttribute('visible') ? this.getAttribute('visible') == 'true' : parent.graph.defaults.edge.visible,
       color: this.getAttribute('color') ?? parent.graph.defaults.edge.color,
