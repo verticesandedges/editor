@@ -807,6 +807,11 @@ class $71fc0554b53eb1ce$export$88315cbbb14c4be4 extends HTMLElement {
             resolve(true);
         });
     }
+    runAll() {
+        this.qsa('.cells>*').forEach(async (cell)=>{
+            if (cell instanceof (0, $60393df850c1c53c$export$5a61110bddf305c0) || cell instanceof (0, $312a93348be6f698$export$62a1cc341f70ee8e)) await cell.run();
+        });
+    }
     async fetchStyle() {
         const sheet = new CSSStyleSheet();
         const file = await fetch(new URL("notebook.a9920b33.css", import.meta.url));

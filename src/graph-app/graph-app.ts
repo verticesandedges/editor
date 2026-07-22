@@ -1,4 +1,3 @@
-import "./graph-element/dist/main"
 import { GraphElement, VertexElement, EdgeElement } from "./graph-element/src/index.ts";
 
 import { NotebookElement } from "./notebook/src/notebook/notebook/notebook.ts";
@@ -8,19 +7,18 @@ import { CellActionsElement } from "./notebook/src/notebook/cell-actions/cell-ac
 import { JavascriptCellElement } from "./notebook/src/notebook/javascript-cell/javascript-cell";
 import { TypescriptCellElement } from "./notebook/src/notebook/typescript-cell/typescript-cell";
 import { NotebookActionsElement } from "./notebook/src/notebook/notebook-actions/notebook-actions";
-import { NotebookAppElement } from "./notebook/src/notebook/notebook-app/notebook-app";
+// import { NotebookAppElement } from "./notebook/src/notebook/notebook-app/notebook-app";
 import "./drill-down/src/drill-down.ts";
 import { Constants } from "./graph-element/src/index.ts";
 
-
-window.customElements.define("markdown-cell", MarkdownCellElement);
-window.customElements.define("notebook-el", NotebookElement);
-window.customElements.define("cell-type", CellTypeSelector)
-window.customElements.define("cell-actions", CellActionsElement);
-window.customElements.define("javascript-cell", JavascriptCellElement);
-window.customElements.define('typescript-cell', TypescriptCellElement);
-window.customElements.define('notebook-actions', NotebookActionsElement);
-window.customElements.define('notebook-app', NotebookAppElement);
+if(!customElements.get('markdown-cell')) customElements.define("markdown-cell", MarkdownCellElement);
+if(!customElements.get('notebook-el')) customElements.define("notebook-el", NotebookElement);
+if(!customElements.get('cell-type')) customElements.define("cell-type", CellTypeSelector);
+if(!customElements.get('cell-actions')) customElements.define("cell-actions", CellActionsElement);
+if(!customElements.get('javascript-cell')) customElements.define("javascript-cell", JavascriptCellElement);
+if(!customElements.get('typescript-cell')) customElements.define('typescript-cell', TypescriptCellElement);
+if(!customElements.get('notebook-actions')) customElements.define('notebook-actions', NotebookActionsElement);
+// if(!customElements.get('notebook-app')) customElements.define('notebook-app', NotebookAppElement);
 
 export class GraphAppElement extends HTMLElement {
   static template: string = ``;
@@ -29,6 +27,15 @@ export class GraphAppElement extends HTMLElement {
   qsa: (query: string) => NodeList;
   graph!: GraphElement;
   notebook!: NotebookElement;
+
+  #clipboard = {
+    V: new Map(),
+    E: new Map(),
+    clear: function(){
+      this.V.clear();
+      this.E.clear();
+    }
+  }
 
   constructor(){
     super();
@@ -63,13 +70,80 @@ export class GraphAppElement extends HTMLElement {
     this.qs('#file-graph-save-indexedDB')?.addEventListener('click', () => this.saveGraphIndexedDB());
 
     // notebook
-    this.qs('#new-notebook')?.addEventListener('click', () => this.notebook.clear())
+    this.qs('#new-notebook')?.addEventListener('click', () => this.notebook.clear());
+    this.qs('#run-notebook')?.addEventListener('click', () => this.notebook.runAll());
     this.qs('#file-notebook-open-file')?.addEventListener('click', () => this.openNotebookFile());
     this.qs('#file-notebook-open-url')?.addEventListener('click', () => this.openNotebookURL());
     this.qs('#file-notebook-open-indexeddb')?.addEventListener('click', () => this.openNotebookIndexedDB());
     this.qs('#file-notebook-save-file')?.addEventListener('click', () => this.saveNotebookFile());
     this.qs('#file-notebook-save-url')?.addEventListener('click', () => this.saveNotebookURL());
     this.qs('#file-notebook-save-indexeddb')?.addEventListener('click', () => this.saveNotebookIndexedDB());
+
+    this.qs('#edit-cut')?.addEventListener('click', () => this.cut());
+    this.qs('#edit-copy')?.addEventListener('click', () => this.copy());
+    this.qs('#edit-paste')?.addEventListener('click', () => this.paste());
+
+    // selection
+    this.qs('#selection-select-all')?.addEventListener('click', () => this.graph.vertices.forEach(v => v.selected = true));
+    this.qs('#selection-select-none')?.addEventListener('click', () => this.graph.selected.forEach(v => v.selected = false));
+  }
+
+  cut(){
+    this.#clipboard.clear();
+
+    const selected = [...this.graph.vertices].filter((v: any) => (v as VertexElement).selected) as VertexElement[];
+
+
+    selected.forEach((v: VertexElement) => {
+      this.#clipboard.V.set(v.id, v.toJSON());
+      
+      [...v.edges]
+      .filter((e: EdgeElement) => selected.includes(e.source) && selected.includes(e.target))
+      .forEach((e: EdgeElement) => this.#clipboard.E.set(e.id, {
+        ...e.toJSON(),
+        sourceId: e.source.id,
+        targetId: e.target.id
+      }));
+      
+      this.graph.removeVertex(v.id);
+    });
+  }
+
+  copy(){
+    this.#clipboard.clear();
+
+    const selected = [...this.graph.vertices]
+    .filter((v: any) => (v as VertexElement).selected) as VertexElement[];
+
+    selected.forEach((v: VertexElement) => {
+      this.#clipboard.V.set(v.id, v.toJSON());
+
+      [...v.edges]
+      .filter((e: EdgeElement) => selected.includes(e.source) && selected.includes(e.target))
+      .forEach((e: EdgeElement) => this.#clipboard.E.set(e.id, {
+        ...e.toJSON(),
+        sourceId: e.source.id,
+        targetId: e.target.id
+      }));
+    });
+  }
+
+  async paste(){
+    const pastedV = new Map<string, string>();
+
+    this.#clipboard.V.forEach((old: any, oldId: string) => {
+      const fresh = this.graph.addVertex({...old, id: null, selected: false });
+      pastedV.set(oldId, fresh.id);
+    });
+
+    this.#clipboard.E.forEach((old: any) => {
+      const sourceId = pastedV.get(old.sourceId);
+      const targetId = pastedV.get(old.targetId);
+      if(!sourceId || !targetId) return;
+
+      const { sourceId: _s, targetId: _t, ...edgeOptions } = old;
+      this.graph.addEdge(sourceId, targetId, {...edgeOptions, id: null });
+    });
   }
 
   //#region graph file functions
@@ -410,16 +484,13 @@ export class GraphAppElement extends HTMLElement {
     });
 
     // remove selected edges
-    this.addEventListener('remove-edge', () => {
-      this.graph.edges.forEach(e => {
-        const source: VertexElement = this.qs(e.getAttribute('source'));
-        const target: VertexElement = this.qs(e.getAttribute('target'));
-
-        const selected: Set<VertexElement> = new Set(this.graph.selected);
-        if(selected.has(source) || selected.has(target)){
-          this.graph.removeEdge(e);
+    this.addEventListener('remove-edges', () => {
+      const edges = Array.from(this.graph.edges) as EdgeElement[];
+      for(const edge of edges){
+        if(edge.source?.selected && edge.target?.selected){
+          this.graph.removeEdge(edge);
         }
-      })
+      }
     });
 
     this.addEventListener('clear-graph', () => {

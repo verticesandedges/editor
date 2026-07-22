@@ -33,6 +33,14 @@ export class NotebookElement extends HTMLElement {
     });
   }
 
+  runAll(): void {
+    this.qsa('.cells>*').forEach(async cell => {
+      if(cell instanceof JavascriptCellElement || cell instanceof TypescriptCellElement){
+        await cell.run();
+      }
+    })
+  }
+
   async fetchStyle(): Promise<void> {
     const sheet = new CSSStyleSheet();
     const file = await fetch(new URL(`./notebook.css`, import.meta.url));
