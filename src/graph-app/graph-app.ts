@@ -59,7 +59,7 @@ export class GraphAppElement extends HTMLElement {
   }
 
   wireTopMenu(){
-    // file menu
+    // file
     // graph
     this.qs('#new-graph')?.addEventListener('click', () => this.graph.clear())
     this.qs('#file-graph-open-file')?.addEventListener('click', () => this.openGraphFile());
@@ -79,6 +79,24 @@ export class GraphAppElement extends HTMLElement {
     this.qs('#file-notebook-save-url')?.addEventListener('click', () => this.saveNotebookURL());
     this.qs('#file-notebook-save-indexeddb')?.addEventListener('click', () => this.saveNotebookIndexedDB());
 
+    // recent
+    const recent = this.getRecent();
+    const recentMenu = this.qs('#file-recent')!;
+    recent.forEach((item: any) => {
+      const li = document.createElement('li');
+      const button = document.createElement('button');
+      button.textContent = item.filename;
+      button.addEventListener('click', () => this.openRecent(item.filename, item.type, item.method));
+      li.appendChild(button);
+      recentMenu.appendChild(li);
+    });
+    if(recent.length === 0){
+      const li = document.createElement('li');
+      li.textContent = 'No recent files';
+      recentMenu.appendChild(li);
+    }
+
+    // edit
     this.qs('#edit-cut')?.addEventListener('click', () => this.cut());
     this.qs('#edit-copy')?.addEventListener('click', () => this.copy());
     this.qs('#edit-paste')?.addEventListener('click', () => this.paste());
@@ -86,6 +104,26 @@ export class GraphAppElement extends HTMLElement {
     // selection
     this.qs('#selection-select-all')?.addEventListener('click', () => this.graph.vertices.forEach(v => v.selected = true));
     this.qs('#selection-select-none')?.addEventListener('click', () => this.graph.selected.forEach(v => v.selected = false));
+  }
+
+  registerRecent(filename: string, type: 'graph' | 'notebook', method: 'url' | 'indexeddb'){
+    const recent = JSON.parse(localStorage.getItem('recent') || '[]');
+    recent.unshift({ filename, type, method });
+    localStorage.setItem('recent', JSON.stringify(recent));
+  }
+
+  getRecent(){
+    return JSON.parse(localStorage.getItem('recent') || '[]');
+  }
+
+  openRecent(filename: string, type: 'graph' | 'notebook', method: 'url' | 'indexeddb'){
+    if(type === 'graph'){
+      if(method === 'url') this.openGraphURL();
+      if(method === 'indexeddb') this.openGraphIndexedDB();
+    }else if(type === 'notebook'){
+      if(method === 'url') this.openNotebookURL();
+      if(method === 'indexeddb') this.openNotebookIndexedDB();
+    }
   }
 
   cut(){
@@ -198,8 +236,8 @@ export class GraphAppElement extends HTMLElement {
       const index = store.createIndex('graphTitleIndex', ['title']);
     }
 
-    open.onsuccess = () => {
-      const db  = event?.target.result;
+    open.onsuccess = (event) => {
+      const db  = (event.target as IDBOpenDBRequest).result;
       const transaction = db.transaction(['graphStore'], 'readwrite');
       const store = transaction.objectStore('graphStore');
 
@@ -208,6 +246,7 @@ export class GraphAppElement extends HTMLElement {
       transaction.oncomplete = () => {
         db.close();
         alert(`Graph titled ${title} successfully written to browser's IndexedDB`);
+        this.registerRecent(title, 'graph', 'indexeddb');
       }
     }
 
@@ -217,7 +256,7 @@ export class GraphAppElement extends HTMLElement {
   }
 
   openGraphFile(){
-    const input = this.qs('#graph-upload');
+    const input = this.qs('#graph-upload')!;
 
     input.onchange = () => {
       const file = input.files[0];
@@ -231,10 +270,12 @@ export class GraphAppElement extends HTMLElement {
     input.showPicker();
   }
 
-  async openGraphURL(){
-    const url = prompt('URL: ', localStorage.getItem('lastGraphURL'));
-    if(url) localStorage.setItem('lastGraphURL', url);
-    else return;
+  async openGraphURL(url?: string){
+    if(url === undefined){
+      url = prompt('URL: ', localStorage.getItem('lastGraphURL') ?? '') ?? undefined;
+      if(url) localStorage.setItem('lastGraphURL', url);
+      else return;
+    }
 
     const res = await fetch(url);
     if(!res.ok){
@@ -244,16 +285,19 @@ export class GraphAppElement extends HTMLElement {
 
     const json = await res.json();
     this.openGraph(json);
+    this.registerRecent(url, 'graph', 'url');
   }
 
-  async openGraphIndexedDB(){
-    let previous = localStorage.getItem("lastGraphTitle") ?? '';
-    const title = prompt('Title', previous);
-    if(!title) return;
-    localStorage.setItem("lastGraphTitle", title);
+  async openGraphIndexedDB(title?: string){
+    if(title === undefined){
+      let previous = localStorage.getItem("lastGraphTitle") ?? '';
+      title = prompt('Title', previous) ?? undefined;
+      if(!title) return;
+      localStorage.setItem("lastGraphTitle", title);
+    }
 
     const open = indexedDB.open('graph.graphDB', 1);
-    open.onupgradeneedd = () => {
+    open.onupgradeneeded = () => {
       alert(`No DB "graph.graphDB" present. Thus no graph of title ${title} could be found.`);
     }
 
@@ -268,6 +312,7 @@ export class GraphAppElement extends HTMLElement {
       getGraph.onsuccess = () => {
         const json = getGraph.result;
         this.openGraph(json);
+        this.registerRecent(title, 'graph', 'indexeddb');
       }
     }
   }
@@ -318,28 +363,33 @@ export class GraphAppElement extends HTMLElement {
     }
   }
 
-  async openNotebookURL(){
-    let previous = localStorage.getItem('lastNotebookURL') ?? '';
-    const url = prompt('URL: ', previous);
-    if(url) localStorage.setItem('lastNotebookURL', url)
-    else return;
-
+  async openNotebookURL(url?: string){
+    if(url === undefined){
+      let previous = localStorage.getItem('lastNotebookURL') ?? '';
+      url = prompt('URL: ', previous) ?? undefined;
+      if(url) localStorage.setItem('lastNotebookURL', url)
+      else return;
+    }
+    
     try{
       const res = await fetch(url, {headers: { "Content-Type": "application/json" }})
       const json = res.json();  
       this.notebook.fromJSON(json, true);
+      this.registerRecent(url, 'notebook', 'url');
     }catch(e){
       console.error(e);
       alert(`Error occured while opening ${url}: ${e}`)
     }
   }
 
-  openNotebookIndexedDB(){
-    const previous = localStorage.getItem('lastNotebookDBTitle') ?? '';
-    const title = prompt('Title: ', previous);
-    if(title) localStorage.setItem('lastNotebookDBTitle', title)
-    else return;
-
+  openNotebookIndexedDB(title?: string){
+    if(title === undefined){
+      const previous = localStorage.getItem('lastNotebookDBTitle') ?? '';
+      title = prompt('Title: ', previous) ?? undefined;
+      if(title) localStorage.setItem('lastNotebookDBTitle', title)
+      else return;
+    }
+    
     const open = window.indexedDB.open('notebook.notebookDB', 1);
     open.onupgradeneeded = () => {
       alert(`No DB "notebook.notebookDB" present, thus no notebook titled ${title} found.`);
@@ -353,7 +403,10 @@ export class GraphAppElement extends HTMLElement {
 
       const getNotebook = index.get([title]);
 
-      getNotebook.onsuccess = () => this.notebook.fromJSON(getNotebook.result, true);
+      getNotebook.onsuccess = () => {
+        this.notebook.fromJSON(getNotebook.result, true);
+        this.registerRecent(title, 'notebook', 'indexeddb');
+      }
       getNotebook.onerror = () => alert(`Error reading ${title} from browser's indexedDB`);
 
       transaction.oncomplete = () => db.close();
@@ -416,6 +469,7 @@ export class GraphAppElement extends HTMLElement {
       transaction.oncomplete = () => {
         db.close();
         alert(`Notebook ${this.notebook.title} successfully written to browser's indexedDB.`);
+        this.registerRecent(this.notebook.title, 'notebook', 'indexeddb');
       }
     }
 
