@@ -60,6 +60,9 @@ export class EdgeElement extends HTMLElement {
 
   toJSON(){
     return {
+      sourceId: this.source.id,
+      targetId: this.target.id,
+      id: this.edge.id,
       color: this.color,
       arrow: this.arrow,
       width: this.width,      
@@ -139,8 +142,11 @@ export class EdgeElement extends HTMLElement {
   readAttributes(){
     const parent = this.parentElement as GraphElement;
 
+    const [sourceId, targetId] = this.readPoints();
     const options: EdgeOptions = {
       id: this.getAttribute('id') ?? Edge.id(),
+      sourceId,
+      targetId,
       arrow: this.hasAttribute('arrow') ? this.getAttribute('arrow') == 'true' : parent.graph.defaults.edge.arrow,
       spline: this.hasAttribute('spline') ? this.getAttribute('spline') == 'true' : parent.graph.defaults.edge.spline,
       visible: this.hasAttribute('visible') ? this.getAttribute('visible') == 'true' : parent.graph.defaults.edge.visible,

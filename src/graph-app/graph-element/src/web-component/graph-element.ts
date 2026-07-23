@@ -12,9 +12,9 @@ function propName(attrStr: string){
 export class GraphElement extends HTMLElement {
   static observedAttributes = ['background-color'];
   graph: Graph;
-  defaults = {
-    vertex: {},
-    edge: {}
+  defaults: {
+    vertex: VertexOptions,
+    edge: EdgeOptions
   }
 
   qs: (query: string) => HTMLElement;
@@ -33,16 +33,18 @@ export class GraphElement extends HTMLElement {
     .then(() => {
       const div = this.shadowRoot!.querySelector('div')!;
       this.graph = new Graph( div );
+      this.defaults = Object.assign({}, this.graph.defaults);
     });
   }
 
-  toJSON(){
-    const V = [...this.qsa('vertex-el')].map(el => (el as VertexElement).toJSON());
-    const E = [...this.qsa('edge-el')].map(el => (el as EdgeElement).toJSON());
+  toJSON(title: string="Untitled Graph"){
+    const V = [...this.querySelectorAll('vertex-el')].map(el => (el as VertexElement).toJSON());
+    const E = [...this.querySelectorAll('edge-el')].map(el => (el as EdgeElement).toJSON());
     const constants = Constants.toJSON();
     const defaults = Object.assign({}, this.defaults);
 
     return {
+      title,
       V,
       E,
       constants,
@@ -51,6 +53,8 @@ export class GraphElement extends HTMLElement {
   }
 
   fromJSON(graph: any){
+    const wait = (delay) => new Promise((resolve, _) => setTimeout(resolve, delay));
+
     Constants.fromJSON(graph.constants);
     Object.assign(this.defaults, graph.defaults);
 
@@ -58,6 +62,7 @@ export class GraphElement extends HTMLElement {
 
     for(let vertex of graph.V){
       const v = this.addVertex(vertex);
+      wait(1);
       if(this.qs(vertex.id)){
         map.set(vertex.id, v.id);
       }
@@ -67,6 +72,7 @@ export class GraphElement extends HTMLElement {
       if(map.has(edge.sourceId)) edge.sourceId = map.get(edge.sourceId);
       if(map.has(edge.targetId)) edge.targetId = map.get(edge.targetId);
       this.addEdge(edge.sourceId, edge.targetId, edge);
+      wait(1)
     }
   }
 

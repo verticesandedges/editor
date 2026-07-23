@@ -22,7 +22,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "watch": "parcel src/index.html --dist-dir docs/",
     "build": "parcel build src/index.html --dist-dir docs/",
-    "start": "http-server docs/",
+    "start": "http-server docs/ -c-1 --silent",
     "clean": "rm -rf .parcel-cache/ docs/"
   },
   "devDependencies": {
@@ -30,6 +30,7 @@
     "process": "^0.11.10"
   },
   "dependencies": {
+    "idb": "^8.0.3",
     "interestfor": "github:mfreed7/interestfor",
     "invokers": "^2.2.0"
   }
