@@ -215,6 +215,6 @@ export class GraphElement extends HTMLElement {
   }
 }
 
-// if(!customElements.get('graph-el')){
-//   customElements.define('graph-el', GraphElement);
-// }
+if(!customElements.get('graph-el')){
+  customElements.define('graph-el', GraphElement);
+}
