@@ -3,7 +3,9 @@ import { EditorState, Compartment } from "@codemirror/state";
 import { keymap, placeholder } from "@codemirror/view";
 import { javascript } from "@codemirror/lang-javascript";
 import { indentWithTab } from "@codemirror/commands";
-import { NotebookElement } from "../notebook/notebook";
+import "../cell-type-selector/cell-type-selector";
+import "../cell-actions/cell-actions";
+import type { NotebookElement } from "../notebook/notebook";
 import * as ts from "typescript"
 
 let language = new Compartment();
@@ -75,7 +77,7 @@ export class TypescriptCellElement extends HTMLElement {
       output.append(result);
     }else if(typeof result in new Set(['number', 'string', 'boolean', 'bigint'])){
       output.innerText = result;
-    }else if((typeof result === 'object') || (typeof result === 'array')){
+    }else if((typeof result === 'object') || (typeof result as any === 'array')){
       output.innerHTML = `<pre>${ JSON.stringify(result, null, 2) }</pre>`;
     }else if(result === null){
       output.innerText = 'null';
@@ -98,7 +100,7 @@ export class TypescriptCellElement extends HTMLElement {
       const p = document.createElement('p');
       p.classList.add('log');
       p.innerText = arg;
-      messages.appendChild(p);
+      messages!.appendChild(p);
     })
   }
 
@@ -108,7 +110,7 @@ export class TypescriptCellElement extends HTMLElement {
       const p = document.createElement('p');
       p.classList.add('error');
       p.innerText = arg;
-      messages.appendChild(p);
+      messages!.appendChild(p);
     })
   }
 
@@ -141,7 +143,7 @@ export class TypescriptCellElement extends HTMLElement {
 
     // console.log and console.error outputs
     const messages = this.qs('.cell-output.messages');
-    [...messages.children].forEach((p: any) => {
+    [...messages!.children].forEach((p: any) => {
       let output;
       if(p.classList.contains('log')){
         output = {
@@ -300,11 +302,11 @@ export class TypescriptCellElement extends HTMLElement {
   private createFunction(context: any) {
     const AsyncFunction = async function(){}.constructor;
     const source = ts.transpileModule(this.source, {
-      module: ts.ModuleKind.ESNext,
-      compact: false
+      // module: ts.ModuleKind.ESNext,
+      // compact: false
     }).outputText;
 
-    const func = new AsyncFunction( ...Object.keys( context ), `
+    const func = new (AsyncFunction as any)( ...Object.keys( context ), `
       try{
         ${source}
       }catch(e){
@@ -322,7 +324,7 @@ export class TypescriptCellElement extends HTMLElement {
       const outputs = this.qs('.cell-outputs');
       indicator = document.createElement('output');
       indicator.classList.add('cell-output', 'indicator')
-      outputs.prepend(indicator);
+      outputs!.prepend(indicator);
     }
     
     let i = 0;
@@ -340,4 +342,8 @@ export class TypescriptCellElement extends HTMLElement {
     (pkg.indicator as HTMLOutputElement).value = '';
   }
   //#endregion 
+}
+
+if(!customElements.get('typescript-cell')){
+  customElements.define('typescript-cell', TypescriptCellElement);
 }

@@ -18,6 +18,8 @@ import {
   mathPlugin,
   blockMathField,
 } from 'codemirror-live-markdown';
+import "../cell-type-selector/cell-type-selector";
+import "../cell-actions/cell-actions";
 let tabSize = new Compartment();
 
 
@@ -186,4 +188,9 @@ export class MarkdownCellElement extends HTMLElement {
     this.view.focus();
   }
   //#endregion
+}
+
+
+if(!customElements.get('markdown-cell')){
+  customElements.define("markdown-cell", MarkdownCellElement);
 }

@@ -92,3 +92,8 @@ export class CellActionsElement extends HTMLElement {
   }
   //#endregion
 }
+
+
+if(!customElements.get('cell-actions')){
+  customElements.define("cell-actions", CellActionsElement);
+}

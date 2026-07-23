@@ -130,3 +130,8 @@ export class CellTypeSelector extends HTMLElement {
   }
   //#endregion
 }
+
+
+if(!customElements.get('cell-type')){
+  customElements.define("cell-type", CellTypeSelector);
+}

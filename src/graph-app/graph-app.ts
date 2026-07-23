@@ -1,11 +1,10 @@
-import "./graph-element/src/index.ts";
+import "./graph-element/src/web-component/graph-element.ts";
 import type { GraphElement, VertexElement, EdgeElement } from "./graph-element/src/index.ts"; 
+
 import "./notebook/src/notebook/notebook/notebook.ts";
 import type { NotebookElement } from "./notebook/src/notebook/notebook/notebook.ts";  
 
-import "./graph-element/src/index.ts";
 import "./drill-down/src/drill-down.ts";
-
 import { openDB } from "idb";
 
 export class GraphAppElement extends HTMLElement {
@@ -35,9 +34,9 @@ export class GraphAppElement extends HTMLElement {
     .then(() => this.fetchTemplate())
     .then(() => {
       const graphEl = this.qs('graph-el') as any;
-      if(!graphEl || typeof graphEl.addVertex !== 'function' || typeof graphEl.addEdge !== 'function'){
-        throw new Error("Graph element not found or does not have addVertex/addEdge methods");
-      } 
+      // if(!graphEl || typeof graphEl.addVertex !== 'function' || typeof graphEl.addEdge !== 'function'){
+      //   throw new Error("Graph element not found or does not have addVertex/addEdge methods");
+      // } 
 
       this.graph = graphEl as GraphElement;
     })
@@ -83,8 +82,8 @@ export class GraphAppElement extends HTMLElement {
     this.qs('#edit-paste')?.addEventListener('click', () => this.paste());
 
     // selection
-    this.qs('#selection-select-all')?.addEventListener('click', () => this.graph.vertices.forEach(v => v.selected = true));
-    this.qs('#selection-select-none')?.addEventListener('click', () => this.graph.selected.forEach(v => v.selected = false));
+    this.qs('#selection-select-all')?.addEventListener('click', () => this.graph.vertices.forEach(v => (v as VertexElement).selected = true));
+    this.qs('#selection-select-none')?.addEventListener('click', () => this.graph.selected.forEach(v => (v as VertexElement).selected = false));
   }
 
   async buildRecentMenu(){
@@ -257,7 +256,7 @@ export class GraphAppElement extends HTMLElement {
     if(!title) return;
 
     if('showSaveFilePicker' in window){
-      const fileHandle = await window.showSaveFilePicker({
+      const fileHandle = await (window as any).showSaveFilePicker({
         suggestedName: `${title}${title.includes('.json') ? '' : '.json'}`
       });
       const writable = await fileHandle.createWritable();
@@ -314,7 +313,7 @@ export class GraphAppElement extends HTMLElement {
     }
 
     open.onsuccess = (event) => {
-      const db  = event.target.result;
+      const db  = (event.target as IDBOpenDBRequest).result;
       const transaction = db.transaction(['graphStore'], 'readwrite');
       const store = transaction.objectStore('graphStore');
 
@@ -347,7 +346,7 @@ export class GraphAppElement extends HTMLElement {
     }
 
     if("showOpenFilePicker" in window){
-      const [fileHandle] = await window.showOpenFilePicker({multiple: false});
+      const [fileHandle] = await (window as any).showOpenFilePicker({multiple: false});
       const file: File = await fileHandle.getFile();
       const contents = await file.text();
       const json = JSON.parse(contents);
@@ -457,7 +456,7 @@ export class GraphAppElement extends HTMLElement {
     }
 
     if("showOpenFilePicker" in window){
-      const [fileHandle] = await window.showOpenFilePicker({multiple: false});
+      const [fileHandle] = await ( window as any).showOpenFilePicker({multiple: false});
       const file: File = await fileHandle.getFile();
       const contents = await file.text();
       const json = JSON.parse(contents);
@@ -558,7 +557,7 @@ export class GraphAppElement extends HTMLElement {
     const title = this.notebook.title;
 
     if('showSaveFilePicker' in window){
-      const fileHandle = await window.showSaveFilePicker({
+      const fileHandle = await (window as any).showSaveFilePicker({
         suggestedName: `${title}${title.includes('.ipynb') ? '' : '.ipynb'}`
       })
 
@@ -615,7 +614,7 @@ export class GraphAppElement extends HTMLElement {
     };
 
     open.onsuccess = (event) => {
-      const db = event.target.result;
+      const db = (event.target as IDBOpenDBRequest).result;
       const transaction = db.transaction(['notebookStore'], 'readwrite');
       const store = transaction.objectStore('notebookStore');
 
@@ -670,30 +669,30 @@ export class GraphAppElement extends HTMLElement {
 
     // add edges
     this.addEventListener('connect-vertices', () => {
-      const selected = [...this.graph.selected];
+      const selected = [...this.graph.selected] as VertexElement[];
       for(let i=0; i<selected.length; i++){
         if(i>0){
-          this.graph.addEdge(selected.at(i-1), selected.at(i));
+          this.graph.addEdge(selected.at(i-1)!, selected.at(i)!);
         }
       }
       if(selected.length > 2){
-        this.graph.addEdge(selected.at(-1), selected.at(0));
+        this.graph.addEdge(selected.at(-1)!, selected.at(0)!);
       }
     })
 
     // select all 
     this.addEventListener('tool-select-all', () => {
-      this.graph.vertices.forEach(v => v.selected = true)
+      this.graph.vertices.forEach(v => (v as VertexElement).selected = true)
     });
 
     // select none 
     this.addEventListener('tool-select-none', () => {
-      this.graph.selected.forEach(v => v.selected = false);
+      this.graph.selected.forEach(v => (v as VertexElement).selected = false);
     });
 
     // remove selected vertices
     this.addEventListener('remove-vertices', () => {
-      this.graph.selected.forEach(v => this.graph.removeVertex(v));
+      this.graph.selected.forEach(v => this.graph.removeVertex(v as VertexElement));
     });
 
     // remove selected edges

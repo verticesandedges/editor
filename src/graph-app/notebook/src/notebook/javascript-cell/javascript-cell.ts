@@ -3,7 +3,9 @@ import { EditorState, Compartment } from "@codemirror/state";
 import { keymap, placeholder } from "@codemirror/view";
 import { javascript } from "@codemirror/lang-javascript";
 import { indentWithTab } from "@codemirror/commands";
-import { NotebookElement } from "../notebook/notebook";
+import "../cell-type-selector/cell-type-selector";
+import "../cell-actions/cell-actions";
+import type { NotebookElement } from "../notebook/notebook";
 
 let language = new Compartment();
 let tabSize = new Compartment();
@@ -97,7 +99,7 @@ export class JavascriptCellElement extends HTMLElement {
       const p = document.createElement('p');
       p.classList.add('log');
       p.innerText = arg;
-      messages.appendChild(p);
+      messages!.appendChild(p);
     })
   }
 
@@ -107,7 +109,7 @@ export class JavascriptCellElement extends HTMLElement {
       const p = document.createElement('p');
       p.classList.add('error');
       p.innerText = arg;
-      messages.appendChild(p);
+      messages!.appendChild(p);
     })
   }
 
@@ -140,14 +142,13 @@ export class JavascriptCellElement extends HTMLElement {
 
     // console.log and console.error outputs
     const messages = this.qsa('.cell-output.messages>*');
-    messages.forEach((p: HTMLElement) => {
-
+    messages!.forEach(p => {
       let output;
       if(p.classList.contains('log')){
         output = {
           "output_type": "stream",
           "name": "stdout",
-          "text": p.innerText
+          "text": (p as HTMLElement).innerText
         }
       }
 
@@ -155,7 +156,7 @@ export class JavascriptCellElement extends HTMLElement {
         output = { 
           "output_type": "stream",
           "name": "stderr",
-          "text": p.innerText
+          "text": (p as HTMLElement).innerText
         }
       }
 
@@ -304,7 +305,7 @@ export class JavascriptCellElement extends HTMLElement {
   }
 
   private createFunction(context: any){
-    const AsyncFunction = async function(){}.constructor;
+    const AsyncFunction = async function(){}.constructor as any;
     const func = new AsyncFunction( ...Object.keys( context ), `
       try{
         ${this.source}
@@ -323,7 +324,7 @@ export class JavascriptCellElement extends HTMLElement {
       const outputs = this.qs('.cell-outputs');
       indicator = document.createElement('output');
       indicator.classList.add('cell-output', 'indicator')
-      outputs.prepend(indicator);
+      outputs!.prepend(indicator);
     }
     
     let i = 0;
@@ -342,3 +343,7 @@ export class JavascriptCellElement extends HTMLElement {
   }
   //#endregion
 }
+
+if(!customElements.get('javascript-cell')){
+  customElements.define("javascript-cell", JavascriptCellElement);
+} 
