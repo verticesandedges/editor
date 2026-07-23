@@ -348,7 +348,7 @@ export class GraphAppElement extends HTMLElement {
     if(file){
       const contents = await file.text();
       const json = JSON.parse(contents);
-      this.graph.fromJSON(json);
+      this.graph.fromJSON(json, true);
       return;
     }
 
@@ -357,7 +357,7 @@ export class GraphAppElement extends HTMLElement {
       const file: File = await fileHandle.getFile();
       const contents = await file.text();
       const json = JSON.parse(contents);
-      this.graph.fromJSON(json);
+      this.graph.fromJSON(json, true);
 
       if(!registered) this.registerRecent({
         title: fileHandle.name, 
@@ -374,7 +374,7 @@ export class GraphAppElement extends HTMLElement {
           const file = input.files![0];
           const contents = await file.text();
           const json = JSON.parse(contents);
-          this.graph.fromJSON(json);
+          this.graph.fromJSON(json, true);
 
           if(!registered) this.registerRecent({
             title: file.name, 
@@ -403,7 +403,7 @@ export class GraphAppElement extends HTMLElement {
     }
 
     const json = await res.json();
-    this.graph.fromJSON(json);
+    this.graph.fromJSON(json, true);
     if(!registered) this.registerRecent({
       title: json.title ?? 'Untitled',
       type: 'graph',
@@ -434,7 +434,7 @@ export class GraphAppElement extends HTMLElement {
       const getGraph = index.get([title]);
 
       getGraph.onsuccess = () => {
-        this.graph.fromJSON(getGraph.result);
+        this.graph.fromJSON(getGraph.result, true);
         if(!registered) this.registerRecent({
           title: getGraph.result.title ?? 'Untitled',
           type: 'graph',
@@ -445,26 +445,6 @@ export class GraphAppElement extends HTMLElement {
       getGraph.onerror = () => alert(`Error reading ${title} from browser's indexedDB`);
 
       transaction.oncomplete = () => db.close();
-    }
-  }
-
-  openGraph(graph: object){
-    Constants.fromJSON(graph.constants);
-    Object.assign(this.defaults, graph.defaults);
-
-    const map = new Map();
-
-    for(let vertex of graph.V){
-      const v = this.graph.addVertex(vertex);
-      if(this.graph.qs(vertex.id)){
-        map.set(vertex.id, v.id);
-      }
-    }
-
-    for(let edge of graph.E){
-      if(map.has(edge.sourceId)) edge.sourceId = map.get(edge.sourceId);
-      if(map.has(edge.targetId)) edge.targetId = map.get(edge.targetId);
-      this.graph.addEdge(edge.sourceId, edge.targetId, edge);
     }
   }
 

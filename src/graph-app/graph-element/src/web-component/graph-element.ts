@@ -52,8 +52,9 @@ export class GraphElement extends HTMLElement {
     };
   }
 
-  fromJSON(graph: any){
-    const wait = (delay) => new Promise((resolve, _) => setTimeout(resolve, delay));
+  async fromJSON(graph: any, clearFirst: boolean=false){
+    if(clearFirst) this.clear();
+    // const wait = (delay) => new Promise((resolve, _) => setTimeout(resolve, delay));
 
     Constants.fromJSON(graph.constants);
     Object.assign(this.defaults, graph.defaults);
@@ -61,18 +62,18 @@ export class GraphElement extends HTMLElement {
     const map = new Map();
 
     for(let vertex of graph.V){
-      const v = this.addVertex(vertex);
-      wait(1);
-      if(this.qs(vertex.id)){
+      if(this.querySelector(`#${CSS.escape(vertex.id)}`)){
+        const v = this.addVertex(vertex);
         map.set(vertex.id, v.id);
+      }else{
+        this.addVertex(vertex);
       }
     }
 
     for(let edge of graph.E){
-      if(map.has(edge.sourceId)) edge.sourceId = map.get(edge.sourceId);
-      if(map.has(edge.targetId)) edge.targetId = map.get(edge.targetId);
-      this.addEdge(edge.sourceId, edge.targetId, edge);
-      wait(1)
+      const sourceId = map.has(edge.sourceId) ? map.get(edge.sourceId) : edge.sourceId;
+      const targetId = map.has(edge.targetId) ? map.get(edge.targetId) : edge.targetId;
+      this.addEdge(sourceId, targetId, edge);
     }
   }
 
@@ -149,6 +150,7 @@ export class GraphElement extends HTMLElement {
     }
 
     for(let prop of Object.keys(options)){
+      if(prop === 'sourceId' || prop === 'targetId') continue;
       if(options[prop] !== null){
         edgeEl.setAttribute(prop, options[prop]);
       }
