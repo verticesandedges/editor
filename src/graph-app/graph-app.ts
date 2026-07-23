@@ -1,26 +1,12 @@
-import { GraphElement, VertexElement, EdgeElement } from "./graph-element/src/index.ts";
+import "./graph-element/src/index.ts";
+import type { GraphElement, VertexElement, EdgeElement } from "./graph-element/src/index.ts"; 
+import "./notebook/src/notebook/notebook/notebook.ts";
+import type { NotebookElement } from "./notebook/src/notebook/notebook/notebook.ts";  
 
-import { NotebookElement } from "./notebook/src/notebook/notebook/notebook.ts";
-import { CellTypeSelector } from "./notebook/src/notebook/cell-type-selector/cell-type-selector";
-import { MarkdownCellElement } from "./notebook/src/notebook/markdown-cell/markdown-cell";
-import { CellActionsElement } from "./notebook/src/notebook/cell-actions/cell-actions";
-import { JavascriptCellElement } from "./notebook/src/notebook/javascript-cell/javascript-cell";
-import { TypescriptCellElement } from "./notebook/src/notebook/typescript-cell/typescript-cell";
-import { NotebookActionsElement } from "./notebook/src/notebook/notebook-actions/notebook-actions";
-// import { NotebookAppElement } from "./notebook/src/notebook/notebook-app/notebook-app";
+import "./graph-element/src/index.ts";
 import "./drill-down/src/drill-down.ts";
-import { Constants } from "./graph-element/src/index.ts";
 
-import { openDB } from 'idb';
-
-if(!customElements.get('markdown-cell')) customElements.define("markdown-cell", MarkdownCellElement);
-if(!customElements.get('notebook-el')) customElements.define("notebook-el", NotebookElement);
-if(!customElements.get('cell-type')) customElements.define("cell-type", CellTypeSelector);
-if(!customElements.get('cell-actions')) customElements.define("cell-actions", CellActionsElement);
-if(!customElements.get('javascript-cell')) customElements.define("javascript-cell", JavascriptCellElement);
-if(!customElements.get('typescript-cell')) customElements.define('typescript-cell', TypescriptCellElement);
-if(!customElements.get('notebook-actions')) customElements.define('notebook-actions', NotebookActionsElement);
-// if(!customElements.get('notebook-app')) customElements.define('notebook-app', NotebookAppElement);
+import { openDB } from "idb";
 
 export class GraphAppElement extends HTMLElement {
   static template: string = ``;
@@ -47,7 +33,14 @@ export class GraphAppElement extends HTMLElement {
 
     this.fetchStyle()
     .then(() => this.fetchTemplate())
-    .then(() => this.graph = this.qs('graph-el') as GraphElement)
+    .then(() => {
+      const graphEl = this.qs('graph-el') as any;
+      if(!graphEl || typeof graphEl.addVertex !== 'function' || typeof graphEl.addEdge !== 'function'){
+        throw new Error("Graph element not found or does not have addVertex/addEdge methods");
+      } 
+
+      this.graph = graphEl as GraphElement;
+    })
     .then(() => this.notebook = this.qs('notebook-el') as NotebookElement)
     .then(() => this.wireTopMenu())
     .then(() => this.wireToolMenu())
@@ -346,7 +339,8 @@ export class GraphAppElement extends HTMLElement {
   async openGraphFile(file?: FileSystemFileHandle){
     const registered = file ? true : false;
     if(file){
-      const contents = await file.text();
+      const f = await file.getFile();
+      const contents = await f.text();
       const json = JSON.parse(contents);
       this.graph.fromJSON(json, true);
       return;
@@ -455,7 +449,8 @@ export class GraphAppElement extends HTMLElement {
   async openNotebookFile(file?: FileSystemFileHandle){
     const registered = file ? true : false;
     if(file){
-      const contents = await file.text();
+      const f = await file.getFile();
+      const contents = await f.text();
       const json = JSON.parse(contents);
       this.notebook.fromJSON(json, true);
       return;
@@ -507,7 +502,7 @@ export class GraphAppElement extends HTMLElement {
     
     try{
       const res = await fetch(url, {headers: { "Content-Type": "application/json" }})
-      const json = res.json();  
+      const json = await res.json();  
       this.notebook.fromJSON(json, true);
 
       if(!registered) this.registerRecent({

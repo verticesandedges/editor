@@ -1,6 +1,16 @@
 import { JavascriptCellElement } from "../javascript-cell/javascript-cell";
 import { MarkdownCellElement } from "../markdown-cell/markdown-cell";
 import { TypescriptCellElement } from "../typescript-cell/typescript-cell";
+import { NotebookActionsElement } from "../notebook-actions/notebook-actions";
+import { CellTypeSelector } from "../cell-type-selector/cell-type-selector";
+import { CellActionsElement } from "../cell-actions/cell-actions";
+
+if(!customElements.get('markdown-cell')) customElements.define("markdown-cell", MarkdownCellElement);
+if(!customElements.get('cell-type')) customElements.define("cell-type", CellTypeSelector);
+if(!customElements.get('cell-actions')) customElements.define("cell-actions", CellActionsElement);
+if(!customElements.get('javascript-cell')) customElements.define("javascript-cell", JavascriptCellElement);
+if(!customElements.get('typescript-cell')) customElements.define('typescript-cell', TypescriptCellElement);
+if(!customElements.get('notebook-actions')) customElements.define('notebook-actions', NotebookActionsElement);
 
 export class NotebookElement extends HTMLElement {
   //#region public properties
@@ -142,3 +152,5 @@ export class NotebookElement extends HTMLElement {
   }
   //#endregion
 }
+
+if(!customElements.get('notebook-el')) customElements.define("notebook-el", NotebookElement);

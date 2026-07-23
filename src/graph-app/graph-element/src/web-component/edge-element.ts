@@ -1,6 +1,8 @@
 import { Edge, EdgeId, EdgeOptions } from '../layout/scene-edge';
-import { VertexElement } from './vertex-element';
-import { GraphElement } from './graph-element';
+import './vertex-element';
+import type { VertexElement } from './vertex-element';
+import './graph-element';
+import type { GraphElement } from './graph-element';
 
 function propName(attrStr: string){
   return attrStr.replace(/-([a-z])/g, (match, letter) => letter.toUpperCase());
@@ -66,7 +68,8 @@ export class EdgeElement extends HTMLElement {
       color: this.color,
       arrow: this.arrow,
       width: this.width,      
-      label: this.label instanceof HTMLElement ? this.label.outerHTML : this.label,
+      label: this.label,
+      strength: this.strength,
       visible: this.visible,
       spline: this.spline
     }

@@ -778,6 +778,279 @@ class $312a93348be6f698$export$62a1cc341f70ee8e extends HTMLElement {
 }
 
 
+
+
+
+class $54cacde54151b574$export$e5e297d53d9ad3c7 extends HTMLElement {
+    //#region public properties
+    qs;
+    qsa;
+    //#endregion
+    constructor(){
+        super();
+        this.attachShadow({
+            mode: "open"
+        });
+        this.qs = this.shadowRoot.querySelector.bind(this.shadowRoot);
+        this.qsa = this.shadowRoot.querySelector.bind(this.shadowRoot);
+        this.setupUI();
+    }
+    async setupUI() {
+        await this.fetchStyle();
+        await this.fetchTemplate();
+        this.setupNotebookActions();
+    }
+    async fetchStyle() {
+        const sheet = new CSSStyleSheet();
+        const file = await fetch(new URL("notebook-actions.9d8b0216.css", import.meta.url));
+        const css = await file.text();
+        sheet.replaceSync(css);
+        this.shadowRoot.adoptedStyleSheets = [
+            sheet
+        ];
+    }
+    async fetchTemplate() {
+        const file = await fetch(new URL("notebook-actions.37d56153.html", import.meta.url));
+        const html = await file.text();
+        this.shadowRoot.innerHTML = html;
+    }
+    //#region private methods
+    setupNotebookActions() {
+        this.qs('.add-cell').addEventListener('click', ()=>this.onAddCellClick());
+        this.qs('.run-cells').addEventListener('click', ()=>this.onRunCellsClick());
+        this.qs('.reset-cells').addEventListener('click', ()=>this.onResetCellsClick());
+    }
+    getParent() {
+        return this.getRootNode().host;
+    }
+    onAddCellClick() {
+        const cell = new (0, $dd4ad8f3f241100e$export$7910644ddd3b55c3)();
+        this.getParent().qs('.cells').appendChild(cell);
+        cell.ready.then(()=>cell.view.focus());
+    }
+    onRunCellsClick() {
+        this.getParent().qsa('.cells>*').forEach(async (cell)=>{
+            if (cell instanceof (0, $60393df850c1c53c$export$5a61110bddf305c0) || cell instanceof (0, $312a93348be6f698$export$62a1cc341f70ee8e)) await cell.run();
+        });
+    }
+    onResetCellsClick() {
+        this.getParent().qsa('.cells>*').forEach((cell)=>{
+            if (cell instanceof (0, $60393df850c1c53c$export$5a61110bddf305c0) || cell instanceof (0, $312a93348be6f698$export$62a1cc341f70ee8e)) cell.resetOutput();
+        });
+    }
+}
+
+
+
+
+
+class $bdaad2d5f3551cf2$export$a97aa3d704ecd66b extends HTMLElement {
+    static observedAttributes = [
+        "data-selected"
+    ];
+    //#region public properties
+    qs;
+    qsa;
+    get selected() {
+        const option = this.qs('.cell-type[checked]');
+        return option.value;
+    }
+    set selected(selection) {
+        if (selection !== this.dataset.selected) {
+            this.qs(`.cell-type[checked]`).removeAttribute('checked');
+            this.qs(`.cell-type.${selection}`).setAttribute('checked', 'true');
+        }
+    }
+    //#endregion
+    constructor(){
+        super();
+        this.attachShadow({
+            mode: "open"
+        });
+        this.qs = this.shadowRoot.querySelector.bind(this.shadowRoot);
+        this.qsa = this.shadowRoot.querySelectorAll.bind(this.shadowRoot);
+        this.setupUI();
+    }
+    async setupUI() {
+        await this.fetchStyle();
+        await this.fetchTemplate();
+        this.setupSelectors();
+    }
+    async fetchStyle() {
+        const sheet = new CSSStyleSheet();
+        const file = await fetch(new URL("cell-type-selector.4c5c21e8.css", import.meta.url));
+        const css = await file.text();
+        sheet.replaceSync(css);
+        this.shadowRoot.adoptedStyleSheets = [
+            sheet
+        ];
+    }
+    async fetchTemplate() {
+        const file = await fetch(new URL("cell-type-selector.f34b40b6.html", import.meta.url));
+        const html = await file.text();
+        this.shadowRoot.innerHTML = html;
+    }
+    //#region public methods
+    attributeChangedCallback(name, old, value) {
+        switch(name){
+            case "data-selected":
+                this.selected = value;
+                break;
+        }
+    }
+    //#endregion
+    //#region private methods
+    setupSelectors() {
+        const md = this.qs('.cell-type.markdown');
+        const js = this.qs('.cell-type.javascript');
+        const ts = this.qs('.cell-type.typescript');
+        md.addEventListener('click', this.onMarkdownClick.bind(this));
+        js.addEventListener('click', this.onJavascriptClick.bind(this));
+        ts.addEventListener('click', this.onTypescriptClick.bind(this));
+        this.qs('.label.markdown').addEventListener('click', this.onMarkdownClick.bind(this));
+        this.qs('.label.javascript').addEventListener('click', this.onJavascriptClick.bind(this));
+        this.qs('.label.typescript').addEventListener('click', this.onTypescriptClick.bind(this));
+        switch(this.dataset.selected){
+            case 'markdown':
+                md.setAttribute('checked', 'checked');
+                break;
+            case 'javascript':
+                js.setAttribute('checked', 'checked');
+                break;
+            case 'typescript':
+                ts.setAttribute('checked', 'checked');
+                break;
+        }
+    }
+    getOld() {
+        const md = this.getRootNode().host.closest('markdown-cell');
+        const js = this.getRootNode().host.closest('javascript-cell');
+        const ts = this.getRootNode().host.closest('typescript-cell');
+        const old = md ?? js ?? ts;
+        return old;
+    }
+    onMarkdownClick() {
+        const cell = new (0, $dd4ad8f3f241100e$export$7910644ddd3b55c3)();
+        cell.ready.then(()=>{
+            const old = this.getOld();
+            const text = old.source;
+            old.replaceWith(cell);
+            cell.source = text;
+            cell.view.focus();
+        });
+    }
+    onJavascriptClick() {
+        const cell = new (0, $60393df850c1c53c$export$5a61110bddf305c0)();
+        cell.ready.then(()=>{
+            const old = this.getOld();
+            const text = old.source;
+            old.replaceWith(cell);
+            cell.source = text;
+            cell.view.focus();
+        });
+    }
+    onTypescriptClick() {
+        const cell = new (0, $312a93348be6f698$export$62a1cc341f70ee8e)();
+        cell.ready.then(()=>{
+            const old = this.getOld();
+            const text = old.source;
+            old.replaceWith(cell);
+            cell.source = text;
+            cell.view.focus();
+        });
+    }
+}
+
+
+
+
+class $e4d3529c0c677131$export$ac85885ea219ea4e extends HTMLElement {
+    //#region public properties
+    qs;
+    qsa;
+    //#endregion
+    constructor(){
+        super();
+        this.attachShadow({
+            mode: "open"
+        });
+        this.qs = this.shadowRoot.querySelector.bind(this.shadowRoot);
+        this.qsa = this.shadowRoot.querySelector.bind(this.shadowRoot);
+        this.setupUI();
+    }
+    async setupUI() {
+        await this.fetchStyle();
+        await this.fetchTemplate();
+        this.setupCellActions();
+    }
+    async fetchStyle() {
+        const sheet = new CSSStyleSheet();
+        const file = await fetch(new URL("cell-actions.d7c73aec.css", import.meta.url));
+        const css = await file.text();
+        sheet.replaceSync(css);
+        this.shadowRoot.adoptedStyleSheets = [
+            sheet
+        ];
+    }
+    async fetchTemplate() {
+        const file = await fetch(new URL("cell-actions.b403dac4.html", import.meta.url));
+        const html = await file.text();
+        this.shadowRoot.innerHTML = html;
+    }
+    //#region private methods
+    setupCellActions() {
+        this.qs('.delete-cell').addEventListener('click', ()=>this.onDeleteCellClick());
+        this.qs('.prepend-cell').addEventListener('click', ()=>this.onPrependCellClick());
+        this.qs('.append-cell').addEventListener('click', ()=>this.onAppendCellClick());
+        const cell = this.getParent();
+        if (cell instanceof (0, $60393df850c1c53c$export$5a61110bddf305c0) || cell instanceof (0, $312a93348be6f698$export$62a1cc341f70ee8e)) {
+            this.qs('.run-cell').addEventListener('click', ()=>this.onRunClick());
+            this.qs('.reset-cell').addEventListener('click', ()=>this.onResetCellClick());
+        } else {
+            this.qs('.run-cell').parentElement?.remove();
+            this.qs('.reset-cell').parentElement?.remove();
+        }
+    }
+    getParent() {
+        const md = this.getRootNode().host.closest('markdown-cell');
+        const ts = this.getRootNode().host.closest('typescript-cell');
+        const js = this.getRootNode().host.closest('javascript-cell');
+        return md ?? ts ?? js;
+    }
+    onDeleteCellClick() {
+        this.getParent().remove();
+    }
+    onResetCellClick() {
+        this.getParent().resetOutput();
+    }
+    onPrependCellClick() {
+        const CellType = this.getParent().constructor;
+        const cell = new CellType();
+        cell.ready.then(()=>{
+            this.getParent().before(cell);
+            cell.view.focus();
+        });
+    }
+    onAppendCellClick() {
+        const CellType = this.getParent().constructor;
+        const cell = new CellType();
+        cell.ready.then(()=>{
+            this.getParent().after(cell);
+            cell.view.focus();
+        });
+    }
+    onRunClick() {
+        this.getParent()?.run();
+    }
+}
+
+
+if (!customElements.get('markdown-cell')) customElements.define("markdown-cell", (0, $dd4ad8f3f241100e$export$7910644ddd3b55c3));
+if (!customElements.get('cell-type')) customElements.define("cell-type", (0, $bdaad2d5f3551cf2$export$a97aa3d704ecd66b));
+if (!customElements.get('cell-actions')) customElements.define("cell-actions", (0, $e4d3529c0c677131$export$ac85885ea219ea4e));
+if (!customElements.get('javascript-cell')) customElements.define("javascript-cell", (0, $60393df850c1c53c$export$5a61110bddf305c0));
+if (!customElements.get('typescript-cell')) customElements.define('typescript-cell', (0, $312a93348be6f698$export$62a1cc341f70ee8e));
+if (!customElements.get('notebook-actions')) customElements.define('notebook-actions', (0, $54cacde54151b574$export$e5e297d53d9ad3c7));
 class $71fc0554b53eb1ce$export$88315cbbb14c4be4 extends HTMLElement {
     //#region public properties
     qs;
@@ -897,6 +1170,7 @@ class $71fc0554b53eb1ce$export$88315cbbb14c4be4 extends HTMLElement {
         this.fromJSON(obj, clearFirst);
     }
 }
+if (!customElements.get('notebook-el')) customElements.define("notebook-el", $71fc0554b53eb1ce$export$88315cbbb14c4be4);
 
 
 export {$71fc0554b53eb1ce$export$88315cbbb14c4be4 as NotebookElement};

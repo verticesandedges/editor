@@ -1,8 +1,12 @@
 import { Graph } from '../layout/scene-graph';
 import { VertexOptions } from '../layout/scene-vertex';
 import { EdgeOptions } from '../layout/scene-edge';
-import { VertexElement } from './vertex-element';
-import { EdgeElement } from './edge-element';
+
+import "./vertex-element"
+import type { VertexElement } from './vertex-element';
+import './edge-element';
+import type { EdgeElement } from './edge-element';
+
 import { Constants } from '../layout/dynamic-matching';
 
 function propName(attrStr: string){
@@ -61,18 +65,16 @@ export class GraphElement extends HTMLElement {
 
     const map = new Map();
 
-    for(let vertex of graph.V){
-      if(this.querySelector(`#${CSS.escape(vertex.id)}`)){
-        const v = this.addVertex(vertex);
+    for(const vertex of graph.V){
+      const v = this.addVertex(vertex);
+      if(v.id !== vertex.id){
         map.set(vertex.id, v.id);
-      }else{
-        this.addVertex(vertex);
       }
     }
 
-    for(let edge of graph.E){
-      const sourceId = map.has(edge.sourceId) ? map.get(edge.sourceId) : edge.sourceId;
-      const targetId = map.has(edge.targetId) ? map.get(edge.targetId) : edge.targetId;
+    for(const edge of graph.E){
+      const sourceId = map.get(edge.sourceId) ?? edge.sourceId
+      const targetId = map.get(edge.targetId) ?? edge.targetId;
       this.addEdge(sourceId, targetId, edge);
     }
   }
@@ -213,6 +215,6 @@ export class GraphElement extends HTMLElement {
   }
 }
 
-if(!customElements.get('graph-el')){
-  customElements.define('graph-el', GraphElement);
-}
+// if(!customElements.get('graph-el')){
+//   customElements.define('graph-el', GraphElement);
+// }

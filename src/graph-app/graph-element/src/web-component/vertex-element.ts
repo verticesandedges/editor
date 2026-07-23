@@ -95,7 +95,7 @@ export class VertexElement extends HTMLElement {
     if(!this.isConnected || !this.vertex) return;
 
     const prop = propName(attr);
-    this.vertex[prop] = value;
+    (this.vertex as any)[prop] = value;
   }
 
   readAttributes(): VertexOptions {

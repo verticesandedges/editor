@@ -10,13 +10,3 @@ export {
   GraphElement,
   Constants
 };
-
-if(!customElements.get('vertex-el')){
-  customElements.define("vertex-el", VertexElement);
-}
-if(!customElements.get('edge-el')){
-  customElements.define("edge-el", EdgeElement);
-}
-if(!customElements.get('graph-el')){
-  customElements.define("graph-el", GraphElement);
-}
