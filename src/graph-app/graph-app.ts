@@ -1,11 +1,11 @@
 import "./graph-element/src/web-component/graph-element.ts";
 import type { GraphElement, VertexElement, EdgeElement } from "./graph-element/src/index.ts"; 
-
 import "./notebook/src/notebook/notebook/notebook.ts";
 import type { NotebookElement } from "./notebook/src/notebook/notebook/notebook.ts";  
-
 import "./drill-down/src/drill-down.ts";
 import { openDB } from "idb";
+
+const capFirst = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 
 export class GraphAppElement extends HTMLElement {
   static template: string = ``;
@@ -44,34 +44,28 @@ export class GraphAppElement extends HTMLElement {
     .then(() => this.wireTopMenu())
     .then(() => this.wireToolMenu())
     .then(() => this.wireNotebook());
-
-    /*.then(() => this.setupGraphMenuHandlers())
-    .then(() => this.setupNotebookMenuHandlers())
-    .then(() => this.setupVertexMenuHandlers())
-    .then(() => this.setupEdgeMenuHandlers())
-    */
   }
 
   wireTopMenu(){
     // file
     // graph
     this.qs('#new-graph')?.addEventListener('click', () => this.graph.clear())
-    this.qs('#file-graph-open-file')?.addEventListener('click', () => this.openGraphFile());
-    this.qs('#file-graph-open-url')?.addEventListener('click', () => this.openGraphURL());
-    this.qs('#file-graph-open-indexeddb')?.addEventListener('click', () => this.openGraphIndexedDB());
-    this.qs('#file-graph-save-file')?.addEventListener('click', () => this.saveGraphFile());
-    this.qs('#file-graph-save-url')?.addEventListener('click', () => this.saveGraphURL());
-    this.qs('#file-graph-save-indexedDB')?.addEventListener('click', () => this.saveGraphIndexedDB());
+    this.qs('#file-graph-open-file')?.addEventListener('click',         () => this.open());
+    this.qs('#file-graph-open-url')?.addEventListener('click',          () => this.open());
+    this.qs('#file-graph-open-indexeddb')?.addEventListener('click',    () => this.open());
+    this.qs('#file-graph-save-file')?.addEventListener('click',         () => this.save());
+    this.qs('#file-graph-save-url')?.addEventListener('click',          () => this.save());
+    this.qs('#file-graph-save-indexedDB')?.addEventListener('click',    () => this.save());
 
     // notebook
-    this.qs('#new-notebook')?.addEventListener('click', () => this.notebook.clear());
-    this.qs('#run-notebook')?.addEventListener('click', () => this.notebook.runAll());
-    this.qs('#file-notebook-open-file')?.addEventListener('click', () => this.openNotebookFile());
-    this.qs('#file-notebook-open-url')?.addEventListener('click', () => this.openNotebookURL());
-    this.qs('#file-notebook-open-indexeddb')?.addEventListener('click', () => this.openNotebookIndexedDB());
-    this.qs('#file-notebook-save-file')?.addEventListener('click', () => this.saveNotebookFile());
-    this.qs('#file-notebook-save-url')?.addEventListener('click', () => this.saveNotebookURL());
-    this.qs('#file-notebook-save-indexeddb')?.addEventListener('click', () => this.saveNotebookIndexedDB());
+    this.qs('#new-notebook')?.addEventListener('click',                 () => this.notebook.clear());
+    this.qs('#run-notebook')?.addEventListener('click',                 () => this.notebook.runAll());
+    this.qs('#file-notebook-open-file')?.addEventListener('click',      () => this.open());
+    this.qs('#file-notebook-open-url')?.addEventListener('click',       () => this.open());
+    this.qs('#file-notebook-open-indexeddb')?.addEventListener('click', () => this.open());
+    this.qs('#file-notebook-save-file')?.addEventListener('click',      () => this.save());
+    this.qs('#file-notebook-save-url')?.addEventListener('click',       () => this.save());
+    this.qs('#file-notebook-save-indexeddb')?.addEventListener('click', () => this.save());
 
     // recent
     this.buildRecentMenu();
@@ -84,109 +78,6 @@ export class GraphAppElement extends HTMLElement {
     // selection
     this.qs('#selection-select-all')?.addEventListener('click', () => this.graph.vertices.forEach(v => (v as VertexElement).selected = true));
     this.qs('#selection-select-none')?.addEventListener('click', () => this.graph.selected.forEach(v => (v as VertexElement).selected = false));
-  }
-
-  async buildRecentMenu(){
-    const recentMenu = this.qs('#file-recent')!;
-    recentMenu.innerHTML = '';
-
-    const recent = await this.getRecent();
-    recent.forEach((item: any) => {
-      const li = document.createElement('li');
-      const button = document.createElement('button');
-      // show filename if string, filehandle.filename otherwise
-      button.textContent = `${item.type}: ${item.title ?? item.url ?? 'Untitled'} (${item.method})`;
-      button.addEventListener('click', () => this.openRecent(item));
-      li.appendChild(button);
-      recentMenu.appendChild(li);
-    });
-    if(recent.length === 0){
-      const li = document.createElement('li');
-      li.textContent = 'No recent files';
-      recentMenu.appendChild(li);
-    }
-
-  }
-
-  async registerRecent(item: {
-    type: 'graph' | 'notebook', 
-    method: 'file' | 'url' | 'indexeddb',
-    title?: string,
-    handle?: FileSystemFileHandle,
-    url?: string
-  }): Promise<void> {
-    const db = await openDB('graph-app.recent', 1, {
-      upgrade(db){
-        if(!db.objectStoreNames.contains('graph-app.recentStore')){
-          db.createObjectStore('graph-app.recentStore', {keyPath: 'id', 'autoIncrement': true});
-        } 
-      }
-    });
-
-    const tx = db.transaction('graph-app.recentStore', 'readwrite');
-    const store = tx.objectStore('graph-app.recentStore');
-
-    const allItems = await store.getAll();
-
-    if(allItems.length >= 5){
-      const oldest = allItems[0];
-      await store.delete(oldest.id);
-    }
-
-    await store.add(item);
-    await tx.done;
-    await this.buildRecentMenu();
-  }
-
-  async getRecent(){
-    const db = await openDB('graph-app.recent', 1, {
-      upgrade(db){
-        if(!db.objectStoreNames.contains('graph-app.recentStore')){
-          db.createObjectStore('graph-app.recentStore', {keyPath: 'id', 'autoIncrement': true});
-        } 
-      }
-    });
-    const tx = db.transaction('graph-app.recentStore', 'readonly');
-    const store = tx.objectStore('graph-app.recentStore');
-    const allItems = await store.getAll();
-    await tx.done;
-    return allItems;
-  }
-
-  async openRecent(item: {
-    type: 'graph' | 'notebook', 
-    method: 'file' | 'url' | 'indexeddb',
-    title?: string,
-    handle?: FileSystemFileHandle,
-    url?: string
-  }){
-    if(item.type === 'graph'){
-      switch(item.method){
-        case 'url':
-          this.openGraphURL(item.url);
-          break;
-        case 'indexeddb':
-          this.openGraphIndexedDB(item.title);
-          break;
-        case 'file':
-          this.openGraphFile(item.handle);
-          break;
-      }
-    }
-    
-    if(item.type === 'notebook'){
-      switch(item.method){
-        case 'url':
-          this.openNotebookURL(item.url);
-          break;
-        case 'indexeddb':
-          this.openNotebookIndexedDB(item.title);
-          break;
-        case 'file':
-          this.openNotebookFile(item.handle);
-          break;
-      }
-    }
   }
 
   cut(){
@@ -247,397 +138,9 @@ export class GraphAppElement extends HTMLElement {
     });
   }
 
-  //#region graph file functions
+  //#region save/open
 
-  async saveGraphFile(){
-    const contents = JSON.stringify(this.graph.toJSON());
-    let title = localStorage.getItem('lastGraphFilename') ?? '';
-    title = prompt('Filename: ', title) ?? '';
-    if(!title) return;
-
-    if('showSaveFilePicker' in window){
-      const fileHandle = await (window as any).showSaveFilePicker({
-        suggestedName: `${title}${title.includes('.json') ? '' : '.json'}`
-      });
-      const writable = await fileHandle.createWritable();
-      await writable.write(contents);
-      await writable.close();
-
-      this.registerRecent({
-        title: fileHandle.name,
-        type: 'graph',
-        method: 'file',
-        handle: fileHandle
-      });
-    }else{
-      const anchor = document.createElement('a');
-      const url = URL.createObjectURL(new Blob([contents]));
-      document.body.appendChild(anchor);
-      anchor.href = url;
-      anchor.download = `${title}${title.includes('.json') ? '' : '.json'}`;
-      anchor.click();
-      anchor.remove();
-      URL.revokeObjectURL(url);
-
-      this.registerRecent({
-        title,
-        type: 'graph',
-        method: 'file'
-      });
-    }
-  }
-
-  async saveGraphURL(){
-    let previous = localStorage.getItem('lastGraphURL') ?? '';
-    const url = prompt('URL: ', previous);
-    if(!url) return;
-
-    localStorage.setItem("lastGraphURL", url);
-    const graph = this.graph.toJSON();
-    const res = await fetch(url, {method: "POST", body: JSON.stringify(graph)});
-    if(res.ok) alert(`Graph successfully sent to ${url}`);
-    else alert(`Error sending graph to ${url}: ${res.status} - ${res.statusText}`);
-  }
-
-  async saveGraphIndexedDB(){
-    const open = window.indexedDB.open('graph-app.graphDB', 1);
-    const previousTitle = localStorage.getItem('lastGraphDBTitle') ?? '';
-    const title = prompt("Graph Title: ", previousTitle);
-    if(title) localStorage.setItem('lastGraphDBTitle', title);
-    else return;
-
-    open.onupgradeneeded = () => {
-      const db = open.result;
-      const store = db.createObjectStore('graphStore', {keyPath: 'title'});
-      const index = store.createIndex('graphTitleIndex', ['title']);
-    }
-
-    open.onsuccess = (event) => {
-      const db  = (event.target as IDBOpenDBRequest).result;
-      const transaction = db.transaction(['graphStore'], 'readwrite');
-      const store = transaction.objectStore('graphStore');
-
-      store.put(this.graph.toJSON(title));
-
-      transaction.oncomplete = () => {
-        db.close();
-        alert(`Graph titled ${title} successfully written to browser's IndexedDB`);
-        this.registerRecent({
-          title, 
-          type: 'graph', 
-          method: 'indexeddb'
-        });
-      }
-    }
-
-    open.onerror = () => {
-      alert(`Error opening DB. Graph ${title} not saved to browser's IndexedDB`);
-    }
-  }
-
-  async openGraphFile(file?: FileSystemFileHandle){
-    const registered = file ? true : false;
-    if(file){
-      const f = await file.getFile();
-      const contents = await f.text();
-      const json = JSON.parse(contents);
-      this.graph.fromJSON(json, true);
-      return;
-    }
-
-    if("showOpenFilePicker" in window){
-      const [fileHandle] = await (window as any).showOpenFilePicker({multiple: false});
-      const file: File = await fileHandle.getFile();
-      const contents = await file.text();
-      const json = JSON.parse(contents);
-      this.graph.fromJSON(json, true);
-
-      if(!registered) this.registerRecent({
-        title: fileHandle.name, 
-        type: 'graph', 
-        method: 'file', 
-        handle: fileHandle
-      });
-    }else{
-      const input = document.createElement('input');
-      input.type = 'file';
-      input.click();
-      input.onchange = async () => {
-        if(input.files!.length){
-          const file = input.files![0];
-          const contents = await file.text();
-          const json = JSON.parse(contents);
-          this.graph.fromJSON(json, true);
-
-          if(!registered) this.registerRecent({
-            title: file.name, 
-            type: 'graph', 
-            method: 'file', 
-            handle: file as unknown as FileSystemFileHandle
-          });
-        }
-      }
-    }
-  }
-
-  async openGraphURL(url?: string){
-    const registered = url ? true : false;
-
-    if(url === undefined){
-      url = prompt('URL: ', localStorage.getItem('lastGraphURL') ?? '') ?? undefined;
-      if(url) localStorage.setItem('lastGraphURL', url);
-      else return;
-    }
-
-    const res = await fetch(url);
-    if(!res.ok){
-      alert(`There was an error fetching ${url}: ${res.status} - ${res.statusText}`);
-      return;
-    }
-
-    const json = await res.json();
-    this.graph.fromJSON(json, true);
-    if(!registered) this.registerRecent({
-      title: json.title ?? 'Untitled',
-      type: 'graph',
-      method: 'url',
-      url
-    });
-  }
-
-  async openGraphIndexedDB(title?: string){
-    const registered = title ? true : false;
-    if(title === undefined){
-      let previous = localStorage.getItem("lastGraphDBTitle") ?? '';
-      title = prompt('Title', previous) ?? undefined;
-      if(title) localStorage.setItem("lastGraphDBTitle", title);
-      else return;
-    }
-
-    const open = window.indexedDB.open('graph-app.graphDB', 1);
-    open.onupgradeneeded = () => {
-      alert(`No DB "graph.graphDB" present. Thus no graph of title ${title} could be found.`);
-    }
-
-    open.onsuccess = () => {
-      const db = open.result;
-      const transaction = db.transaction('graphStore', 'readonly');
-      const store = transaction.objectStore('graphStore');
-      const index = store.index("graphTitleIndex");
-      const getGraph = index.get([title]);
-
-      getGraph.onsuccess = () => {
-        this.graph.fromJSON(getGraph.result, true);
-        if(!registered) this.registerRecent({
-          title: getGraph.result.title ?? 'Untitled',
-          type: 'graph',
-          method: 'indexeddb'
-        });
-      }
-
-      getGraph.onerror = () => alert(`Error reading ${title} from browser's indexedDB`);
-
-      transaction.oncomplete = () => db.close();
-    }
-  }
-
-  //#endregion graph file functions
-
-  //#region notebook file functions
-
-  async openNotebookFile(file?: FileSystemFileHandle){
-    const registered = file ? true : false;
-    if(file){
-      const f = await file.getFile();
-      const contents = await f.text();
-      const json = JSON.parse(contents);
-      this.notebook.fromJSON(json, true);
-      return;
-    }
-
-    if("showOpenFilePicker" in window){
-      const [fileHandle] = await ( window as any).showOpenFilePicker({multiple: false});
-      const file: File = await fileHandle.getFile();
-      const contents = await file.text();
-      const json = JSON.parse(contents);
-      this.notebook.fromJSON(json, true);
-
-      if(!registered) this.registerRecent({
-        title: fileHandle.name,
-        type: 'notebook',
-        method: 'file',
-        handle: fileHandle
-      });
-    }else{
-      const input = document.createElement('input');
-      input.type = 'file';
-      input.click();
-      input.onchange = async () => {
-        if(input.files!.length){
-          const file = input.files![0];
-          const contents = await file.text();
-          const json = JSON.parse(contents);
-          this.notebook.fromJSON(json, true);
-
-          if(!registered) this.registerRecent({
-            title: file.name,
-            type: 'notebook',
-            method: 'file',
-            handle: file as unknown as FileSystemFileHandle
-          });
-        }
-      }
-    }
-  }
-
-  async openNotebookURL(url?: string){
-    const registered = url ? true : false;
-    if(url === undefined){
-      let previous = localStorage.getItem('lastNotebookURL') ?? '';
-      url = prompt('URL: ', previous) ?? undefined;
-      if(url) localStorage.setItem('lastNotebookURL', url)
-      else return;
-    }
-    
-    try{
-      const res = await fetch(url, {headers: { "Content-Type": "application/json" }})
-      const json = await res.json();  
-      this.notebook.fromJSON(json, true);
-
-      if(!registered) this.registerRecent({
-        title: json.title ?? 'Untitled',
-        type: 'notebook',
-        method: 'url',
-        url
-      });
-    }catch(e){
-      console.error(e);
-      alert(`Error occured while opening ${url}: ${e}`)
-    }
-  }
-
-  openNotebookIndexedDB(title?: string){
-    const registered = title ? true : false;
-    if(title === undefined){
-      const previous = localStorage.getItem('lastNotebookDBTitle') ?? '';
-      title = prompt('Title: ', previous) ?? undefined;
-      if(title) localStorage.setItem('lastNotebookDBTitle', title)
-      else return;
-    }
-    
-    const open = window.indexedDB.open('graph-app.notebookDB', 1);
-    open.onupgradeneeded = () => {
-      alert(`No DB "graph-app.notebookDB" present, thus no notebook titled ${title} found.`);
-    };
-
-    open.onsuccess = () => {
-      const db = open.result;
-      const transaction = db.transaction('notebookStore', 'readonly');
-      const store = transaction.objectStore('notebookStore');
-      const index = store.index("notebookTitleIndex");
-
-      const getNotebook = index.get([title]);
-
-      getNotebook.onsuccess = () => {
-        this.notebook.fromJSON(getNotebook.result, true);
-        if(!registered) this.registerRecent({
-          title: getNotebook.result.title ?? 'Untitled',
-          type: 'notebook',
-          method: 'indexeddb'
-        });
-      }
-      getNotebook.onerror = () => alert(`Error reading ${title} from browser's indexedDB`);
-
-      transaction.oncomplete = () => db.close();
-    }
-  }
-
-  async saveNotebookFile(){
-    const contents = JSON.stringify(this.notebook.toJSON());
-    const title = this.notebook.title;
-
-    if('showSaveFilePicker' in window){
-      const fileHandle = await (window as any).showSaveFilePicker({
-        suggestedName: `${title}${title.includes('.ipynb') ? '' : '.ipynb'}`
-      })
-
-      const writable = await fileHandle.createWritable();
-      await writable.write(contents);
-      await writable.close();
-
-      this.registerRecent({
-        title: fileHandle.name,
-        type: 'notebook',
-        method: 'file',
-        handle: fileHandle
-      });
-    }else{
-      const anchor = document.createElement('a');
-      const url = URL.createObjectURL(new Blob([contents]));
-      document.body.appendChild(anchor);
-      anchor.href = url;
-      anchor.download = `${title}${title.includes('.ipynb') ? "" : ".ipynb"}`;
-      anchor.click();
-      anchor.remove();
-      URL.revokeObjectURL(url);
-
-      this.registerRecent({
-        title: anchor.download,
-        type: 'notebook',
-        method: 'file'
-      });
-    }
-  }
-
-  async saveNotebookURL(){
-    const previous = localStorage.getItem('lastNotebookURL') ?? '';
-    const url = prompt("URL: ", previous);
-    if(url) localStorage.setItem('lastNotebookURL', url);
-    else return;
-
-    const res = await fetch(url, {method: "POST", body: this.notebook.toString()});
-    if(res.ok){
-      alert(`${this.notebook.title} successfully sent to ${url}`);
-    }else{
-      alert(`Error sending ${this.notebook.title} to ${url}: ${res.status} - ${res.statusText}`);
-    }
-  }
-
-  async saveNotebookIndexedDB(){
-    const open = window.indexedDB.open('graph-app.notebookDB', 1);
-    localStorage.setItem('lastNotebookDBTitle', this.notebook.title);
-
-    open.onupgradeneeded = () => {
-      const db = open.result;
-      const store = db.createObjectStore('notebookStore', {keyPath: "metadata.title"});
-      const index = store.createIndex('notebookTitleIndex', ['metadata.title']);
-    };
-
-    open.onsuccess = (event) => {
-      const db = (event.target as IDBOpenDBRequest).result;
-      const transaction = db.transaction(['notebookStore'], 'readwrite');
-      const store = transaction.objectStore('notebookStore');
-
-      store.put(this.notebook.toJSON());
-
-      transaction.oncomplete = () => {
-        db.close();
-        alert(`Notebook ${this.notebook.title} successfully written to browser's indexedDB.`);
-        this.registerRecent({
-          title: this.notebook.title,
-          type: 'notebook',
-          method: 'indexeddb'
-        });
-      }
-    }
-
-    open.onerror = () => {
-      alert(`Error opening DB. Notebook ${this.notebook.title} not saved to browser's indexedDB.`);
-    }
-  }
-
-  //#endregion notebook file functions 
-
+  //#endregion save/open
 
   wireToolMenu(){
     /* Tool Menu Toggle in the Main Menu */

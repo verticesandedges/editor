@@ -1,11 +1,8 @@
 import { Graph } from '../layout/scene-graph';
 import { VertexOptions } from '../layout/scene-vertex';
 import { EdgeOptions } from '../layout/scene-edge';
-
-import "./vertex-element"
-import type { VertexElement } from './vertex-element';
-import './edge-element';
-import type { EdgeElement } from './edge-element';
+import { VertexElement } from './vertex-element';
+import { EdgeElement } from './edge-element';
 
 import { Constants } from '../layout/dynamic-matching';
 
@@ -15,8 +12,8 @@ function propName(attrStr: string){
 
 export class GraphElement extends HTMLElement {
   static observedAttributes = ['background-color'];
-  graph: Graph;
-  defaults: {
+  graph!: Graph;
+  defaults!: {
     vertex: VertexOptions,
     edge: EdgeOptions
   }
@@ -93,7 +90,7 @@ export class GraphElement extends HTMLElement {
 
   attributeChangedCallback(attr: string, old: string, value: string){
     const prop = propName(attr);
-    this.graph[prop] = value;
+    (this.graph as any)[prop] = value;
   }
 
   get vertices(): NodeList {
@@ -126,8 +123,8 @@ export class GraphElement extends HTMLElement {
       options.id = this.nextId('vertex');
     }
     for(let prop of Object.keys(options)){
-      if(options[prop] !== null){
-        vertexEl.setAttribute(prop, String(options[prop]));
+      if((options as any)[prop] !== null){
+        vertexEl.setAttribute(prop, String((options as any)[prop]));
       }
     }
     
@@ -153,8 +150,8 @@ export class GraphElement extends HTMLElement {
 
     for(let prop of Object.keys(options)){
       if(prop === 'sourceId' || prop === 'targetId') continue;
-      if(options[prop] !== null){
-        edgeEl.setAttribute(prop, options[prop]);
+      if((options as any)[prop] !== null){
+        edgeEl.setAttribute(prop, (options as any)[prop]);
       }
     }
 
@@ -179,7 +176,7 @@ export class GraphElement extends HTMLElement {
   }
 
   removeEdge(sel: string | EdgeElement): void {
-    let edge!: EdgeElement | null = null;
+    let edge: EdgeElement | null = null;
 
     if(typeof sel === 'string'){
       const selector = sel.startsWith('#') ? sel : `#${sel}`;
