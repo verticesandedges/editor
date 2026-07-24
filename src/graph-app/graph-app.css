@@ -233,6 +233,7 @@ drill-down#tool-menu:popover-open {
   gap: 5px;
   justify-content: start;
   border: 1px solid var(--ui-color);
+  margin-left: 20px;
 
   li {
     border: none;

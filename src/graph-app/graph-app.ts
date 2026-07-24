@@ -89,14 +89,21 @@ export class GraphAppElement extends HTMLElement {
   }
 
   private async buildRecentlyOpenedMenu() {
+    const hasFileSystemAccess = ("showOpenFilePicker" in window);
+
     const menu = this.qs('#file-recent') as HTMLUListElement;
     menu.innerHTML = '';
+
     const db = await this.openDB();
     const tx = db.transaction('opened', 'readonly');
     const store = tx.objectStore('opened');
     const entries = await store.getAll();
     entries.sort((a, b) => b.timestamp - a.timestamp);
+
     for (const entry of entries) {
+      const isFileHandleEntry = entry.method === 'file' && typeof entry.identifier !== 'string';
+      if(isFileHandleEntry && !hasFileSystemAccess) continue;
+
       const li = document.createElement('li');
       const button = document.createElement('button');
       button.textContent = `${capFirst(entry.type)} (${entry.method}): ${typeof entry.identifier === 'string' ? entry.identifier : entry.identifier.name}`;
@@ -145,12 +152,15 @@ export class GraphAppElement extends HTMLElement {
     // after this, content is a string from graph.toJSON() or notebook.toJSON()
     content ??= JSON.stringify((this as any)[type].toJSON());
     const previous = localStorage.getItem(`graph-app.previous-${type}-${method}`);
-
+    const extension = type === 'graph' ? '.json' : '.ipynb';
+          
+    
     if(method === 'file'){
 
       try{
         if(fileApiWindow.showSaveFilePicker){
-          const handle = await fileApiWindow.showSaveFilePicker({ suggestedName: previous });
+          const filename = previous?.endsWith(extension) ? previous : `${previous}${extension}`;
+          const handle = await fileApiWindow.showSaveFilePicker({ suggestedName: filename });
           const writable = await handle.createWritable();
           await writable.write(content); // a string
           await writable.close();
@@ -158,7 +168,6 @@ export class GraphAppElement extends HTMLElement {
           await this.registerOpened(type, method, handle);
           return;
         }else{
-          const extension = type === 'graph' ? '.json' : '.ipynb';
           let filename = prompt(`Enter the filename to save the ${type} as: `, previous || `${capFirst(type)}${extension}`);
           if(!filename) return;
           if(!filename.endsWith(extension)) filename += extension;
