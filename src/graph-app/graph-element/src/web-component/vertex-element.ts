@@ -58,6 +58,7 @@ export class VertexElement extends HTMLElement {
 
   toJSON(){
     return {
+      id: this.vertex.id,
       color: this.color,
       texture: this.texture,      
       size: this.size,

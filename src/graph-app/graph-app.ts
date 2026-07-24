@@ -147,20 +147,21 @@ export class GraphAppElement extends HTMLElement {
     const previous = localStorage.getItem(`graph-app.previous-${type}-${method}`);
 
     if(method === 'file'){
-      const extension = type === 'graph' ? '.json' : '.ipynb';
-      let filename = prompt(`Enter the filename to save the ${type} as: `, previous || `${capFirst(type)}${extension}`);
-      if(!filename) return;
-      if(!filename.endsWith(extension)) filename += extension;
 
       try{
         if(fileApiWindow.showSaveFilePicker){
-          const handle = await fileApiWindow.showSaveFilePicker({ suggestedName: filename });
+          const handle = await fileApiWindow.showSaveFilePicker({ suggestedName: previous });
           const writable = await handle.createWritable();
           await writable.write(content); // a string
           await writable.close();
           localStorage.setItem(`graph-app.previous-${type}-file`, handle.name);
           await this.registerOpened(type, method, handle);
+          return;
         }else{
+          const extension = type === 'graph' ? '.json' : '.ipynb';
+          let filename = prompt(`Enter the filename to save the ${type} as: `, previous || `${capFirst(type)}${extension}`);
+          if(!filename) return;
+          if(!filename.endsWith(extension)) filename += extension;
           const blob = new Blob([content], { type: 'application/json' }); // a blob from a string
           const url = URL.createObjectURL(blob);
           const anchor = document.createElement('a');
