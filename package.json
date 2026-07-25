@@ -3,8 +3,9 @@
   "version": "0.51.0",
   "description": "A canvas based graph app",
   "keywords": [
-    "3D",
     "interactive",
+    "force-directed",
+    "3D",
     "graph",
     "editor"
   ],
