@@ -447,8 +447,8 @@ export class GraphAppElement extends HTMLElement {
 
     colorInput.value = `#${settings.color.toString(16)}`;
     strengthInput.value = settings.strength?.toString();
-    arrowInput.value = settings.arrow.toString();
-    splineInput.value = settings.spline.toString();
+    arrowInput.checked = settings.arrow;
+    splineInput.checked = settings.spline;
     widthInput.value = settings.width?.toString();
     labelInput.value = settings.label || '';
     visibleInput.checked = settings.visible;
