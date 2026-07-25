@@ -18,7 +18,7 @@
     "url": "git+ssh://git@github.com/illogical-alliteration/graph-canvas.git"
   },
   "license": "UNLICENSED",
-  "author": "Joshua Moore <joshua.moore@verticesandedges.net>",
+  "author": "Joshua M. Moore <joshua.moore@verticesandedges.net>",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "watch": "parcel src/index.html --dist-dir docs/",
