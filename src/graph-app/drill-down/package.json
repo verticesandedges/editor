@@ -1,0 +1,40 @@
+{
+  "name": "drill-down",
+  "version": "0.1.0",
+  "description": "A Drill Down Component",
+  "keywords": [
+    "Drill",
+    "Down",
+    "Component"
+  ],
+  "license": "UNLICENSED",
+  "author": "Joshua M. Moore <joshua.moore@verticesandedges.net>",
+  "type": "module",
+  "source": "src/drill-down.ts",
+  "main": "dist/main.js",
+  "module": "dist/module.js",
+  "types": "dist/types.d.ts",
+  "targets": {
+    "main": {
+      "isLibrary": true
+    },
+    "demo": {
+      "source": "demo/index.html",
+      "distDir": "dist/demo",
+      "engines": {
+        "browsers": "> 0.5%, last 2 versions, not dead"
+      }
+    }
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:lib": "parcel build --target main",
+    "watch:lib": "parcel watch --target main",
+    "watch:demo": "parcel watch --target demo",
+    "start:demo": "http-server dist/demo",
+    "clean": "rm -rf .parcel-cache dist"
+  },
+  "devDependencies": {
+    "parcel": "^2.16.4"
+  }
+}

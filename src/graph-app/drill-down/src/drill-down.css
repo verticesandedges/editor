@@ -1,0 +1,113 @@
+:host {
+}
+
+#title {
+  font-weight: bold;
+}
+
+#back {
+  border: none;
+  background: none;
+  width: 100%;
+}
+
+#back:hover {
+  background-color: black;
+  color: white;
+}
+
+ul#menu {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+  width: 100%;
+  padding: 5px;
+  overflow-x: hidden;
+}
+
+span.symbol {
+  display: inline-block;
+  width: 35px;
+}
+
+li {
+  border-top: 1px solid black;
+}
+
+li:hover {
+  background-color: black;
+  color: white;
+  width: 100%;
+}
+
+li:hover * {
+  background-color: black;
+  color: white;
+}
+
+/* color control */
+input[type="color"] {
+  -webkit-appearance: none; /* Removes default Chrome/Safari styles */
+  -moz-appearance: none;    /* Removes default Firefox styles */
+  appearance: none;
+  width: 100%;
+  height: 20px;
+  border: none;
+  padding: 0;
+  margin: 1px;
+}
+
+/* file control */
+input[type="file"] {
+  display: none;
+}
+
+.custom-file-upload {
+  display: inline-block;
+  width: 100%;
+  height: 20px;
+  padding: 0px;
+  border: 0;
+  margin: 1px;
+}
+
+/* number control */
+input[type="number"] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 20px;
+  padding: 0;
+  border: 0;
+  margin: 1px;
+  font-size: 10px;
+}
+
+/* text control */
+input[type="text"] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 20px;
+  padding: 0;
+  border: 0;
+  margin: 1px;
+  font-size: 10px;
+  outline: none;
+}
+
+/* checkbox control */
+input[type="checkbox"] {
+  display: block;
+  width: 10px;
+  height: 10px;
+  padding: 0;
+  border: 1px solid black;
+  margin: 1px;
+  font-size: 10px;
+  outline: none;
+  align-self: bottom;
+}

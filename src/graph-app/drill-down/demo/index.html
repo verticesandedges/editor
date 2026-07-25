@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nested Menu Demo</title>
+    <script type="module" src="../src/drill-down.ts"></script>
+  </head>
+  <body>
+
+    <drill-down>
+      {
+        "title": "Container",
+        "options": [
+          { "title": "First", "onclick": "console.log('1 clicked')" },
+          { "title": "Second", "onclick": "console.log('2 clicked')" },
+          {
+            "title": "Third", 
+            "options": [
+              { "title": "Third 3.1", "onclick": "console.log('3.1 clicked')"},
+              { "title": "Third 3.2", "onclick": "console.log('3.2 clicked')"},
+              { "title": "Third 3.3", "onclick": "console.log('3.3 clicked')"},
+              { "title": "Deep Nested", "options": [
+                { "title": "Deeply Nested Option 1", "onclick": "console.log('Deeply nested 1 clicked')" },
+                { "title": "Deeply Nested Option 2", "onclick": "console.log('Deeply nested 2 clicked')"}
+              ]}
+            ]
+          }
+        ]
+      }
+    </drill-down>
+  </body>
+</html>
