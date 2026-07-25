@@ -455,26 +455,23 @@ export class GraphAppElement extends HTMLElement {
   }
 
   syncConstants(menu: DrillDownElement){
-    const settings = this.graph.constants;
     const root = menu.shadowRoot as ShadowRoot;
+    
+    const setInputValue = (selector: string, value: string) => {
+      const input = root.querySelector(selector);
+      if (input instanceof HTMLInputElement) {
+        input.value = value;
+      }
+    };
 
-    const repulsionInput = root.querySelector('#constant-repulsion input') as HTMLInputElement;
-    const attractionInput = root.querySelector('#constant-attraction input') as HTMLInputElement;
-    const timeStepInput = root.querySelector('#constant-time-step input') as HTMLInputElement;
-    const dampingInput = root.querySelector('#constant-damping input') as HTMLInputElement;
-    const epsilonInput = root.querySelector('#constant-epsilon input') as HTMLInputElement;
-    const thetaInput = root.querySelector('#constant-theta input') as HTMLInputElement;
-    const phiInput = root.querySelector('#constant-phi input') as HTMLInputElement;
-    const innerDistanceInput = root.querySelector('#constant-inner-distance input') as HTMLInputElement;
-
-    repulsionInput.value = settings.f0?.toString();
-    attractionInput.value = settings.K?.toString();
-    timeStepInput.value = settings.dt?.toString();
-    dampingInput.value = settings.D?.toString();
-    epsilonInput.value = settings.epsilon?.toString();
-    thetaInput.value = settings.theta?.toString();
-    phiInput.value = settings.phi?.toString();
-    innerDistanceInput.value = settings.innerDistance?.toString();
+    setInputValue('#constant-f0 input', String(this.graph.constants.f0));
+    setInputValue('#constant-K input', String(this.graph.constants.K));
+    setInputValue('#constant-dt input', String(this.graph.constants.dt));
+    setInputValue('#constant-D input', String(this.graph.constants.D));
+    setInputValue('#constant-epsilon input', String(this.graph.constants.epsilon));
+    setInputValue('#constant-theta input', String(this.graph.constants.theta));
+    setInputValue('#constant-phi input', String(this.graph.constants.phi));
+    setInputValue('#constant-inner-distance input', String(this.graph.constants.innerDistance));
   }
 
   wireToolMenu(){
@@ -634,7 +631,7 @@ export class GraphAppElement extends HTMLElement {
 
   wireConstants(){
     this.addEventListener('constant-f0-change', (e: any) => {
-      const f0 = parseFloat(e.detail?.value);
+      const f0 = e.detail?.value;
       this.graph.constants.f0 = f0;
     });
 
