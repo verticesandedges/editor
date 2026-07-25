@@ -60,6 +60,10 @@ export class EdgeElement extends HTMLElement {
   get strength(){ return this.edge.strength; }
   set strength(v){ this.edge.strength = v; }
 
+  get selected(){
+    return this.source.selected && this.target.selected;
+  }
+
   toJSON(){
     return {
       sourceId: this.source.id,

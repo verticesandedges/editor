@@ -3,6 +3,7 @@ import type { GraphElement, VertexElement, EdgeElement } from "./graph-element/s
 import "./notebook/src/notebook/notebook/notebook.ts";
 import type { NotebookElement } from "./notebook/src/notebook/notebook/notebook.ts";  
 import "./drill-down/src/drill-down.ts";
+import type { DrillDownElement } from "./drill-down/src/drill-down.ts";
 import { openDB } from "idb";
 
 type ItemType = 'graph' | 'notebook';
@@ -38,6 +39,9 @@ export class GraphAppElement extends HTMLElement {
     .then(() => this.notebook = this.qs('notebook-el') as NotebookElement)
     .then(() => this.wireTopMenu())
     .then(() => this.wireToolMenu())
+    .then(() => this.wireVertexOptions())
+    .then(() => this.wireEdgeOptions())
+    .then(() => this.wireConstants())
     .then(() => this.wireNotebook());
   }
 
@@ -72,7 +76,7 @@ export class GraphAppElement extends HTMLElement {
 
     // selection
     this.qs('#selection-select-all')?.addEventListener('click', () => this.graph.vertices.forEach(v => (v as VertexElement).selected = true));
-    this.qs('#selection-select-none')?.addEventListener('click', () => this.graph.selected.forEach(v => (v as VertexElement).selected = false));
+    this.qs('#selection-select-none')?.addEventListener('click', () => this.graph.selectedVertices.forEach(v => (v as VertexElement).selected = false));
   }
 
   async openDB(){
@@ -434,7 +438,7 @@ export class GraphAppElement extends HTMLElement {
 
     // add edges
     this.addEventListener('connect-vertices', () => {
-      const selected = [...this.graph.selected] as VertexElement[];
+      const selected = [...this.graph.selectedVertices] as VertexElement[];
       for(let i=0; i<selected.length; i++){
         if(i>0){
           this.graph.addEdge(selected.at(i-1)!, selected.at(i)!);
@@ -452,12 +456,12 @@ export class GraphAppElement extends HTMLElement {
 
     // select none 
     this.addEventListener('tool-select-none', () => {
-      this.graph.selected.forEach(v => (v as VertexElement).selected = false);
+      this.graph.selectedVertices.forEach(v => (v as VertexElement).selected = false);
     });
 
     // remove selected vertices
     this.addEventListener('remove-vertices', () => {
-      this.graph.selected.forEach(v => this.graph.removeVertex(v as VertexElement));
+      this.graph.selectedVertices.forEach(v => this.graph.removeVertex(v as VertexElement));
     });
 
     // remove selected edges
@@ -473,6 +477,46 @@ export class GraphAppElement extends HTMLElement {
     this.addEventListener('clear-graph', () => {
       this.graph.clear();
     })
+  }
+
+  wireVertexOptions(){
+    this.addEventListener('vertex-color-change', (e: any) => {
+      const color = e.detail?.value;
+      this.graph.selectedVertices.forEach(v => (v as VertexElement).color = color);
+    });
+
+    this.addEventListener('vertex-texture-change', (e: any) => {
+      const texture = e.detail?.value;
+      this.graph.selectedVertices.forEach(v => (v as VertexElement).texture = texture);
+    });
+
+    this.addEventListener('vertex-selection-color-change', (e: any) => {
+      const selectionColor = e.detail?.value;
+      this.graph.selectedVertices.forEach(v => (v as VertexElement).selectionColor = selectionColor);
+    });
+
+    this.addEventListener('vertex-size-change', (e: any) => {
+      const size = parseFloat(e.detail?.value);
+      this.graph.selectedVertices.forEach(v => (v as VertexElement).size = size);
+    });
+
+    this.addEventListener('vertex-label-change', (e: any) => {
+      const label = e.detail?.value;
+      this.graph.selectedVertices.forEach(v => (v as VertexElement).label = label);
+    });
+
+    this.addEventListener('vertex-visible-change', (e: any) =>  {
+      const visible = e.detail?.value;
+      this.graph.selectedVertices.forEach(v => (v as VertexElement).visible = visible);
+    });
+  }
+
+  wireEdgeOptions(){
+      
+  }
+
+  wireConstants(){
+
   }
 
   wireNotebook(){

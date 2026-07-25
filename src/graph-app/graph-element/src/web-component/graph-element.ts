@@ -93,17 +93,20 @@ export class GraphElement extends HTMLElement {
     (this.graph as any)[prop] = value;
   }
 
-  get vertices(): NodeList {
-    return this.querySelectorAll('vertex-el');
+  get vertices(): VertexElement[] {
+    return this.querySelectorAll('vertex-el') as unknown as VertexElement[];
   }
 
-  get edges(): NodeList {
-    return this.querySelectorAll('edge-el');
+  get edges(): EdgeElement[] {
+    return this.querySelectorAll('edge-el') as unknown as EdgeElement[];
   }
 
-  get selected(): NodeList {
-    // return this.querySelectorAll('vertex-el[selected]');
-    return [...this.vertices].filter((el => (el as VertexElement).selected)) as unknown as  NodeList;
+  get selectedVertices(): VertexElement[] {
+    return [...this.vertices].filter((el => (el as VertexElement).selected)) as unknown as  VertexElement[];
+  }
+
+  get selectedEdges(): EdgeElement[] {
+    return [...this.edges].filter((el => (el as EdgeElement).selected)) as unknown as EdgeElement[];
   }
 
   private hasChildWithId(id: string): boolean {
