@@ -21,7 +21,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "watch": "parcel src/index.html --dist-dir docs/",
-    "build": "parcel build src/index.html --dist-dir docs/",
+    "build": "parcel build src/index.html --dist-dir docs/ && cp -r examples/ docs/examples/",
     "start": "http-server docs/ -c-1 --silent && echo http://localhost:8080/",
     "clean": "rm -rf .parcel-cache/ docs/"
   },

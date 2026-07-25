@@ -42,7 +42,8 @@ export class GraphAppElement extends HTMLElement {
     .then(() => this.wireVertexOptions())
     .then(() => this.wireEdgeOptions())
     .then(() => this.wireConstants())
-    .then(() => this.wireNotebook());
+    .then(() => this.wireNotebook())
+    .then(() => this.openSearchParams())
   }
 
   async wireTopMenu(){
