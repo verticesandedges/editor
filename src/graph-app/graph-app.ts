@@ -422,9 +422,6 @@ export class GraphAppElement extends HTMLElement {
 
     colorInput.value = `#${settings.color.toString(16)}`;
 
-    console.debug('colorInput.value', colorInput.value, 'settings.color', settings.color.toString(16));
-
-
     // textureInput.value = settings.texture;
     selectionColorInput.value = `#${settings.selectionColor.toString(16)}`;
     sizeInput.value = settings.size?.toString();
@@ -454,15 +451,15 @@ export class GraphAppElement extends HTMLElement {
     visibleInput.checked = settings.visible;
   }
 
-  syncConstants(menu: DrillDownElement){
+  syncFromConstants(menu: DrillDownElement){
     const root = menu.shadowRoot as ShadowRoot;
-    
+
     const setInputValue = (selector: string, value: string) => {
       const input = root.querySelector(selector);
-      if (input instanceof HTMLInputElement) {
+      if(input instanceof HTMLInputElement){
         input.value = value;
       }
-    };
+    }
 
     setInputValue('#constant-f0 input', String(this.graph.constants.f0));
     setInputValue('#constant-K input', String(this.graph.constants.K));
@@ -492,7 +489,7 @@ export class GraphAppElement extends HTMLElement {
       }
 
       if(word === "Constants"){
-        this.syncConstants(menu);
+        this.syncFromConstants(menu);
       }
     });
 
@@ -631,7 +628,8 @@ export class GraphAppElement extends HTMLElement {
 
   wireConstants(){
     this.addEventListener('constant-f0-change', (e: any) => {
-      const f0 = e.detail?.value;
+      const f0 = parseFloat(e.detail?.value);
+      console.debug('f0', e.detail?.value, f0, typeof f0);
       this.graph.constants.f0 = f0;
     });
 
