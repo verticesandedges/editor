@@ -691,6 +691,20 @@ export class GraphAppElement extends HTMLElement {
     }
   }
 
+  openSearchParams(){
+    let params = new URLSearchParams(document.location.search);
+    
+    let nbUrl = params.get('nburl');
+    if(nbUrl){
+      this.open('notebook', 'url', nbUrl);
+    }
+
+    let graphUrl = params.get('graphurl');
+    if(graphUrl){
+      this.open('graph', 'url', graphUrl);
+    }
+  }
+
   async fetchStyle(): Promise<void> {
     const sheet = new CSSStyleSheet();
     const file = await fetch(new URL('./graph-app.css', import.meta.url));
