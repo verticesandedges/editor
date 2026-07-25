@@ -38,6 +38,26 @@ export class GraphElement extends HTMLElement {
     });
   }
 
+  constants = {
+    set f0(val: number){ Constants.f0 = val; },
+    set K(val: number){ Constants.K = val; },
+    set dt(val: number){ Constants.dt = val; },
+    set D(val: number){ Constants.D = val; },
+    set epsilon(val: number){ Constants.epsilon = val; },
+    set theta(val: number){ Constants.theta = val; },
+    set phi(val: number){ Constants.phi = val; },
+    set innerDistance(val: number){ Constants.innerDistance = val; },
+
+    get f0(){ return Constants.f0; },
+    get K(){ return Constants.K; },
+    get dt(){ return Constants.dt; },
+    get D(){ return Constants.D; },
+    get epsilon(){ return Constants.epsilon; },
+    get theta(){ return Constants.theta; },
+    get phi(){ return Constants.phi; },
+    get innerDistance(){ return Constants.innerDistance; }
+  }
+
   toJSON(title: string="Untitled Graph"){
     const V = [...this.querySelectorAll('vertex-el')].map(el => (el as VertexElement).toJSON());
     const E = [...this.querySelectorAll('edge-el')].map(el => (el as EdgeElement).toJSON());

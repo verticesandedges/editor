@@ -131,13 +131,24 @@
             { "title": "Strength",  "id": "edge-strength",  "control": "number",    "event": "edge-strength-change" },
             { "title": "Arrow",     "id": "edge-arrow",     "control": "checkbox",  "event": "edge-arrow-change" },
             { "title": "Spline",    "id": "edge-spline",    "control": "checkbox",  "event": "edge-spline-change" },
-            { "title": "Color",     "id": "edge-color",     "control": "color",     "event": "edge-color-change" },
             { "title": "Width",     "id": "edge-width",     "control": "number",    "event": "edge-width-change" },
             { "title": "Label",     "id": "edge-label",     "control": "text",      "event": "edge-label-change" },
             { "title": "Visible",   "id": "edge-visible",   "control": "checkbox",  "event": "edge-visible-change" }
           ]
         },
-        { "event": "edit-constants",   "title": {"symbol": "🛠", "word": "Constants"} },
+        { 
+          "title": {"symbol": "🛠", "word": "Constants"},
+          "options": [
+            { "title": "Repulsion (f0)",            "id": "constant-f0",              "control": "number",    "event": "constant-f0-change" },
+            { "title": "Attraction (K)",            "id": "constant-K",               "control": "number",    "event": "constant-K-change" },
+            { "title": "Time Step (dt)",            "id": "constant-dt",              "control": "number",    "event": "constant-dt-change" },
+            { "title": "Damping (D)",               "id": "constant-D",               "control": "number",    "event": "constant-D-change" },
+            { "title": "Min Distance (ε)",          "id": "constant-epsilon",         "control": "number",    "event": "constant-epsilon-change" },
+            { "title": "Barnes-Hut θ",              "id": "constant-theta",           "control": "number",    "event": "constant-theta-change" },
+            { "title": "(Φ) Time Dilation Factor",  "id": "constant-phi",             "control": "number",    "event": "constant-time-dilation-change" },
+            { "title": "Barnes Hut Inner Distance", "id": "constant-inner-distance",  "control": "number",    "event": "constant-inner-distance-change" }
+          ]
+        },
         { "event": "clear-graph",      "title": {"symbol": "⭯", "word": "Clear Graph"} }
       ]
     }

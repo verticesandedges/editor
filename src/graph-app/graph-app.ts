@@ -408,12 +408,96 @@ export class GraphAppElement extends HTMLElement {
 
   //#endregion
 
+  syncVertexSettingsFromSelection(menu: DrillDownElement){
+    const first = this.graph.selectedVertices[0] as VertexElement;
+    const settings = first?.toJSON() || this.graph.defaults.vertex;
+    const root = menu.shadowRoot as ShadowRoot;
+    
+    const colorInput = root.querySelector('#vertex-color input') as HTMLInputElement;
+    // const textureInput = root.querySelector('#vertex-texture') as HTMLInputElement;
+    const selectionColorInput = root.querySelector('#vertex-selection-color input') as HTMLInputElement;
+    const sizeInput = root.querySelector('#vertex-size input') as HTMLInputElement;
+    const labelInput = root.querySelector('#vertex-label input') as HTMLInputElement;
+    const visibleInput = root.querySelector('#vertex-visible input') as HTMLInputElement;
+
+    colorInput.value = `#${settings.color.toString(16)}`;
+
+    console.debug('colorInput.value', colorInput.value, 'settings.color', settings.color.toString(16));
+
+
+    // textureInput.value = settings.texture;
+    selectionColorInput.value = `#${settings.selectionColor.toString(16)}`;
+    sizeInput.value = settings.size?.toString();
+    labelInput.value = settings.label || '';
+    visibleInput.checked = settings.visible;
+  }
+
+  syncEdgeSettingsFromSelection(menu: DrillDownElement){
+    const first = this.graph.selectedEdges[0] as EdgeElement;
+    const settings = first?.toJSON() || this.graph.defaults.edge;
+    const root = menu.shadowRoot as ShadowRoot;
+
+    const colorInput = root.querySelector('#edge-color input') as HTMLInputElement;
+    const strengthInput = root.querySelector('#edge-strength input') as HTMLInputElement;
+    const arrowInput = root.querySelector('#edge-arrow input') as HTMLInputElement;
+    const splineInput = root.querySelector('#edge-spline input') as HTMLInputElement;
+    const widthInput = root.querySelector('#edge-width input') as HTMLInputElement;
+    const labelInput = root.querySelector('#edge-label input') as HTMLInputElement;
+    const visibleInput = root.querySelector('#edge-visible input') as HTMLInputElement;
+
+    colorInput.value = `#${settings.color.toString(16)}`;
+    strengthInput.value = settings.strength?.toString();
+    arrowInput.value = settings.arrow.toString();
+    splineInput.value = settings.spline.toString();
+    widthInput.value = settings.width?.toString();
+    labelInput.value = settings.label || '';
+    visibleInput.checked = settings.visible;
+  }
+
+  syncConstants(menu: DrillDownElement){
+    const settings = this.graph.constants;
+    const root = menu.shadowRoot as ShadowRoot;
+
+    const repulsionInput = root.querySelector('#constant-repulsion input') as HTMLInputElement;
+    const attractionInput = root.querySelector('#constant-attraction input') as HTMLInputElement;
+    const timeStepInput = root.querySelector('#constant-time-step input') as HTMLInputElement;
+    const dampingInput = root.querySelector('#constant-damping input') as HTMLInputElement;
+    const epsilonInput = root.querySelector('#constant-epsilon input') as HTMLInputElement;
+    const thetaInput = root.querySelector('#constant-theta input') as HTMLInputElement;
+    const phiInput = root.querySelector('#constant-phi input') as HTMLInputElement;
+    const innerDistanceInput = root.querySelector('#constant-inner-distance input') as HTMLInputElement;
+
+    repulsionInput.value = settings.f0?.toString();
+    attractionInput.value = settings.K?.toString();
+    timeStepInput.value = settings.dt?.toString();
+    dampingInput.value = settings.D?.toString();
+    epsilonInput.value = settings.epsilon?.toString();
+    thetaInput.value = settings.theta?.toString();
+    phiInput.value = settings.phi?.toString();
+    innerDistanceInput.value = settings.innerDistance?.toString();
+  }
+
   wireToolMenu(){
     /* Tool Menu Toggle in the Main Menu */
     /* main menu: tool menu toggle (button & checkbox for show-hide)*/
     const button = this.qs('#tool-menu-button') as HTMLButtonElement;
     const trigger = this.qs('#tool-menu-checkbox')! as HTMLInputElement;
-    const menu = this.qs('#tool-menu')!;
+    const menu = this.qs('#tool-menu')! as DrillDownElement;
+
+    menu.addEventListener('drill-level-change', (e: any) => {
+      const word = e.detail?.option?.title?.word;
+      if(word === "Vertex Settings"){
+        this.syncVertexSettingsFromSelection(menu);
+      }
+
+      if(word === "Edge Settings"){
+        this.syncEdgeSettingsFromSelection(menu);
+      }
+
+      if(word === "Constants"){
+        this.syncConstants(menu);
+      }
+    });
 
     trigger.onchange = (e) => {
       e.stopPropagation();
@@ -512,11 +596,82 @@ export class GraphAppElement extends HTMLElement {
   }
 
   wireEdgeOptions(){
-      
+    this.addEventListener('edge-color-change', (e: any) => {
+      const color = e.detail?.value;
+      this.graph.selectedEdges.forEach(e => (e as EdgeElement).color = color);
+    });
+
+    this.addEventListener('edge-strength-change', (e: any) => {
+      const strength = parseFloat(e.detail?.value);
+      this.graph.selectedEdges.forEach(e => (e as EdgeElement).strength = strength);
+    });
+
+    this.addEventListener('edge-arrow-change', (e: any) => {
+      const arrow = e.detail?.value;
+      this.graph.selectedEdges.forEach(e => (e as EdgeElement).arrow = arrow);
+    });
+
+    this.addEventListener('edge-spline-change', (e: any) => {
+      const spline = e.detail?.value;
+      this.graph.selectedEdges.forEach(e => (e as EdgeElement).spline = spline);
+    });
+    
+    this.addEventListener('edge-width-change', (e: any) => {
+      const width = parseFloat(e.detail?.value);
+      this.graph.selectedEdges.forEach(e => (e as EdgeElement).width = width);
+    });
+
+    this.addEventListener('edge-label-change', (e: any) => {
+      const label = e.detail?.value;
+      this.graph.selectedEdges.forEach(e => (e as EdgeElement).label = label);
+    });
+
+    this.addEventListener('edge-visible-change', (e: any) => {
+      const visible = e.detail?.value;
+      this.graph.selectedEdges.forEach(e => (e as EdgeElement).visible = visible);
+    });
   }
 
   wireConstants(){
+    this.addEventListener('constant-f0-change', (e: any) => {
+      const f0 = parseFloat(e.detail?.value);
+      this.graph.constants.f0 = f0;
+    });
 
+    this.addEventListener('constant-K-change', (e: any) => {
+      const K = parseFloat(e.detail?.value);
+      this.graph.constants.K = K;
+    });
+
+    this.addEventListener('constant-dt-change', (e: any) => {
+      const dt = parseFloat(e.detail?.value);
+      this.graph.constants.dt = dt;
+    });
+
+    this.addEventListener('constant-D-change', (e: any) => {
+      const D = parseFloat(e.detail?.value);
+      this.graph.constants.D = D;
+    });
+
+    this.addEventListener('constant-epsilon-change', (e: any) => {
+      const epsilon = parseFloat(e.detail?.value);
+      this.graph.constants.epsilon = epsilon;
+    });
+
+    this.addEventListener('constant-theta-change', (e: any) => {
+      const theta = parseFloat(e.detail?.value);
+      this.graph.constants.theta = theta;
+    });
+
+    this.addEventListener('constant-phi-change', (e: any) => {
+      const phi = parseFloat(e.detail?.value);
+      this.graph.constants.phi = phi;
+    });
+
+    this.addEventListener('constant-inner-distance-change', (e: any) => {
+      const innerDistance = parseFloat(e.detail?.value);
+      this.graph.constants.innerDistance = innerDistance;
+    });
   }
 
   wireNotebook(){
