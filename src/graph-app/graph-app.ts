@@ -154,7 +154,6 @@ export class GraphAppElement extends HTMLElement {
     const previous = localStorage.getItem(`graph-app.previous-${type}-${method}`);
     const extension = type === 'graph' ? '.json' : '.ipynb';
           
-    
     if(method === 'file'){
 
       try{

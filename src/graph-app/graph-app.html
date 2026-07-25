@@ -103,23 +103,6 @@
 <main>
   <graph-el></graph-el>
 
-  <!--
-  <ul popover="manual" id="tool-menu">
-    <label>Tools</label>
-    <li><button id="add-vertex"><span class="symbol">+&#x25A0;</span><span class="word">Add Vertex</span></button></li>
-    <li><button id="connect-vertices"><span class="symbol">+🔗&#xFE0E;</span><span class="word"> Add Edge(s)</span></button></li>
-    <li><button id="tool-select-all"><span class="symbol">⬚&#x2200;</span><span class="word">Select All</span></button></li>
-    <li><button id="tool-select-none"><span class="symbol">⬚∅</span><span class="word">Select None</span></button></li>
-    <li><button id="remove-vertices"><span class="symbol">−&#x25A0;</span><span class="word">Remove Vertices</span></button></li>
-    <li><button id="remove-edges"><span class="symbol">−🔗&#xFE0E;</span><span class="word">Remove Edges</span></button></li>
-    <li><button id="edit-vertices"><span class="symbol">🛠&#x25A0;</span><span class="word">Vertex Settings</span></button></li> 
-    <li><button id="edit-edges"><span class="symbol">🛠🔗&#xFE0E;</span><span class="word">Edge Settings</span></button></li>
-    <li><button id="edit-constants"><span class="symbol">🛠</span><span class="word">Constants</span></button></li>
-
-    <li><button id="clear-graph"><span class="symbol">⭯</span><span class="word">Clear Graph</span></button></li>
-  </ul>
-  -->
-
   <drill-down popover="manual" id="tool-menu">
     {
       "title": "Tools",
@@ -133,25 +116,25 @@
         { 
           "title": {"symbol": "🛠&#x25A0;", "word": "Vertex Settings"},
           "options": [
-            { "title": "Color",           "id": "vertex-color" },
-            { "title": "Texture",         "id": "vertex-texture" },
-            { "title": "Selection Color", "id": "vertex-selection-color" },
-            { "title": "Size",            "id": "vertex-size" },
-            { "title": "Label",           "id": "vertex-label" },
-            { "title": "Visible",         "id": "vertex-visible" }
+            { "title": "Color",           "id": "vertex-color",           "control": "color", "event": "vertex-color-change" },
+            { "title": "Texture",         "id": "vertex-texture",         "control": "file",  "event": "vertex-texture-change" },
+            { "title": "Selection Color", "id": "vertex-selection-color", "control": "color", "event": "vertex-selection-color-change" },
+            { "title": "Size",            "id": "vertex-size",            "control": "number", "event": "vertex-size-change" },
+            { "title": "Label",           "id": "vertex-label",           "control": "text", "event": "vertex-label-change" },
+            { "title": "Visible",         "id": "vertex-visible",         "control": "checkbox", "event": "vertex-visible-change" }
           ]
         },
         { 
           "title": {"symbol": "🛠🔗&#xFE0E;", "word": "Edge Settings"},
           "options": [
-            { "title": "Color",     "id": "edge-color"},
-            { "title": "Strength",  "id": "edge-strength"},
-            { "title": "Arrow",     "id": "edge-arrow"},
-            { "title": "Spline",    "id": "edge-spline"},
-            { "title": "Color",     "id": "edge-color"},
-            { "title": "Width",     "id": "edge-width"},
-            { "title": "Label",     "id": "edge-label"},
-            { "title": "Visible",   "id": "edge-visible"}
+            { "title": "Color",     "id": "edge-color",     "control": "color", "event": "edge-color-change"},
+            { "title": "Strength",  "id": "edge-strength",  "control": "number", "event": "edge-strength-change" },
+            { "title": "Arrow",     "id": "edge-arrow",     "control": "checkbox", "event": "edge-arrow-change" },
+            { "title": "Spline",    "id": "edge-spline",    "control": "checkbox", "event": "edge-spline-change" },
+            { "title": "Color",     "id": "edge-color",     "control": "color", "event": "edge-color-change" },
+            { "title": "Width",     "id": "edge-width",     "control": "number", "event": "edge-width-change" },
+            { "title": "Label",     "id": "edge-label",     "control": "text", "event": "edge-label-change" },
+            { "title": "Visible",   "id": "edge-visible",   "control": "checkbox", "event": "edge-visible-change" }
           ]
         },
         { "event": "edit-constants",   "title": {"symbol": "🛠", "word": "Constants"} },
