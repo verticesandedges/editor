@@ -457,7 +457,7 @@ export class DynamicMatching {
     }
   }
 
-  singleLevelLayout(){
+  singleLevelLayoutCPU(){
     // estimate repulsion forces
     const vertices = Array.from(this.vertices.values());
     const octree = new Octree();
@@ -482,6 +482,10 @@ export class DynamicMatching {
 
     // add acceleration to velocity to position
     vertices.forEach((v: Vertex) => v.updateSingle());
+  }
+
+  singleLevelLayoutGPU(){
+    
   }
 
   multiLevelLayout(){
@@ -793,7 +797,7 @@ export class DynamicMatching {
       this.coarser.update();
       this.multiLevelLayout();
     }else{
-      this.singleLevelLayout()
+      this.singleLevelLayoutCPU()
     }
   }
 }
