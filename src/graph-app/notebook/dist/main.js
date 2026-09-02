@@ -1,12 +1,12 @@
 import {EditorView as $TDEgv$EditorView, basicSetup as $TDEgv$basicSetup} from "codemirror";
-import {Compartment as $TDEgv$Compartment, EditorState as $TDEgv$EditorState, Prec as $TDEgv$Prec} from "@codemirror/state";
+import {Compartment as $TDEgv$Compartment, EditorState as $TDEgv$EditorState} from "@codemirror/state";
 import {keymap as $TDEgv$keymap, placeholder as $TDEgv$placeholder, EditorView as $TDEgv$EditorView1} from "@codemirror/view";
 import {javascript as $TDEgv$javascript} from "@codemirror/lang-javascript";
-import {indentWithTab as $TDEgv$indentWithTab, insertNewline as $TDEgv$insertNewline, history as $TDEgv$history} from "@codemirror/commands";
-import {syntaxTree as $TDEgv$syntaxTree} from "@codemirror/language";
+import {indentWithTab as $TDEgv$indentWithTab} from "@codemirror/commands";
 import {markdown as $TDEgv$markdown} from "@codemirror/lang-markdown";
-import {linkPlugin as $TDEgv$linkPlugin, imageField as $TDEgv$imageField, codeBlockField as $TDEgv$codeBlockField, collapseOnSelectionFacet as $TDEgv$collapseOnSelectionFacet, mouseSelectingField as $TDEgv$mouseSelectingField, tableField as $TDEgv$tableField, tableEditorPlugin as $TDEgv$tableEditorPlugin, editorTheme as $TDEgv$editorTheme, livePreviewPlugin as $TDEgv$livePreviewPlugin, markdownStylePlugin as $TDEgv$markdownStylePlugin, mathPlugin as $TDEgv$mathPlugin, blockMathField as $TDEgv$blockMathField, setMouseSelecting as $TDEgv$setMouseSelecting} from "codemirror-live-markdown";
-import {transpileModule as $TDEgv$transpileModule} from "typescript";
+import {marked as $TDEgv$marked} from "marked";
+import $TDEgv$katex from "katex";
+import {transpileModule as $TDEgv$transpileModule, ModuleKind as $TDEgv$ModuleKind} from "typescript";
 
 
 
@@ -20,12 +20,285 @@ import {transpileModule as $TDEgv$transpileModule} from "typescript";
 
 
 
+let $dd4ad8f3f241100e$var$tabSize = new (0, $TDEgv$Compartment)();
+class $dd4ad8f3f241100e$export$7910644ddd3b55c3 extends HTMLElement {
+    //#region public properties
+    view;
+    qs;
+    qsa;
+    ready;
+    isRendered = false;
+    set source(val) {
+        if (this.view) this.view.dispatch({
+            changes: {
+                from: 0,
+                to: this.view.state.doc.length,
+                insert: val
+            }
+        });
+    }
+    get source() {
+        return this.view ? this.view.state.doc.toString() : '';
+    }
+    //#endregion
+    constructor(){
+        // Call parent constructor
+        super();
+        // attach shadowRoot
+        this.attachShadow({
+            mode: "open"
+        });
+        // setup querySelector and querySelectorAll shorthands
+        this.qs = this.shadowRoot.querySelector.bind(this.shadowRoot);
+        this.qsa = this.shadowRoot.querySelectorAll.bind(this.shadowRoot);
+        this.ready = new Promise(async (resolve)=>{
+            await this.setupUI();
+            resolve(true);
+        });
+    }
+    async setupUI() {
+        await this.fetchStyle();
+        await this.fetchTemplate();
+        this.setupCodeMirror();
+        this.setupEvents();
+        this.view.focus();
+    }
+    async fetchStyle() {
+        const sheet = new CSSStyleSheet();
+        const file = await fetch(new URL("markdown-cell.a81e32cc.css", import.meta.url));
+        const css = await file.text();
+        sheet.replaceSync(css);
+        this.shadowRoot.adoptedStyleSheets = [
+            sheet
+        ];
+    }
+    async fetchTemplate() {
+        const file = await fetch(new URL("markdown-cell.1659e7b8.html", import.meta.url));
+        const html = await file.text();
+        this.shadowRoot.innerHTML = html;
+    }
+    setupEvents() {
+        const output = this.qs('.cell-output');
+        const renderBtn = this.qs('.render-btn') || this.qs('#render') || this.qs('button');
+        // Toggle render when clicking the "Render" button below the cell
+        renderBtn?.addEventListener('click', ()=>this.toggleRender());
+        // Double-click output container to go back to editor mode
+        output?.addEventListener('dblclick', ()=>{
+            if (this.isRendered) this.toggleRender(false);
+        });
+    }
+    /**
+   * Toggles between raw Markdown editor and rendered HTML/KaTeX output
+   */ toggleRender(forceState) {
+        this.isRendered = forceState !== undefined ? forceState : !this.isRendered;
+        const input = this.qs('.cell-editor');
+        const output = this.qs('.cell-output');
+        if (this.isRendered) {
+            // 1. Convert Markdown to HTML
+            const html = (0, $TDEgv$marked).parse(this.source);
+            output.innerHTML = html;
+            // 2. Parse KaTeX Math ($$ block $$ and $ inline $)
+            output.querySelectorAll("*").forEach((el)=>{
+                if (el.children.length === 0 && el.textContent?.includes("$$")) el.innerHTML = el.innerHTML.replace(/\$\$([\s\S]+?)\$\$/g, (_, math)=>{
+                    try {
+                        return (0, $TDEgv$katex).renderToString(math.trim(), {
+                            displayMode: true
+                        });
+                    } catch (e) {
+                        return `<span class="katex-error">${math}</span>`;
+                    }
+                });
+                if (el.children.length === 0 && el.textContent?.includes("$")) el.innerHTML = el.innerHTML.replace(/\$([^\$\n]+?)\$/g, (_, math)=>{
+                    try {
+                        return (0, $TDEgv$katex).renderToString(math.trim(), {
+                            displayMode: false
+                        });
+                    } catch (e) {
+                        return `<span class="katex-error">${math}</span>`;
+                    }
+                });
+            });
+            // 3. Swap UI visibility
+            input.style.display = 'none';
+            output.style.display = 'block';
+        } else {
+            // Return to Editor
+            output.style.display = 'none';
+            input.style.display = 'block';
+            this.view.focus();
+        }
+    }
+    // Public method mapped to render button
+    render() {
+        this.toggleRender();
+    }
+    toJSON() {
+        return {
+            "cell_type": "markdown",
+            "metadata": {},
+            "source": this.source
+        };
+    }
+    static fromJSON(obj) {
+        const cell = new $dd4ad8f3f241100e$export$7910644ddd3b55c3();
+        cell.fromJSON(obj);
+        return cell;
+    }
+    fromJSON(obj) {
+        this.ready.then(()=>{
+            if (typeof obj.source === 'string') this.source = obj.source;
+            if (Array.isArray(obj.source)) this.source = obj.source.join('');
+            this.render(true);
+        });
+    }
+    static fromString(str) {
+        const obj = JSON.parse(str);
+        return $dd4ad8f3f241100e$export$7910644ddd3b55c3.fromJSON(obj);
+    }
+    fromString(str) {
+        const obj = JSON.parse(str);
+        this.fromJSON(obj);
+    }
+    disconnectedCallback() {
+        this.view?.destroy();
+    }
+    //#endregion
+    //#region private methods
+    setupCodeMirror() {
+        const cell = this;
+        const CtrlEnter = (0, $TDEgv$keymap).of([
+            {
+                key: "Ctrl-Enter",
+                run () {
+                    cell.toggleRender();
+                    return true;
+                }
+            }
+        ]);
+        const extensions = [
+            (0, $TDEgv$EditorView1).contentAttributes.of({
+                'aria-label': "Cell editor"
+            }),
+            CtrlEnter,
+            (0, $TDEgv$basicSetup),
+            (0, $TDEgv$keymap).of([
+                (0, $TDEgv$indentWithTab)
+            ]),
+            $dd4ad8f3f241100e$var$tabSize.of((0, $TDEgv$EditorState).tabSize.of(2)),
+            (0, $TDEgv$EditorView1).lineWrapping,
+            (0, $TDEgv$placeholder)("Write here..."),
+            (0, $TDEgv$markdown)()
+        ];
+        this.view = new (0, $TDEgv$EditorView1)({
+            state: (0, $TDEgv$EditorState).create({
+                extensions: extensions
+            }),
+            parent: this.qs('.cell-editor')
+        });
+    }
+}
+if (!customElements.get('markdown-cell')) customElements.define("markdown-cell", $dd4ad8f3f241100e$export$7910644ddd3b55c3);
 
 
 
 
 
 
+
+
+
+
+
+
+class $e4d3529c0c677131$export$ac85885ea219ea4e extends HTMLElement {
+    //#region public properties
+    qs;
+    qsa;
+    //#endregion
+    constructor(){
+        super();
+        this.attachShadow({
+            mode: "open"
+        });
+        this.qs = this.shadowRoot.querySelector.bind(this.shadowRoot);
+        this.qsa = this.shadowRoot.querySelector.bind(this.shadowRoot);
+        this.setupUI();
+    }
+    async setupUI() {
+        await this.fetchStyle();
+        await this.fetchTemplate();
+        this.setupCellActions();
+    }
+    async fetchStyle() {
+        const sheet = new CSSStyleSheet();
+        const file = await fetch(new URL("cell-actions.93a45d96.css", import.meta.url));
+        const css = await file.text();
+        sheet.replaceSync(css);
+        this.shadowRoot.adoptedStyleSheets = [
+            sheet
+        ];
+    }
+    async fetchTemplate() {
+        const file = await fetch(new URL("cell-actions.9659f20b.html", import.meta.url));
+        const html = await file.text();
+        this.shadowRoot.innerHTML = html;
+    }
+    //#region private methods
+    setupCellActions() {
+        this.qs('.delete-cell').addEventListener('click', ()=>this.onDeleteCellClick());
+        this.qs('.prepend-cell').addEventListener('click', ()=>this.onPrependCellClick());
+        this.qs('.append-cell').addEventListener('click', ()=>this.onAppendCellClick());
+        this.qs('.run-cell').addEventListener('click', ()=>this.onRunClick());
+        const cell = this.getParent();
+        if (cell instanceof (0, $60393df850c1c53c$export$5a61110bddf305c0) || cell instanceof (0, $312a93348be6f698$export$62a1cc341f70ee8e)) {
+            this.qs('.run-cell').innerText = 'Run';
+            this.qs('.reset-cell').addEventListener('click', ()=>this.onResetCellClick());
+        } else {
+            this.qs('.run-cell').innerText = 'Render';
+            this.qs('.reset-cell').parentElement?.remove();
+        }
+    }
+    getParent() {
+        const md = this.getRootNode().host.closest('markdown-cell');
+        const ts = this.getRootNode().host.closest('typescript-cell');
+        const js = this.getRootNode().host.closest('javascript-cell');
+        return md ?? ts ?? js;
+    }
+    onDeleteCellClick() {
+        this.getParent().remove();
+    }
+    onResetCellClick() {
+        this.getParent().resetOutput();
+    }
+    onPrependCellClick() {
+        const CellType = this.getParent().constructor;
+        const cell = new CellType();
+        cell.ready.then(()=>{
+            this.getParent().before(cell);
+            cell.view.focus();
+        });
+    }
+    onAppendCellClick() {
+        const CellType = this.getParent().constructor;
+        const cell = new CellType();
+        cell.ready.then(()=>{
+            this.getParent().after(cell);
+            cell.view.focus();
+        });
+    }
+    isRunnable(cell) {
+        return cell instanceof (0, $60393df850c1c53c$export$5a61110bddf305c0) || cell instanceof (0, $312a93348be6f698$export$62a1cc341f70ee8e);
+    }
+    isRenderable(cell) {
+        return cell instanceof (0, $dd4ad8f3f241100e$export$7910644ddd3b55c3);
+    }
+    onRunClick() {
+        const parentCell = this.getParent();
+        if (this.isRunnable(parentCell)) parentCell.run();
+        if (this.isRenderable(parentCell)) parentCell.render();
+    }
+}
+if (!customElements.get('cell-actions')) customElements.define("cell-actions", $e4d3529c0c677131$export$ac85885ea219ea4e);
 
 
 
@@ -59,7 +332,7 @@ class $312a93348be6f698$export$62a1cc341f70ee8e extends HTMLElement {
     }
     async fetchStyle() {
         const sheet = new CSSStyleSheet();
-        const file = await fetch(new URL("typescript-cell.93e7d409.css", import.meta.url));
+        const file = await fetch(new URL("typescript-cell.1b23ac87.css", import.meta.url));
         const css = await file.text();
         sheet.replaceSync(css);
         this.shadowRoot.adoptedStyleSheets = [
@@ -67,7 +340,7 @@ class $312a93348be6f698$export$62a1cc341f70ee8e extends HTMLElement {
         ];
     }
     async fetchTemplate() {
-        const file = await fetch(new URL("typescript-cell.8ff996ba.html", import.meta.url));
+        const file = await fetch(new URL("typescript-cell.5d809dea.html", import.meta.url));
         const html = await file.text();
         this.shadowRoot.innerHTML = html;
     }
@@ -265,6 +538,7 @@ class $312a93348be6f698$export$62a1cc341f70ee8e extends HTMLElement {
         const notebook = this.getRootNode().host.closest('notebook-el');
         const context = {
             ...notebook.context,
+            cell: this,
             output: outputs,
             console: {
                 log: (...args)=>{
@@ -282,6 +556,8 @@ class $312a93348be6f698$export$62a1cc341f70ee8e extends HTMLElement {
     createFunction(context) {
         const AsyncFunction = (async function() {}).constructor;
         const source = $TDEgv$transpileModule(this.source, {
+            module: $TDEgv$ModuleKind.ESNext,
+            compact: false
         }).outputText;
         const func = new AsyncFunction(...Object.keys(context), `
       try{
@@ -325,252 +601,6 @@ class $312a93348be6f698$export$62a1cc341f70ee8e extends HTMLElement {
 if (!customElements.get('typescript-cell')) customElements.define('typescript-cell', $312a93348be6f698$export$62a1cc341f70ee8e);
 
 
-class $e4d3529c0c677131$export$ac85885ea219ea4e extends HTMLElement {
-    //#region public properties
-    qs;
-    qsa;
-    //#endregion
-    constructor(){
-        super();
-        this.attachShadow({
-            mode: "open"
-        });
-        this.qs = this.shadowRoot.querySelector.bind(this.shadowRoot);
-        this.qsa = this.shadowRoot.querySelector.bind(this.shadowRoot);
-        this.setupUI();
-    }
-    async setupUI() {
-        await this.fetchStyle();
-        await this.fetchTemplate();
-        this.setupCellActions();
-    }
-    async fetchStyle() {
-        const sheet = new CSSStyleSheet();
-        const file = await fetch(new URL("cell-actions.d7c73aec.css", import.meta.url));
-        const css = await file.text();
-        sheet.replaceSync(css);
-        this.shadowRoot.adoptedStyleSheets = [
-            sheet
-        ];
-    }
-    async fetchTemplate() {
-        const file = await fetch(new URL("cell-actions.b403dac4.html", import.meta.url));
-        const html = await file.text();
-        this.shadowRoot.innerHTML = html;
-    }
-    //#region private methods
-    setupCellActions() {
-        this.qs('.delete-cell').addEventListener('click', ()=>this.onDeleteCellClick());
-        this.qs('.prepend-cell').addEventListener('click', ()=>this.onPrependCellClick());
-        this.qs('.append-cell').addEventListener('click', ()=>this.onAppendCellClick());
-        const cell = this.getParent();
-        if (cell instanceof (0, $60393df850c1c53c$export$5a61110bddf305c0) || cell instanceof (0, $312a93348be6f698$export$62a1cc341f70ee8e)) {
-            this.qs('.run-cell').addEventListener('click', ()=>this.onRunClick());
-            this.qs('.reset-cell').addEventListener('click', ()=>this.onResetCellClick());
-        } else {
-            this.qs('.run-cell').parentElement?.remove();
-            this.qs('.reset-cell').parentElement?.remove();
-        }
-    }
-    getParent() {
-        const md = this.getRootNode().host.closest('markdown-cell');
-        const ts = this.getRootNode().host.closest('typescript-cell');
-        const js = this.getRootNode().host.closest('javascript-cell');
-        return md ?? ts ?? js;
-    }
-    onDeleteCellClick() {
-        this.getParent().remove();
-    }
-    onResetCellClick() {
-        this.getParent().resetOutput();
-    }
-    onPrependCellClick() {
-        const CellType = this.getParent().constructor;
-        const cell = new CellType();
-        cell.ready.then(()=>{
-            this.getParent().before(cell);
-            cell.view.focus();
-        });
-    }
-    onAppendCellClick() {
-        const CellType = this.getParent().constructor;
-        const cell = new CellType();
-        cell.ready.then(()=>{
-            this.getParent().after(cell);
-            cell.view.focus();
-        });
-    }
-    onRunClick() {
-        this.getParent()?.run();
-    }
-}
-if (!customElements.get('cell-actions')) customElements.define("cell-actions", $e4d3529c0c677131$export$ac85885ea219ea4e);
-
-
-let $dd4ad8f3f241100e$var$tabSize = new (0, $TDEgv$Compartment)();
-class $dd4ad8f3f241100e$export$7910644ddd3b55c3 extends HTMLElement {
-    //#region public properties
-    view;
-    qs;
-    qsa;
-    ready;
-    set source(val) {
-        this.view?.dispatch({
-            changes: {
-                from: 0,
-                to: this.view.state.doc.length,
-                insert: val
-            }
-        });
-    }
-    get source() {
-        return this.view.state.doc.toString();
-    }
-    //#endregion
-    constructor(){
-        // Call parent constructor
-        super();
-        // attach shadowRoot
-        this.attachShadow({
-            mode: "open"
-        });
-        // setup querySelector and querySelectorAll shorthands
-        this.qs = this.shadowRoot.querySelector.bind(this.shadowRoot);
-        this.qsa = this.shadowRoot.querySelector.bind(this.shadowRoot);
-        this.ready = new Promise(async (resolve, reject)=>{
-            await this.setupUI();
-            resolve(true);
-        });
-    }
-    async setupUI() {
-        await this.fetchStyle();
-        await this.fetchTemplate();
-        this.setupCodeMirror();
-    }
-    async fetchStyle() {
-        const sheet = new CSSStyleSheet();
-        const file = await fetch(new URL("markdown-cell.d10cc866.css", import.meta.url));
-        const css = await file.text();
-        sheet.replaceSync(css);
-        this.shadowRoot.adoptedStyleSheets = [
-            sheet
-        ];
-    }
-    async fetchTemplate() {
-        const file = await fetch(new URL("markdown-cell.fe4c8347.html", import.meta.url));
-        const html = await file.text();
-        this.shadowRoot.innerHTML = html;
-    }
-    //#region public methods
-    toJSON() {
-        return {
-            "cell_type": "markdown",
-            "metadata": {},
-            "source": this.source
-        };
-    }
-    static fromJSON(obj) {
-        const cell = new $dd4ad8f3f241100e$export$7910644ddd3b55c3();
-        cell.fromJSON(obj);
-        return cell;
-    }
-    fromJSON(obj) {
-        this.ready.then(()=>{
-            if (typeof obj.source === 'string') this.source = obj.source;
-            if (Array.isArray(obj.source)) this.source = obj.source.join('');
-        });
-    }
-    static fromString(str) {
-        const obj = JSON.parse(str);
-        const cell = $dd4ad8f3f241100e$export$7910644ddd3b55c3.fromJSON(obj);
-        return cell;
-    }
-    fromString(str) {
-        const obj = JSON.parse(str);
-        this.fromJSON(obj);
-    }
-    disconnectedCallback() {
-        this.view.destroy();
-    }
-    //#endregion
-    //#region private methods
-    setupCodeMirror() {
-        const clickableLinks = (0, $TDEgv$EditorView1).domEventHandlers({
-            mousedown (event, view) {
-                if (!(event.ctrlKey || event.metaKey)) return;
-                let pos = view.posAtCoords({
-                    x: event.clientX,
-                    y: event.clientY
-                });
-                if (pos === null) return;
-                let node = (0, $TDEgv$syntaxTree)(view.state).resolveInner(pos, 1);
-                if (node.name === "URL" || node.name === "Link") {
-                    let url = view.state.doc.sliceString(node.from, node.to);
-                    window.open(url, '_blank');
-                    return true;
-                }
-            }
-        });
-        this.view = new (0, $TDEgv$EditorView1)({
-            state: (0, $TDEgv$EditorState).create({
-                doc: '',
-                extensions: [
-                    (0, $TDEgv$markdown)(),
-                    (0, $TDEgv$Prec).highest((0, $TDEgv$keymap).of([
-                        {
-                            key: "Enter",
-                            run: (0, $TDEgv$insertNewline)
-                        }
-                    ])),
-                    (0, $TDEgv$keymap).of([
-                        (0, $TDEgv$indentWithTab)
-                    ]),
-                    (0, $TDEgv$linkPlugin)(),
-                    (0, $TDEgv$imageField)(),
-                    (0, $TDEgv$codeBlockField)(),
-                    (0, $TDEgv$collapseOnSelectionFacet).of(true),
-                    (0, $TDEgv$mouseSelectingField),
-                    $dd4ad8f3f241100e$var$tabSize.of((0, $TDEgv$EditorState).tabSize.of(2)),
-                    clickableLinks,
-                    (0, $TDEgv$tableField),
-                    (0, $TDEgv$tableEditorPlugin)(),
-                    (0, $TDEgv$editorTheme),
-                    (0, $TDEgv$EditorView1).lineWrapping,
-                    (0, $TDEgv$EditorView1).theme({
-                        "&.cm-focused": {
-                            outline: "none"
-                        }
-                    }),
-                    (0, $TDEgv$livePreviewPlugin),
-                    (0, $TDEgv$markdownStylePlugin),
-                    (0, $TDEgv$placeholder)("Write here..."),
-                    (0, $TDEgv$history)(),
-                    (0, $TDEgv$mathPlugin).extension,
-                    (0, $TDEgv$blockMathField)
-                ]
-            }),
-            parent: this.qs('.cell-editor')
-        });
-        this.view.contentDOM.addEventListener('mouseDown', (e)=>{
-            this.view.dispatch({
-                effects: (0, $TDEgv$setMouseSelecting).of(true)
-            });
-        });
-        document.addEventListener('mouseup', ()=>{
-            requestAnimationFrame(()=>{
-                this.view.dispatch({
-                    effects: (0, $TDEgv$setMouseSelecting).of(false)
-                });
-            });
-        });
-        this.view.focus();
-    }
-}
-if (!customElements.get('markdown-cell')) customElements.define("markdown-cell", $dd4ad8f3f241100e$export$7910644ddd3b55c3);
-
-
-
-
 class $bdaad2d5f3551cf2$export$a97aa3d704ecd66b extends HTMLElement {
     static observedAttributes = [
         "data-selected"
@@ -605,7 +635,7 @@ class $bdaad2d5f3551cf2$export$a97aa3d704ecd66b extends HTMLElement {
     }
     async fetchStyle() {
         const sheet = new CSSStyleSheet();
-        const file = await fetch(new URL("cell-type-selector.4c5c21e8.css", import.meta.url));
+        const file = await fetch(new URL("cell-type-selector.5bdba451.css", import.meta.url));
         const css = await file.text();
         sheet.replaceSync(css);
         this.shadowRoot.adoptedStyleSheets = [
@@ -613,7 +643,7 @@ class $bdaad2d5f3551cf2$export$a97aa3d704ecd66b extends HTMLElement {
         ];
     }
     async fetchTemplate() {
-        const file = await fetch(new URL("cell-type-selector.f34b40b6.html", import.meta.url));
+        const file = await fetch(new URL("cell-type-selector.68e1798a.html", import.meta.url));
         const html = await file.text();
         this.shadowRoot.innerHTML = html;
     }
@@ -721,7 +751,7 @@ class $60393df850c1c53c$export$5a61110bddf305c0 extends HTMLElement {
     }
     async fetchStyle() {
         const sheet = new CSSStyleSheet();
-        const file = await fetch(new URL("javascript-cell.011af87f.css", import.meta.url));
+        const file = await fetch(new URL("javascript-cell.a5e0a626.css", import.meta.url));
         const css = await file.text();
         sheet.replaceSync(css);
         this.shadowRoot.adoptedStyleSheets = [
@@ -729,7 +759,7 @@ class $60393df850c1c53c$export$5a61110bddf305c0 extends HTMLElement {
         ];
     }
     async fetchTemplate() {
-        const file = await fetch(new URL("javascript-cell.28e42438.html", import.meta.url));
+        const file = await fetch(new URL("javascript-cell.8b466d5a.html", import.meta.url));
         const html = await file.text();
         this.shadowRoot.innerHTML = html;
     }
@@ -929,6 +959,7 @@ class $60393df850c1c53c$export$5a61110bddf305c0 extends HTMLElement {
         const notebook = this.getRootNode().host.closest('notebook-el');
         const context = {
             ...notebook.context,
+            cell: this,
             output: outputs,
             console: {
                 log: (...args)=>{
@@ -1013,7 +1044,7 @@ class $54cacde54151b574$export$e5e297d53d9ad3c7 extends HTMLElement {
     }
     async fetchStyle() {
         const sheet = new CSSStyleSheet();
-        const file = await fetch(new URL("notebook-actions.9d8b0216.css", import.meta.url));
+        const file = await fetch(new URL("notebook-actions.2095f95b.css", import.meta.url));
         const css = await file.text();
         sheet.replaceSync(css);
         this.shadowRoot.adoptedStyleSheets = [
@@ -1021,7 +1052,7 @@ class $54cacde54151b574$export$e5e297d53d9ad3c7 extends HTMLElement {
         ];
     }
     async fetchTemplate() {
-        const file = await fetch(new URL("notebook-actions.37d56153.html", import.meta.url));
+        const file = await fetch(new URL("notebook-actions.a3eb6f21.html", import.meta.url));
         const html = await file.text();
         this.shadowRoot.innerHTML = html;
     }
@@ -1076,10 +1107,14 @@ class $71fc0554b53eb1ce$export$88315cbbb14c4be4 extends HTMLElement {
         this.qs = this.shadowRoot.querySelector.bind(this.shadowRoot);
         this.qsa = this.shadowRoot.querySelectorAll.bind(this.shadowRoot);
         this.ready = new Promise(async (resolve, reject)=>{
-            await this.fetchStyle();
-            await this.fetchTemplate();
-            this.qs('.title').addEventListener('blur', (e)=>this.title = e.target.innerText);
-            resolve(true);
+            try {
+                await this.fetchStyle();
+                await this.fetchTemplate();
+                this.qs('.title').addEventListener('blur', (e)=>this.title = e.target.innerText);
+                resolve(true);
+            } catch (error) {
+                reject(error);
+            }
         });
     }
     runAll() {
@@ -1089,7 +1124,7 @@ class $71fc0554b53eb1ce$export$88315cbbb14c4be4 extends HTMLElement {
     }
     async fetchStyle() {
         const sheet = new CSSStyleSheet();
-        const file = await fetch(new URL("notebook.a9920b33.css", import.meta.url));
+        const file = await fetch(new URL("notebook.3f4b208f.css", import.meta.url));
         const css = await file.text();
         sheet.replaceSync(css);
         this.shadowRoot.adoptedStyleSheets = [
@@ -1097,7 +1132,7 @@ class $71fc0554b53eb1ce$export$88315cbbb14c4be4 extends HTMLElement {
         ];
     }
     async fetchTemplate() {
-        const file = await fetch(new URL("notebook.fab1eccd.html", import.meta.url));
+        const file = await fetch(new URL("notebook.264230b7.html", import.meta.url));
         const html = await file.text();
         this.shadowRoot.innerHTML = html;
     }

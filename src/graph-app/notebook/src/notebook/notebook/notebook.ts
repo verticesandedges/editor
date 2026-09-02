@@ -27,10 +27,14 @@ export class NotebookElement extends HTMLElement {
     this.qs = this.shadowRoot!.querySelector.bind(this.shadowRoot);
     this.qsa = this.shadowRoot!.querySelectorAll.bind(this.shadowRoot);
     this.ready = new Promise(async (resolve, reject) => {
-      await this.fetchStyle();
-      await this.fetchTemplate();
-      this.qs('.title').addEventListener('blur', (e) => this.title = (e.target! as HTMLElement).innerText);
-      resolve(true);
+      try{
+        await this.fetchStyle();
+        await this.fetchTemplate();
+        this.qs('.title').addEventListener('blur', (e) => this.title = e.target!.innerText);
+        resolve(true);
+      }catch(error){
+        reject(error);
+      }
     });
   }
 
@@ -39,7 +43,7 @@ export class NotebookElement extends HTMLElement {
       if(cell instanceof JavascriptCellElement || cell instanceof TypescriptCellElement){
         await cell.run();
       }
-    })
+    });
   }
 
   async fetchStyle(): Promise<void> {
@@ -144,4 +148,6 @@ export class NotebookElement extends HTMLElement {
   //#endregion
 }
 
-if(!customElements.get('notebook-el')) customElements.define("notebook-el", NotebookElement);
+if(!customElements.get('notebook-el')){
+  customElements.define("notebook-el", NotebookElement);
+}

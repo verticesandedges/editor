@@ -1,9 +1,11 @@
-import "./graph-element/src/web-component/graph-element.ts";
-import type { GraphElement, VertexElement, EdgeElement } from "./graph-element/src/index.ts"; 
-import "./notebook/src/notebook/notebook/notebook.ts";
-import type { NotebookElement } from "./notebook/src/notebook/notebook/notebook.ts";  
-import "./drill-down/src/drill-down.ts";
-import type { DrillDownElement } from "./drill-down/src/drill-down.ts";
+import "./graph-element/src/web-component/graph-element";
+import type { GraphElement, VertexElement, EdgeElement } from "./graph-element/src/index"; 
+
+import "./notebook/src/notebook/notebook/notebook";
+import type { NotebookElement } from "./notebook/src/notebook/notebook/notebook";  
+
+import "./drill-down/src/drill-down";
+import type { DrillDownElement } from "./drill-down/src/drill-down";
 import { openDB } from "idb";
 
 type ItemType = 'graph' | 'notebook';

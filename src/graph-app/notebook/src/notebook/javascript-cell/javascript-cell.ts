@@ -94,22 +94,22 @@ export class JavascriptCellElement extends HTMLElement {
 
   //#region public methods
   log(...args: string[]){
-    const messages = this.qs('.cell-output.messages');
+    const messages = this.qs('.cell-output.messages')!;
     args.forEach((arg: string) => {
       const p = document.createElement('p');
       p.classList.add('log');
       p.innerText = arg;
-      messages!.appendChild(p);
+      messages.appendChild(p);
     })
   }
 
   error(...args: string[]){
-    const messages = this.qs('.cell-output.messages');
+    const messages = this.qs('.cell-output.messages')!;
     args.forEach((arg: string) => {
       const p = document.createElement('p');
       p.classList.add('error');
       p.innerText = arg;
-      messages!.appendChild(p);
+      messages.appendChild(p);
     })
   }
 
@@ -141,14 +141,15 @@ export class JavascriptCellElement extends HTMLElement {
     const outputs = [];
 
     // console.log and console.error outputs
-    const messages = this.qsa('.cell-output.messages>*');
-    messages!.forEach(p => {
+    const messages = this.qsa('.cell-output.messages>*')!;
+    messages.forEach((p: unknown) => {
+
       let output;
       if(p.classList.contains('log')){
         output = {
           "output_type": "stream",
           "name": "stdout",
-          "text": (p as HTMLElement).innerText
+          "text": p.innerText
         }
       }
 
@@ -156,7 +157,7 @@ export class JavascriptCellElement extends HTMLElement {
         output = { 
           "output_type": "stream",
           "name": "stderr",
-          "text": (p as HTMLElement).innerText
+          "text": p.innerText
         }
       }
 
@@ -288,6 +289,7 @@ export class JavascriptCellElement extends HTMLElement {
     const notebook = (this.getRootNode() as any).host.closest('notebook-el') as NotebookElement;
     const context = {
       ...notebook.context,
+      cell: this,
       output: outputs,
       console: {
         log: (...args: string[]) => {
@@ -305,7 +307,7 @@ export class JavascriptCellElement extends HTMLElement {
   }
 
   private createFunction(context: any){
-    const AsyncFunction = async function(){}.constructor as any;
+    const AsyncFunction = async function(){}.constructor;
     const func = new AsyncFunction( ...Object.keys( context ), `
       try{
         ${this.source}
@@ -324,7 +326,7 @@ export class JavascriptCellElement extends HTMLElement {
       const outputs = this.qs('.cell-outputs');
       indicator = document.createElement('output');
       indicator.classList.add('cell-output', 'indicator')
-      outputs!.prepend(indicator);
+      outputs.prepend(indicator);
     }
     
     let i = 0;

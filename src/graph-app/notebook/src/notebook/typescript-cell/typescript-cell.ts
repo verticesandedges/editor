@@ -77,7 +77,7 @@ export class TypescriptCellElement extends HTMLElement {
       output.append(result);
     }else if(typeof result in new Set(['number', 'string', 'boolean', 'bigint'])){
       output.innerText = result;
-    }else if((typeof result === 'object') || (typeof result as any === 'array')){
+    }else if((typeof result === 'object') || (typeof result === 'array')){
       output.innerHTML = `<pre>${ JSON.stringify(result, null, 2) }</pre>`;
     }else if(result === null){
       output.innerText = 'null';
@@ -100,7 +100,7 @@ export class TypescriptCellElement extends HTMLElement {
       const p = document.createElement('p');
       p.classList.add('log');
       p.innerText = arg;
-      messages!.appendChild(p);
+      messages.appendChild(p);
     })
   }
 
@@ -110,7 +110,7 @@ export class TypescriptCellElement extends HTMLElement {
       const p = document.createElement('p');
       p.classList.add('error');
       p.innerText = arg;
-      messages!.appendChild(p);
+      messages.appendChild(p);
     })
   }
 
@@ -143,7 +143,7 @@ export class TypescriptCellElement extends HTMLElement {
 
     // console.log and console.error outputs
     const messages = this.qs('.cell-output.messages');
-    [...messages!.children].forEach((p: any) => {
+    [...messages.children].forEach((p: any) => {
       let output;
       if(p.classList.contains('log')){
         output = {
@@ -283,6 +283,7 @@ export class TypescriptCellElement extends HTMLElement {
     const notebook = (this.getRootNode() as any).host.closest('notebook-el') as NotebookElement;
     const context = {
       ...notebook.context,
+      cell: this,
       output: outputs,
       console: {
         log: (...args: string[]) => {
@@ -302,8 +303,8 @@ export class TypescriptCellElement extends HTMLElement {
   private createFunction(context: any) {
     const AsyncFunction = async function(){}.constructor;
     const source = ts.transpileModule(this.source, {
-      // module: ts.ModuleKind.ESNext,
-      // compact: false
+      module: ts.ModuleKind.ESNext,
+      compact: false
     }).outputText;
 
     const func = new (AsyncFunction as any)( ...Object.keys( context ), `
@@ -323,7 +324,7 @@ export class TypescriptCellElement extends HTMLElement {
     if(!indicator){
       const outputs = this.qs('.cell-outputs');
       indicator = document.createElement('output');
-      indicator.classList.add('cell-output', 'indicator')
+      indicator.classList.add('cell-output', 'indicator');
       outputs!.prepend(indicator);
     }
     
