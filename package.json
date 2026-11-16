@@ -1,5 +1,5 @@
 {
-  "name": "graph-canvas",
+  "name": "editor",
   "version": "0.52.0",
   "description": "A canvas based graph app",
   "keywords": [
@@ -9,13 +9,13 @@
     "graph",
     "editor"
   ],
-  "homepage": "https://github.com/verticesandedges/graph-editor#readme",
+  "homepage": "https://github.com/verticesandedges/editor#readme",
   "bugs": {
-    "url": "https://github.com/verticesandedges/graph-editor/issues"
+    "url": "https://github.com/verticesandedges/editor/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/verticesandedges/graph-editor.git"
+    "url": "git+ssh://git@github.com/verticesandedges/editor.git"
   },
   "license": "UNLICENSED",
   "author": "Joshua M. Moore <joshua.moore@verticesandedges.net>",
