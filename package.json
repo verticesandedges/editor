@@ -9,13 +9,13 @@
     "graph",
     "editor"
   ],
-  "homepage": "https://github.com/illogical-alliteration/graph-canvas#readme",
+  "homepage": "https://github.com/verticesandedges/graph-editor#readme",
   "bugs": {
-    "url": "https://github.com/illogical-alliteration/graph-canvas/issues"
+    "url": "https://github.com/verticesandedges/graph-editor/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/illogical-alliteration/graph-canvas.git"
+    "url": "git+ssh://git@github.com/verticesandedges/graph-editor.git"
   },
   "license": "UNLICENSED",
   "author": "Joshua M. Moore <joshua.moore@verticesandedges.net>",

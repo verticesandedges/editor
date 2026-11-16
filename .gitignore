@@ -1,6 +1,5 @@
 .parcel-cache/
 node_modules/
-docs/
 src/graph-app/notebook/dist/**/*
 src/graph-app/graph-element/dist/**/*
 src/graph-app/drill-down/dist/**/*
