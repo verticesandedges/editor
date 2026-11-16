@@ -50,7 +50,6 @@
   },
   "dependencies": {
     "idb": "^8.0.3",
-    "interestfor": "github:mfreed7/interestfor",
     "invokers": "^2.2.0",
     "katex": "^0.19.1"
   }
