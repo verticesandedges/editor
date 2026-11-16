@@ -2,15 +2,30 @@ import "./graph-element/src/web-component/graph-element.ts";
 import type { GraphElement, VertexElement, EdgeElement } from "./graph-element/src/index.ts"; 
 
 import "./notebook/src/notebook/notebook/notebook.ts";
-import type { NotebookElement } from "./notebook/src/notebook/notebook/notebook.ts";  
 
 import "./drill-down/src/drill-down";
-import type { DrillDownElement } from "./drill-down/src/drill-down.ts";
 import { openDB } from "idb";
+
+import { CellTypeSelector } from "./notebook/src/notebook/cell-type-selector/cell-type-selector.ts";
+import { MarkdownCellElement } from "./notebook/src/notebook/markdown-cell/markdown-cell.ts";
+import { NotebookElement } from "./notebook/src/notebook/notebook/notebook.ts";
+import { CellActionsElement } from "./notebook/src/notebook/cell-actions/cell-actions.ts";
+import { JavascriptCellElement } from "./notebook/src/notebook/javascript-cell/javascript-cell.ts";
+import { TypescriptCellElement } from "./notebook/src/notebook/typescript-cell/typescript-cell.ts";
+import { NotebookActionsElement } from "./notebook/src/notebook/notebook-actions/notebook-actions.ts";
+
+window.customElements.define("markdown-cell", MarkdownCellElement);
+window.customElements.define("notebook-el", NotebookElement);
+window.customElements.define("cell-type", CellTypeSelector)
+window.customElements.define("cell-actions", CellActionsElement);
+window.customElements.define("javascript-cell", JavascriptCellElement);
+window.customElements.define('typescript-cell', TypescriptCellElement);
+window.customElements.define('notebook-actions', NotebookActionsElement);
 
 type ItemType = 'graph' | 'notebook';
 type Method = 'file' | 'url' | 'indexeddb';
 const capFirst = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+
 
 export class GraphAppElement extends HTMLElement {
   static template: string = ``;
