@@ -1,7 +1,7 @@
-import "./graph-element/src/web-component/graph-element.ts";
-import type { GraphElement, VertexElement, EdgeElement } from "./graph-element/src/index.ts"; 
+import "./graph-element/src/web-component/graph-element";
+import type { GraphElement, VertexElement, EdgeElement } from "./graph-element/src/index"; 
 
-import "./notebook/src/notebook/notebook/notebook.ts";
+import "./notebook/src/notebook/notebook/notebook";
 
 import "./drill-down/src/drill-down";
 import { openDB } from "idb";
