@@ -18,6 +18,7 @@ export class NotebookElement extends HTMLElement {
     val = val?.replace('\n', '')
     if(val === "") val = undefined;
     this.qs('h1')!.innerText = val ?? "Untitled Notebook";
+    document.title = this.qs('h1').innerText;
   }
   //#endregion
 
@@ -107,6 +108,7 @@ export class NotebookElement extends HTMLElement {
     cells.innerHTML = '';
     const jsCell = document.createElement('javascript-cell');
     cells.appendChild(jsCell);
+    jsCell.focus()
   }
 
   fromJSON(obj: any, clearFirst: boolean=false): void {
@@ -148,6 +150,3 @@ export class NotebookElement extends HTMLElement {
   //#endregion
 }
 
-if(!customElements.get('notebook-el')){
-  customElements.define("notebook-el", NotebookElement);
-}

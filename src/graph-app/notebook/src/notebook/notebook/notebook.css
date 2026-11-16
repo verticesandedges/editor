@@ -1,60 +1,88 @@
+:root {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
 :host {
-  --spiral-width: 45px;
-  --padding-left: 28px;
-  --panel-max-h: calc(100vh - 140px);
-  display: block;
 }
 
-h1.title {
-  border-bottom: 1px solid var(--ui-color);
+@media screen and (min-width: 800px){
+  :host {  
+    --font-size: 20px;
+
+    margin: 50px transparent;
+    
+    max-width: 80ch;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    flex-direction: column;
+
+    --spiral-width: 75px;
+    background: url('./spiral-small.png') left top repeat-y;
+    background-size: var(--spiral-width);
+    padding-left: calc(var(--spiral-width) + 15px);
+    padding-right: 25px;
+    padding-bottom: 25px;
+    border: 1px solid black;
+    border-left: none;
+  }
+}
+
+h1 {
+  border: none;
+  border-bottom: 1px solid black;
+  font-family: serif;
+}
+
+h1:focus {
   outline: none;
 }
 
-h1.title:focus {
-  outline: none;
+.notebook-actions {
+  display: flex;
+  flex-direction: row;
+  gap: 15px;
 }
 
-.notebook-shell {
+button {
+  margin: 0;
+  border: 0;
+  padding: 0;
+
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 20px;
+
+  color: var(--ui-color);
+  background-color: var(--bg-color);
+  font-size: var(--font-size);
+}
+
+.cover {
+  width: 28px;
+  height: 0px;
+  border: 1px solid white;
   position: relative;
-  overflow: visible;
+  left: -92px;
 }
 
-.notebook-scroll {
-  max-height: var(--panel-max-h);
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding-left: var(--padding-left);
-  padding-right: 10px;
-  padding-bottom: 16px;
-  background: var(--bg-color);
-  border-top: 1px solid var(--ui-color);
-  border-bottom: 1px solid var(--ui-color);
+.cover.top {
+  top: -1px;
 }
 
-.notebook-content {
-  position: relative;
+.cover.bottom {
+  bottom: -26px;
 }
 
-.spiral {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: calc(var(--padding-left) - var(--spiral-width));
-  width: var(--spiral-width);
-  background: url('./spiral-small.png') left top repeat-y;
-  background-size: var(--spiral-width);
-  background-color: transparent;
-  pointer-events: none;
+notebook-actions:first-of-type {
+  margin-bottom: 15px;
 }
 
-.border {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: var(--padding-left);
-  box-sizing: border-box;
-  border: 1px solid var(--ui-color);
-  border-left: 0;
-  pointer-events: none;
+notebook-actions:last-of-type {
+  margin-top: 15px;
+}
+
+hr {
+  border: none;
+  height: 1px;
+  border-bottom: 1px solid gray;
 }

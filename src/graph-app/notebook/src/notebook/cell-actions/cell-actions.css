@@ -5,9 +5,7 @@
   justify-content: flex-end;
   outline: none;
   border: none;
-  font-size: inherit;
-  --bg-color: inherit;
-  --ui-color: inherit;
+  --font-size: 20px;
 }
 
 button {
@@ -17,12 +15,7 @@ button {
 
   color: var(--ui-color);
   background-color: var(--bg-color);
-  font-size: inherit;
-}
-
-button:hover {
-  color: var(--ui-color);
-  background-color: var(--bg-color);
+  font-size: var(--font-size);
 }
 
 @media not screen {

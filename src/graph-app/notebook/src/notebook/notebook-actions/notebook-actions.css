@@ -1,3 +1,8 @@
+:root {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 20px;
+}
+
 :host {
   display: flex;
   flex-direction: row;
@@ -5,12 +10,7 @@
   justify-content: flex-start;
   outline: none;
   border: none;
-  font-size: inherit;
-  font-family: inherit;
-  --bg-color: inherit;
-  --ui-color: inherit;
-  background-color: var(--bg-color);
-  color: var(--ui-color);
+  --font-size: 20px;
 }
 
 button {
@@ -18,16 +18,10 @@ button {
   border: 0;
   padding: 0;
 
-  background-color: var(--bg-color);
   color: var(--ui-color);
-  font-size: inherit;
+  background-color: var(--bg-color);
+  font-size: var(--font-size);
 }
-
-button:hover {
-  color: var(--bg-color);
-  background-color: var(--ui-color);
-}
-
 
 @media not screen {
   :host {

@@ -1,6 +1,6 @@
 {
   "name": "notebook",
-  "version": "0.0.9",
+  "version": "1.1.20",
   "description": "A JS/TS/MD notebook with live markdown fields",
   "keywords": [
     "js",
@@ -11,40 +11,45 @@
   "license": "UNLICENSED",
   "author": "Joshua M. Moore <joshua.moore@verticesandedges.net>",
   "type": "module",
-  "source": "src/notebook/notebook/notebook.ts",
-  "main": "dist/main.js",
-  "module": "dist/module.js",
-  "types": "dist/types.d.ts",
-  "targets": {
-    "main": {
-      "isLibrary": true
-    },
-    "page": {
-      "source": "src/index.html",
-      "distDir": "dist/page",
-      "engines": {
-        "browsers": "> 0.5%, last 2 versions, not dead"
-      }
-    }
-  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "parcel src/index.html --dist-dir docs",
-    "start": "http-server docs/",
-    "clean": "rm -rf .parcel-cache/ docs/ dist/",
-    "build:lib": "parcel build --target main",
-    "watch:lib": "parcel watch --target main",
-    "build:folder": "parcel src/index.html --dist-dir docs/notebook/ --public-url /notebook/",
-    "copy:folder": "cp -r ./examples/ ./docs/notebook/. && cp src/notebook/spiral-small.png ./docs/notebook/.",
-    "start:folder": "http-server docs/",
-    "build:publish": "rm -rf .parcel-cache/ docs/* && cp -r examples/ docs/. && parcel src/index.html --dist-dir docs/ --public-url /notebook/"
+    "clean": "rm -rf .parcel-cache docs build",
+    "build": "parcel build --dist-dir docs/ --public-url /notebook/",
+    "watch": "parcel watch --dist-dir docs/",
+    "gh-pages": "parcel build --dist-dir docs/ --public-url /notebook/",
+    "start": "parcel src/index.html --dist-dir docs/ --port 8080 --public-url /notebook/",
+    "serve": "http-server docs/"
+  },
+  "serviceWorker": "docs/sw.js",
+  "source": "src/index.html",
+  "targets": {
+    "main": false,
+    "default": {
+      "distDir": "./docs/"
+    }
+  },
+  "pluginOptions": {
+    "staticFiles": {
+      "staticPath": [
+        {
+          "src": "examples",
+          "outDir": "."
+        },
+        {
+          "src": "screenshots",
+          "outDir": "."
+        }
+      ]
+    }
   },
   "devDependencies": {
     "@parcel/packager-raw-url": "^2.16.4",
+    "@parcel/service-worker": "^2.16.4",
     "@parcel/transformer-inline-string": "^2.16.4",
     "@parcel/transformer-webmanifest": "^2.16.4",
     "license-checker-rseidelsohn": "^4.4.2",
     "parcel": "^2.16.4",
+    "parcel-reporter-static-files-copy": "^1.5.3",
     "process": "^0.11.10"
   },
   "dependencies": {
@@ -54,9 +59,10 @@
     "@codemirror/language": "^6.12.3",
     "@codemirror/state": "^6.6.0",
     "@codemirror/view": "^6.41.1",
-    "@parcel/service-worker": "^2.16.4",
+    "@lezer/markdown": "^1.6.3",
     "codemirror": "^6.0.2",
-    "katex": "^0.16.45",
+    "katex": "^0.19.1",
+    "lowlight": "^3.3.0",
     "marked": "^18.0.11",
     "typescript": "^6.0.3"
   }

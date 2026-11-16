@@ -1,6 +1,6 @@
 import { basicSetup, EditorView } from "codemirror";
 import { EditorState, Compartment } from "@codemirror/state";
-import { keymap, placeholder } from "@codemirror/view";
+import { keymap } from "@codemirror/view";
 import { javascript } from "@codemirror/lang-javascript";
 import { indentWithTab } from "@codemirror/commands";
 import "../cell-type-selector/cell-type-selector";
@@ -262,7 +262,6 @@ export class JavascriptCellElement extends HTMLElement {
           keymap.of([ indentWithTab ]),
           language.of( javascript({ typescript: false })),
           tabSize.of( EditorState.tabSize.of( 2 )),
-          placeholder('JavaScript code... for example: return 7 * 3;'),
           EditorView.lineWrapping
         ]
       }),
@@ -299,6 +298,12 @@ export class JavascriptCellElement extends HTMLElement {
         error: (...args: string[]) => {
           this.error(...args);
           console.error(...args);
+        },
+        assert(...args: []){
+          if(!args[0] as unknown as boolean){
+            throw new Error(args[1] as unknown as string);
+            console.assert(...args);
+          }
         }
       }
     }
@@ -344,8 +349,8 @@ export class JavascriptCellElement extends HTMLElement {
     (pkg.indicator as HTMLOutputElement).value = '';
   }
   //#endregion
-}
 
-if(!customElements.get('javascript-cell')){
-  customElements.define("javascript-cell", JavascriptCellElement);
-} 
+  focus(){
+    this.qs('.cell-editor')!.focus();
+  }
+}

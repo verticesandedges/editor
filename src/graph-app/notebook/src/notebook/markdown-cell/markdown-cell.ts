@@ -1,10 +1,11 @@
 import { basicSetup } from 'codemirror';
 import { EditorState, Compartment } from '@codemirror/state';
-import { keymap, placeholder, EditorView } from '@codemirror/view';
+import { keymap, EditorView } from '@codemirror/view';
 import { markdown } from '@codemirror/lang-markdown';
 import { indentWithTab } from '@codemirror/commands';
 import { marked } from 'marked';
 import katex from 'katex';
+import { CellActionsElement } from '../cell-actions/cell-actions.ts';
 
 let tabSize = new Compartment();
 
@@ -95,7 +96,11 @@ export class MarkdownCellElement extends HTMLElement {
 
     const input = this.qs('.cell-editor');
     const output = this.qs('.cell-output');
-
+    const runBtn = this.shadowRoot
+        ?.querySelector('cell-actions')
+        ?.shadowRoot
+        ?.querySelector('.run-cell') as HTMLButtonElement;
+      
     if (this.isRendered) {
       // 1. Convert Markdown to HTML
       const html = marked.parse(this.source) as string;
@@ -127,10 +132,13 @@ export class MarkdownCellElement extends HTMLElement {
       // 3. Swap UI visibility
       input.style.display = 'none';
       output.style.display = 'block';
+      // this runBtn belongs to the cell-actions element
+      if(runBtn) runBtn.innerText = 'Edit';
     } else {
       // Return to Editor
-      output.style.display = 'none';
       input.style.display = 'block';
+      output.style.display = 'none';
+      if(runBtn) runBtn.innerText = 'Render';
       this.view.focus();
     }
   }
@@ -203,7 +211,6 @@ export class MarkdownCellElement extends HTMLElement {
       keymap.of([ indentWithTab ]),
       tabSize.of( EditorState.tabSize.of( 2 ) ),
       EditorView.lineWrapping,
-      placeholder("Write here..."),
       markdown()
     ];
     
@@ -213,8 +220,8 @@ export class MarkdownCellElement extends HTMLElement {
     });
   }
   //#endregion
-}
 
-if(!customElements.get('markdown-cell')){
-  customElements.define("markdown-cell", MarkdownCellElement);
+  focus(){
+    this.qs('.cell-editor')!.focus();
+  }
 }

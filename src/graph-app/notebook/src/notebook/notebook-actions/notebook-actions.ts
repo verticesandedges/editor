@@ -72,7 +72,3 @@ export class NotebookActionsElement extends HTMLElement {
   }
   //#endregion
 }
-
-if(!customElements.get('notebook-actions')){
-  customElements.define('notebook-actions', NotebookActionsElement);
-}
