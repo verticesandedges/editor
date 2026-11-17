@@ -1,1 +1,0 @@
-{"mappings":"AAAA;;;;;;;AAOA","sources":["src/index.css"],"sourcesContent":["html, body {\n  margin: 0;\n  border: 0;\n  padding: 0;\n  overflow: hidden;\n}\n\ngraph-app {\n  position: relative;\n}"],"names":[],"version":3,"file":"editor.fc7cabbb.css.map","sourceRoot":"../"}
