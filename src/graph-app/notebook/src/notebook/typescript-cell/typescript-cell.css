@@ -1,3 +1,11 @@
+:root {
+  font-size: 12px;
+}
+
+.cm-editor {
+  font-size: 12px;
+}
+
 fieldset.cell-editor {
   outline: none;
   border: none;
@@ -19,6 +27,13 @@ fieldset.cell-outputs {
   border: none;
 }
 
+.log {
+  font-size: 12px;
+  margin-left: 10px;
+  margin-top: 3px;
+  margin-bottom: 3px;
+}
+
 fieldset {
   padding: 0;
   border: 0;
@@ -30,22 +45,19 @@ fieldset {
   flex-direction: row;
   justify-content: space-between;
   align-items: end;
+  margin-bottom: 5px;
 }
 
 cell-type { 
-  margin-top: 5px;
-  margin-bottom: 5px;
   padding-top: 0;
 }
 
 cell-actions {
-  margin-top: 5px;
-  margin-bottom: 5px;
 }
 
 
 hr {
   border: none;
-  height: 1px;
+  height: 0px;
   border-bottom: 1px dotted gray;
 }

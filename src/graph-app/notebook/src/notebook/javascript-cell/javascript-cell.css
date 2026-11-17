@@ -1,12 +1,17 @@
+:root {
+  font-size: 12px;
+}
+
+.cm-editor {
+  font-size: 12px;
+}
+
 fieldset.cell-editor {
   outline: none;
   border: none;
 }
 
 .cell-outputs {
-  display: block;
-  width: content;
-  height: content;
   overflow-wrap: anywhere;
 }
 
@@ -17,6 +22,13 @@ fieldset.cell-editor {
 fieldset.cell-outputs {
   outline: none;
   border: none;
+}
+
+.log {
+  font-size: 12px;
+  margin-left: 10px;
+  margin-top: 3px;
+  margin-bottom: 3px;
 }
 
 fieldset {
@@ -30,18 +42,9 @@ fieldset {
   flex-direction: row;
   justify-content: space-between;
   align-items: end;
-}
-
-cell-type { 
-  margin-top: 5px;
-  margin-bottom: 5px;
-  padding-top: 0;
-}
-
-cell-actions {
-  margin-top: 5px;
   margin-bottom: 5px;
 }
+
 
 hr {
   border: none;
