@@ -6,6 +6,7 @@
   --graph-bg-color: white;
   --nb-bg-color: white;
   --nb-ui-color: black;
+  --font-size: 12px;
 }
 
 :host {
@@ -28,7 +29,6 @@ notebook-el {
   --bg-color: var(--nb-bg-color, white);
   --ui-color: var(--nb-ui-color, black);
 }
-
 
 /* Top Menu Styles */
 /* todo  .menu-bar */
@@ -266,7 +266,8 @@ drill-down#tool-menu:not(:popover-open) {
 main {
   display: flex;
   flex-direction: row;
-  height: 100%;
+  flex: 1;
+  min-height: 0;
 }
 
 /* Graph Element */
@@ -278,14 +279,14 @@ graph-el {
 
 /* Notebook Element */
 notebook-el {
-  background: transparent;
   border: none;
   padding: 0;
   width: auto;
-  height: auto;
   margin: 0;
-  overflow: visible;
   top: 100px;
+  height: auto;
+  max-height: none;
+  overflow-y: auto;
 }
 
 notebook-el:popover-open {
@@ -298,8 +299,11 @@ notebook-el:popover-open {
   bottom: auto;
   
   margin: 0;
-  width: 80ch;
+  width: 100ch;
   margin-right: 20px;
+
+  max-height: calc(100vh - 120px);
+  overflow-y: auto;
 }
 
 notebook-el:not(:popover-open) {
